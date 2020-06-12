@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Inventario</string>
+    <string name="title_activity_home"></string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Cerrar Sesión</string>
+
+    <string name="menu_home">Inicio</string>
+    <string name="menu_documentos">Documentos</string>
+    <string name="menu_equipos">Equipos</string>
+
+    <string name="home_second">Home Second</string>
+    <string name="inventario">Inventario</string>
+    <string name="usuario">Usuario</string>
+    <string name="password">Password</string>
+    <string name="ingresar">Ingresar</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hint_fecha">Fecha Ingreso</string>
+    <string name="hint_Compra">Fecha Compra</string>
+    <string name="hint_autores">Autor/Autores</string>
+    <string name="hint_modelo">Modelo</string>
+    <string name="hint_Ejemplo">Ejemplo</string>
+    <string name="hint_tema">Tema</string>
+    <string name="hint_titulo">Titulo</string>
+    <string name="hint_precio">Precio</string>
+    <string name="hint_serie">Serie</string>
+    <string name="hint_subtitulo">Subtitulo</string>
+    <string name="hint_cantidad">Cantidad</string>
+    <string name="hint_editorial">Editorial</string>
+    <string name="hint_isbm">ISBN</string>
+    <string name="hint_inventario">Nº Inventario</string>
+    <string name="hint_palabras">Palabras Clave</string>
+    <string name="hint_descripcion">Descripción</string>
+    <string name="hint_years">How Many Years</string>
+    <string name="hint_emi">EMI ₹</string>
+    <string name="hint_interest_total">Total Interest for Loan ₹</string>
+    <string name="buscar_documentos">Buscar Documentos</string>
+    <string name="ingrese_el_nombre_o_el_id_del_documento">Ingrese el nombre o el ID del documento</string>
+    <string name="buscar_docuemnto">Buscar Docuemnto</string>
+    <string name="ingrese_el_nombre_o_el_isbn_del_documento">Ingrese el nombre o el ISBN del documento</string>
+</resources>

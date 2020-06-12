@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="0dp">
+            <!--           <android.widget.TextClock
+                           android:id="@+id/datumprikaz"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:format12Hour="dd.MM.yyyy"
+                           android:format24Hour="@null"
+                           />-->
+
+            <!--get categoria-->
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Nuevo Equipo"
+                android:textColor="#000"
+                android:fontFamily="@font/billabong"
+                android:textSize="36sp"
+                android:layout_marginBottom="10dp"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_categoria"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/txt32"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Seleccionar Categoria"
+                    android:textColor="#757575"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="5dp"/>
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sp_categorias_equipos"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <!--get marcas-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_marcas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/txt33"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Seleccionar Marca"
+                    android:textColor="#757575"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"/>
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sp_marca"
+                    android:layout_marginTop="20dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <!--get Fecha Ingreso-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_fecha"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp">
+                <EditText
+                    android:id="@+id/etDate"
+                    android:hint="@string/hint_fecha"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="date"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <!--get modelo-->
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_modelo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edmodelo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                    android:inputType="text"
+                    android:hint="@string/hint_modelo" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <!--get serie-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_serie"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edserie"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                    android:inputType="text"
+                    android:hint="@string/hint_serie" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <!--get numero inventario-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_inventario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edinventario"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:digits="0123456789-.() "
+                    android:inputType="number"
+                    android:hint="@string/hint_inventario" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <!--get precio-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_precio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edprecio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:digits=" .0123456789"
+                    android:drawableLeft="@drawable/ic_attach_money_black_24dp"
+                    android:inputType="numberDecimal"
+                    android:hint="@string/hint_precio" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <!--get Fecha Compra-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_compra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/etDateCompra"
+                    android:hint="@string/hint_Compra"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="date"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <!--get cantidad-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_cantidad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/edcantidad"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:digits=" 0123456789"
+                    android:inputType="number"
+                    android:hint="@string/hint_cantidad" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <!--descripcion-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_descripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/eddescripcion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                    android:hint="@string/hint_descripcion"
+                    android:inputType="text"
+                    android:maxLength="180"
+                    android:lines="5"
+                    android:maxLines="5" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btnEquipo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Agregar Equipo"
+                android:background="@drawable/gradient_1"
+                android:layout_marginTop="40dp"
+                android:textColor="@android:color/white"/>
+
+        </LinearLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
