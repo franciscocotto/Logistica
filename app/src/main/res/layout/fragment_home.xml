@@ -8,6 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/bg2"
     tools:context="com.example.logistica.ui.home.HomeFragment">
 
     <androidx.core.widget.NestedScrollView
@@ -30,15 +31,15 @@
                     android:text="DILOG"
                     android:textSize="12sp"
                     android:fontFamily="@font/moonlightf"
-                    android:textColor="#fff"
+                    android:textColor="#000"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:layout_marginTop="6dp"
                     android:layout_below="@id/txtdashboard"
-                    android:text="4 Item"
+                    android:text="Distribución y Logística"
                     android:textSize="14sp"
-                    android:textColor="#52BAFF"
+                    android:textColor="#030303"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <ImageView

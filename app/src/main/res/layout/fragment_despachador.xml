@@ -32,7 +32,7 @@
                  <TextView
                      android:layout_marginTop="6dp"
                      android:layout_below="@id/txtdashboard"
-                     android:text="4 Item"
+                     android:text="Distribución y Logística"
                      android:textSize="14sp"
                      android:textColor="#52BAFF"
                      android:layout_width="wrap_content"
@@ -50,11 +50,11 @@
                 android:layout_height="wrap_content"
                 android:columnOrderPreserved="false"
                 android:alignmentMode="alignMargins"
-                android:rowCount="3"
-                android:columnCount="2">
+                android:rowCount="1"
+                android:columnCount="1">
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/addruta"
+                android:id="@+id/viewruta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
@@ -80,7 +80,7 @@
                         android:layout_marginTop="12dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Crear Ruta"
+                        android:text="Ver Ruta"
                         android:textSize="16dp"
                         android:textColor="#6f6f6f"/>
                 </LinearLayout>
