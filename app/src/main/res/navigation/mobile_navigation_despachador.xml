@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.logistica.ui.home.HomeFragment"
+        android:name="com.example.logistica.ui.despachador.Despachador"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home">
+        tools:layout="@layout/fragment_despachador">
     </fragment>
 
 

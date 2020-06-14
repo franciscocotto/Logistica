@@ -1,69 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@android:style/Theme.NoTitleBar"
-    tools:context=".MainActivity"
+    tools:context="com.example.logistica.MainActivity"
     android:id="@+id/main"
-    android:background="#303030">
+    android:background="#093028"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="0dp">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            tools:ignore="MissingConstraints">
+            <ImageView
+                android:layout_centerHorizontal="true"
+                android:id="@+id/imageView2"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:singleLine="true"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:layout_marginTop="30dp"
+                app:srcCompat="@drawable/ic_menu_manage"
+                tools:ignore="MissingConstraints" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/input_layout_user"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/moonlightf"
+                android:gravity="center"
+                android:singleLine="true"
+                android:text="DILOG"
+                android:textColor="#fff"
+                android:textSize="20sp"
+                tools:ignore="MissingConstraints" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_layout_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        tools:ignore="MissingConstraints">
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+            android:inputType="text"
+            android:hint="Usuario"
+            android:background="#55000000"
+            android:padding="16dp"
+            android:textColor="#E91E63"
+            android:textColorHint="#fff"
+            android:textSize="16dp"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_layout_password"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="0dp"
-        android:fontFamily="@font/billabong"
-        android:text="Inventario"
-        android:textColor="#fff"
-        android:textSize="36sp" />
+        tools:ignore="MissingConstraints">
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+            android:inputType="text"
+            android:hint="Password"
+            android:background="#55000000"
+            android:padding="16dp"
+            android:textColor="#E91E63"
+            android:textColorHint="#fff"
+            android:textSize="16dp"/>
 
-    <EditText
-        android:id="@+id/etName"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="359dp"
-        android:background="#55000000"
+    </com.google.android.material.textfield.TextInputLayout>
 
-        android:hint="Usuario"
-        android:padding="16dp"
-        android:textColor="#E91E63"
-        android:textColorHint="#fff"
-        android:textSize="16dp" />
-
-    <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="283dp"
-        android:background="#55000000"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:padding="16dp"
-        android:textColor="#E91E63"
-        android:textColorHint="#fff"
-        android:textSize="16dp" />
 
     <Button
+        android:layout_marginTop="30dp"
         android:id="@+id/btnLogin"
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="203dp"
         android:background="@drawable/gradient_1"
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
         android:text="Ingresar"
         android:textColor="#fff"
-        android:textSize="16dp" />
+        android:textSize="16dp"
+        tools:ignore="MissingConstraints" />
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -81,5 +147,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.456" />
 
+    </LinearLayout>
 
-</RelativeLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

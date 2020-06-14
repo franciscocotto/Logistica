@@ -1,2 +1,2 @@
-rootProject.name='Inventario'
+rootProject.name='Logistica'
 include ':app'
