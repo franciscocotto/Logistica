@@ -36,12 +36,12 @@
                 android:layout_centerHorizontal="true"
                 android:id="@+id/imageView2"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="65dp"
                 android:singleLine="true"
                 android:layout_alignParentTop="true"
                 android:gravity="center"
                 android:layout_marginTop="30dp"
-                app:srcCompat="@drawable/ic_menu_manage"
+                app:srcCompat="@mipmap/ic_spanner"
                 tools:ignore="MissingConstraints" />
 
             <TextView

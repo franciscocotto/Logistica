@@ -4,79 +4,193 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.logistica.ui.home.HomeFragment">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        tools:ignore="MissingConstraints">
-
-    <ScrollView
-        android:layout_height="match_parent"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        >
-    <LinearLayout
         android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="50dp"
         >
-        <ImageButton
-            android:id="@+id/btn_doc"
-            android:layout_width="158dp"
-            android:layout_height="160dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:layout_marginTop="32dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <TextView
+                    android:id="@+id/txtdashboard"
+                    android:text="DILOG"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/moonlightf"
+                    android:textColor="#fff"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:layout_marginTop="6dp"
+                    android:layout_below="@id/txtdashboard"
+                    android:text="4 Item"
+                    android:textSize="14sp"
+                    android:textColor="#52BAFF"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <ImageView
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_spanner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="55dp" />
 
-            android:background="#00000000"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_document"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteY="317dp" />
+            </RelativeLayout>
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="121dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="Documentos"
-            android:textStyle="bold" />
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnOrderPreserved="false"
+                android:alignmentMode="alignMargins"
+                android:rowCount="3"
+                android:columnCount="2">
 
-        <ImageButton
-            android:id="@+id/btn_equi"
-            android:layout_width="156dp"
-            android:layout_height="155dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center"
-            android:background="#00000000"
-            android:paddingTop="20dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_equip"
-            app:layout_constraintBottom_toTopOf="@+id/imageButton5"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="MissingConstraints" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/addruta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    app:cardElevation="6dp"
+                    app:cardCornerRadius="12dp"
+                    android:layout_margin="12dp"
+                    >
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="124dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="Equipos"
-            android:textStyle="bold" />
-    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:padding="16dp"
+                        android:orientation="vertical"
+                        >
+                        <ImageView
+                            android:src="@mipmap/ic_ruta"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"/>
 
+                        <TextView
+                            android:layout_marginTop="12dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Crear Ruta"
+                            android:textSize="16dp"
+                            android:textColor="#6f6f6f"/>
+                    </LinearLayout>
 
-    </ScrollView>
-    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/addDriver"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    app:cardElevation="6dp"
+                    app:cardCornerRadius="12dp"
+                    android:layout_margin="12dp"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:padding="16dp"
+                        android:orientation="vertical"
+                        >
+                        <ImageView
+                            android:src="@mipmap/ic_driver"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"/>
+
+                        <TextView
+                            android:layout_marginTop="12dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Conductores"
+                            android:textSize="16dp"
+                            android:textColor="#6f6f6f"/>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/addTruck"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    app:cardElevation="6dp"
+                    app:cardCornerRadius="12dp"
+                    android:layout_margin="12dp"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:padding="16dp"
+                        android:orientation="vertical"
+                        >
+                        <ImageView
+                            android:src="@mipmap/ic_truck"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"/>
+
+                        <TextView
+                            android:layout_marginTop="12dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Vehiculos"
+                            android:textSize="16dp"
+                            android:textColor="#6f6f6f"/>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/addReport"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_rowWeight="1"
+                    app:cardElevation="6dp"
+                    app:cardCornerRadius="12dp"
+                    android:layout_margin="12dp"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:padding="16dp"
+                        android:orientation="vertical"
+                        >
+                        <ImageView
+                            android:src="@mipmap/ic_report"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"/>
+
+                        <TextView
+                            android:layout_marginTop="12dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Reporte"
+                            android:textSize="16dp"
+                            android:textColor="#6f6f6f"/>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+            </GridLayout>
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

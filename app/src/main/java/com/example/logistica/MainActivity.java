@@ -111,8 +111,15 @@ public class MainActivity extends AppCompatActivity {
       loginButton.registerCallback(callbackManager, callback);
 
         if (SharedPrefManager.getInstance(this).isLoggedIn()) {
+            User user = SharedPrefManager.getInstance(this).getUser();
+            if(user.getRol()== 1){
+                finish();
+                startActivity(new Intent(this, Administrador.class));
+            }
+            else{
             finish();
-            startActivity(new Intent(this, Administrador.class));
+            startActivity(new Intent(this, Despachador.class));
+            }
         }
 
         progressBar = findViewById(R.id.progressBar);
@@ -231,15 +238,20 @@ public class MainActivity extends AppCompatActivity {
                                         userJson.getString("email")
                                 );
 
-                                //storing the user in shared preferences
-                                SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
-                                //starting the profile activity
-                                finish();
+
                                 if(user.getRol()== 1){
-                                Intent intent = new Intent(MainActivity.this, Administrador.class);
-                                startActivity(intent);
+                                    //storing the user in shared preferences
+                                    SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
+                                    //starting the profile activity
+                                    finish();
+                                    Intent intent = new Intent(MainActivity.this, Administrador.class);
+                                    startActivity(intent);
                                 }
                                 else{
+                                    //storing the user in shared preferences
+                                    SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
+                                    //starting the profile activity
+                                    finish();
                                     Intent intent = new Intent(MainActivity.this, Despachador.class);
                                     startActivity(intent);
                                 }

@@ -1,14 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.despachador.Despachador">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.despachador.Despachador"
+    android:background="@drawable/bg">
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+             <RelativeLayout
+                 android:layout_marginTop="32dp"
+                 android:layout_marginRight="20dp"
+                 android:layout_marginLeft="20dp"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 >
+            <TextView
+                android:id="@+id/txtdashboard"
+                android:text="DILOG"
+                android:textSize="12sp"
+                android:fontFamily="@font/moonlightf"
+                android:textColor="#fff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+                 <TextView
+                     android:layout_marginTop="6dp"
+                     android:layout_below="@id/txtdashboard"
+                     android:text="4 Item"
+                     android:textSize="14sp"
+                     android:textColor="#52BAFF"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content" />
+                 <ImageView
+                     android:layout_alignParentRight="true"
+                     android:src="@mipmap/ic_spanner"
+                     android:layout_width="wrap_content"
+                     android:layout_height="55dp" />
 
-</FrameLayout>
+             </RelativeLayout>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnOrderPreserved="false"
+                android:alignmentMode="alignMargins"
+                android:rowCount="3"
+                android:columnCount="2">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/addruta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                app:cardElevation="6dp"
+                app:cardCornerRadius="12dp"
+                android:layout_margin="12dp"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:orientation="vertical"
+                    >
+                    <ImageView
+                        android:src="@mipmap/ic_ruta"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"/>
+
+                    <TextView
+                        android:layout_marginTop="12dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Crear Ruta"
+                        android:textSize="16dp"
+                        android:textColor="#6f6f6f"/>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+             </GridLayout>
+        </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
