@@ -9,12 +9,20 @@
             android:icon="@drawable/ic_home_black_24dp"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_insert_drive_file_black_24dp"
-            android:title="@string/menu_documentos" />
+            android:id="@+id/nav_ruta"
+            android:icon="@drawable/ic_map_black_24dp"
+            android:title="@string/menu_ruta" />
+         <item
+            android:id="@+id/nav_driver"
+            android:icon="@drawable/ic_person_black_24dp"
+            android:title="@string/menu_driver" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_computer_black_24dp"
-            android:title="@string/menu_equipos" />
+            android:id="@+id/nav_addviaje"
+            android:icon="@drawable/ic_drive_eta_black_24dp"
+            android:title="@string/menu_viaje" />
+        <item
+            android:id="@+id/nav_reporte"
+            android:icon="@drawable/ic_insert_drive_file_black_24dp"
+            android:title="@string/menu_reporte" />
     </group>
 </menu>

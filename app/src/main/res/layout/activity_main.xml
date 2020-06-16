@@ -98,7 +98,7 @@
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-            android:inputType="text"
+            android:inputType="textPassword"
             android:hint="Password"
             android:background="#55000000"
             android:padding="16dp"

@@ -9,8 +9,10 @@
     <string name="action_settings">Cerrar Sesión</string>
 
     <string name="menu_home">Inicio</string>
-    <string name="menu_documentos">Documentos</string>
-    <string name="menu_equipos">Equipos</string>
+    <string name="menu_ruta">Ruta</string>
+    <string name="menu_viaje">Viaje</string>
+    <string name="menu_reporte">Reporte</string>
+    <string name="menu_driver">Conductores</string>
 
     <string name="home_second">Home Second</string>
     <string name="inventario">Inventario</string>
@@ -22,7 +24,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="hint_fecha">Fecha Ingreso</string>
     <string name="hint_Compra">Fecha Compra</string>
-    <string name="hint_autores">Autor/Autores</string>
+    <string name="hint_ruta">Nombre de Ruta</string>
     <string name="hint_modelo">Modelo</string>
     <string name="hint_Ejemplo">Ejemplo</string>
     <string name="hint_tema">Tema</string>
@@ -44,8 +46,10 @@
     <string name="buscar_docuemnto">Buscar Docuemnto</string>
     <string name="ingrese_el_nombre_o_el_isbn_del_documento">Ingrese el nombre o el ISBN del documento</string>
     <string name="title_activity_despachador">Despachador</string>
-    <string name="menu_gallery">Gallery</string>
+    <string name="menu_gallery">Ver Viajes</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="facebook_app_id">2888656171242982</string>
     <string name="fb_login_protocol_scheme">fb2888656171242982</string>
+    <string name="title_activity_add_rutas">Map</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

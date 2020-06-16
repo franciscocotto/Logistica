@@ -6,14 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.logistica.Administrador;
 import com.example.logistica.R;
-import com.example.logistica.ui.documentos.DocumentosFragment;
-import com.example.logistica.ui.equipos.EquiposFragment;
+import com.example.logistica.ui.ruta.RutaFragment;
 
 public class HomeFragment extends Fragment {
 
@@ -28,20 +26,20 @@ public class HomeFragment extends Fragment {
 
 
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
-     //   CardView ruta = (CardView) view.findViewById(R.id.viewruta);
+     ImageButton ruta = (ImageButton) view.findViewById(R.id.addruta);
         //open fragment documentos
-     /*   ruta.setOnClickListener(new View.OnClickListener() {
+        ruta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                DocumentosFragment DocumentosFragment = new DocumentosFragment();
+                RutaFragment rutaFragment = new RutaFragment();
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.nav_host_fragment, new DocumentosFragment());
+                fr.replace(R.id.nav_host_fragment, new RutaFragment());
                 fr.commit();
-                ((Administrador) getActivity()).getSupportActionBar().setTitle("Documentos");
+                ((Administrador) getActivity()).getSupportActionBar().setTitle("Rutas");
 
             }
-        });*/
+        });
 
         return view;
     }

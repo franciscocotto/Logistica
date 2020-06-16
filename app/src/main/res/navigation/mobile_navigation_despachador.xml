@@ -14,14 +14,9 @@
 
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.logistica.ui.documentos.DocumentosFragment"
-        android:label="@string/menu_documentos"
-        tools:layout="@layout/fragment_documentos" />
+        android:id="@+id/nav_viaje"
+        android:name="com.example.logistica.ui.viajes.ViajeFragment"
+        android:label="@string/menu_viaje"
+        tools:layout="@layout/fragment_viaje" />
 
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.logistica.ui.equipos.EquiposFragment"
-        android:label="@string/menu_equipos"
-        tools:layout="@layout/fragment_equipos" />
 </navigation>

@@ -8,9 +8,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@drawable/bg2"
-    tools:context="com.example.logistica.ui.home.HomeFragment">
-
+    tools:context="com.example.logistica.ui.ruta.RutaFragment"
+    android:background="@drawable/bg2">
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,36 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <RelativeLayout
-                android:layout_marginTop="32dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-                <TextView
-                    android:id="@+id/txtdashboard"
-                    android:text="DILOG"
-                    android:textSize="12sp"
-                    android:fontFamily="@font/moonlightf"
-                    android:textColor="#000"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:layout_marginTop="6dp"
-                    android:layout_below="@id/txtdashboard"
-                    android:text="Distribución y Logística"
-                    android:textSize="14sp"
-                    android:textColor="#030303"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <ImageView
-                    android:layout_alignParentRight="true"
-                    android:src="@mipmap/ic_spanner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="55dp" />
-
-            </RelativeLayout>
 
             <GridLayout
                 android:layout_width="match_parent"
@@ -56,7 +25,7 @@
                 android:columnOrderPreserved="false"
                 android:alignmentMode="alignMargins"
                 android:rowCount="3"
-                android:columnCount="2">
+                android:columnCount="1">
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
@@ -76,10 +45,10 @@
                         android:orientation="vertical"
                         >
                         <ImageButton
-                            android:id="@+id/addruta"
+                            android:id="@+id/agregarRuta"
                             android:background="#00000000"
                             android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_ruta"
+                            android:src="@mipmap/ic_agregar"
                             android:layout_width="100dp"
                             android:layout_height="100dp"/>
 
@@ -87,14 +56,13 @@
                             android:layout_marginTop="12dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Rutas"
+                            android:text="Agregar Rutas"
                             android:textSize="16dp"
                             android:textColor="#6f6f6f"/>
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/addDriver"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
@@ -112,9 +80,10 @@
                         android:orientation="vertical"
                         >
                         <ImageButton
+                            android:id="@+id/editarRuta"
                             android:background="#00000000"
                             android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_driver"
+                            android:src="@mipmap/ic_editar"
                             android:layout_width="100dp"
                             android:layout_height="100dp"/>
 
@@ -122,14 +91,13 @@
                             android:layout_marginTop="12dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Conductores"
+                            android:text="Editar Rutas"
                             android:textSize="16dp"
                             android:textColor="#6f6f6f"/>
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/addTruck"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
@@ -147,9 +115,10 @@
                         android:orientation="vertical"
                         >
                         <ImageButton
+                            android:id="@+id/eliminarRuta"
                             android:background="#00000000"
                             android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_truck"
+                            android:src="@mipmap/ic_eliminar"
                             android:layout_width="100dp"
                             android:layout_height="100dp"/>
 
@@ -157,47 +126,13 @@
                             android:layout_marginTop="12dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Viajes"
+                            android:text="Eliminar Rutas"
                             android:textSize="16dp"
                             android:textColor="#6f6f6f"/>
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/addReport"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    app:cardElevation="6dp"
-                    app:cardCornerRadius="12dp"
-                    android:layout_margin="12dp"
-                    >
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:padding="16dp"
-                        android:orientation="vertical"
-                        >
-                        <ImageButton
-                            android:background="#00000000"
-                            android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_report"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"/>
-
-                        <TextView
-                            android:layout_marginTop="12dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Reporte"
-                            android:textSize="16dp"
-                            android:textColor="#6f6f6f"/>
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
             </GridLayout>
         </LinearLayout>
 
