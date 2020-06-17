@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
         final String username = etName.getText().toString().trim();
         final String password = etPassword.getText().toString().trim();
 
-        String url = "https://inventario-pdm115.000webhostapp.com/ws_ca06025/Logistica/login.php";
+        String url = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_ca06025/login.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
