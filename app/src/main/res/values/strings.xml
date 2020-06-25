@@ -25,6 +25,8 @@
     <string name="hint_fecha">Fecha Ingreso</string>
     <string name="hint_Compra">Fecha Compra</string>
     <string name="hint_ruta">Nombre de Ruta</string>
+    <string name="hint_origen">Origen</string>
+    <string name="hint_destino">Destino</string>
     <string name="hint_modelo">Modelo</string>
     <string name="hint_Ejemplo">Ejemplo</string>
     <string name="hint_tema">Tema</string>

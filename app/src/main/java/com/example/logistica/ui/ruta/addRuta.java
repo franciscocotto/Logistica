@@ -3,9 +3,12 @@ package com.example.logistica.ui.ruta;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
@@ -60,21 +63,31 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class addRuta extends Fragment {
-    private GoogleMap mMap;
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.client.ClientProtocolException;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.methods.HttpPost;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 
-    EditText txtLatInicio,txtLongInicio,txtLatFinal,txtLongFinal, addnameRuta;
+public class addRuta extends Fragment {
+
+    private GoogleMap mMap;
+    ProgressDialog pDialog;
+    EditText txtLatInicio,txtLongInicio,txtLatFinal,txtLongFinal, addnameRuta, txtorigen, txtdestino;
 
     JsonObjectRequest jsonObjectRequest;
     RequestQueue request;
 
     public addRuta() {
-        // Required empty public constructor
+
     }
     String url_guardar = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_ca06025/PostRuta.php";
     ProgressBar progressBar;
@@ -83,24 +96,45 @@ public class addRuta extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_ruta, container, false);
         addnameRuta = (EditText) view.findViewById(R.id.addnameRuta);
-        txtLatInicio= (EditText) view.findViewById(R.id.txtLatIni);
-        txtLongInicio= (EditText) view.findViewById(R.id.txtLongIni);
-        txtLatFinal= (EditText) view.findViewById(R.id.txtLatFin);
-        txtLongFinal= (EditText) view.findViewById(R.id.txtLongFin);
+        txtorigen= (EditText) view.findViewById(R.id.origen);
+        txtdestino= (EditText) view.findViewById(R.id.destino);
         Button get = (Button) view.findViewById(R.id.btnDocumento);
-        Button addMappas = (Button) view.findViewById(R.id.addMappas);
+        Button addMapas = (Button) view.findViewById(R.id.addMappas);
         Button clean = (Button) view.findViewById(R.id.clean);
-
         clean.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addnameRuta.setText("");
-                txtLatInicio.setText("");
-                txtLongInicio.setText("");
-                txtLatFinal.setText("");
-                txtLongFinal.setText("");
+                txtorigen.setText("");
+                txtdestino.setText("");
+
             }
         });
+
+        addMapas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String origen = txtorigen.getText().toString().trim();
+                final String destino = txtdestino.getText().toString().trim();
+                if (TextUtils.isEmpty(origen)) {
+                    txtLatInicio.setError("Favor Ingresar Origen de la Ruta");
+                    txtLatInicio.requestFocus();
+                    return;
+                }
+                if (TextUtils.isEmpty(destino)) {
+                    txtLatInicio.setError("Favor Ingresar Destino de la Ruta");
+                    txtLatInicio.requestFocus();
+                    return;
+                }
+                pDialog = new ProgressDialog(getContext());
+                pDialog.setMessage("Cargando Coordenadas");
+                pDialog.setCancelable(false);
+                pDialog.show();
+                goToLocationFromAddress(origen, destino);
+
+            }
+        });
+
 
         get.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,52 +178,7 @@ public class addRuta extends Fragment {
             }
 
         });
-        addMappas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String LatInicio = txtLatInicio.getText().toString().trim();
-                final String LongInicio = txtLongInicio.getText().toString().trim();
-                final String LatFinal = txtLatFinal.getText().toString().trim();
-                final String LongFinal = txtLongFinal.getText().toString().trim();
-                if (TextUtils.isEmpty(LatInicio)) {
-                    txtLatInicio.setError("Favor Ingresar Latitud Inicial");
-                    txtLatInicio.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(LatInicio)) {
-                    txtLatInicio.setError("Favor Ingresar Latitud Inicial");
-                    txtLatInicio.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(LongInicio)) {
-                    txtLongInicio.setError("Favor Ingresar Longitud Inicial");
-                    txtLongInicio.requestFocus();
-                    return;
-                }
 
-                if (TextUtils.isEmpty(LatFinal)) {
-                    txtLatFinal.setError("Favor Ingresar Latitud Final");
-                    txtLatFinal.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(LongFinal)) {
-                    txtLongFinal.setError("Favor Ingresar Longitud Final");
-                    txtLongFinal.requestFocus();
-                    return;
-                }
-
-
-                Utilidades.coordenadas.setLatitudInicial(Double.valueOf(txtLatInicio.getText().toString()));
-                Utilidades.coordenadas.setLongitudInicial(Double.valueOf(txtLongInicio.getText().toString()));
-                Utilidades.coordenadas.setLatitudFinal(Double.valueOf(txtLatFinal.getText().toString()));
-                Utilidades.coordenadas.setLongitudFinal(Double.valueOf(txtLongFinal.getText().toString()));
-
-                webServiceObtenerRuta(txtLatInicio.getText().toString(),txtLongInicio.getText().toString(),
-                        txtLatFinal.getText().toString(),txtLongFinal.getText().toString());
-
-            }
-
-        });
         request= Volley.newRequestQueue(getActivity().getApplicationContext());
         return view;
     }
@@ -219,7 +208,67 @@ public class addRuta extends Fragment {
         dialog.show();
     }
 
+    public void goToLocationFromAddress(String strAddress, String strAddress2) {
+        //Create coder with Activity context - this
+        Geocoder coder = new Geocoder(getActivity().getApplicationContext());
+        List<Address> address;
+        List<Address> address2;
 
+        try {
+            //Get latLng from String
+            address = coder.getFromLocationName(strAddress, 5);
+            address2 = coder.getFromLocationName(strAddress2, 5);
+
+            //check for null
+            if (address != null && address2 != null) {
+
+                //Lets take first possibility from the all possibilities.
+                try {
+                    Address origen = address.get(0);
+                    Address destino = address2.get(0);
+                    LatLng OrigenRuta = new LatLng(origen.getLatitude(), origen.getLongitude());
+                    LatLng DestinoRuta = new LatLng(destino.getLatitude(), destino.getLongitude());
+                    //capturando resultados en variables separadas
+                    double latitudInicial = OrigenRuta.latitude;
+                    double longitudInicial = OrigenRuta.longitude;
+                    double latitudFinal = DestinoRuta.latitude;
+                    double longitudFinal = DestinoRuta.longitude;
+
+
+                    //convirtiendo a string resultados double
+                    String LatInicial = new Double(latitudInicial).toString();
+                    String LongInicial = new Double(longitudInicial).toString();
+                    String LatFinal = new Double(latitudFinal).toString();
+                    String LongFinal = new Double(longitudFinal).toString();
+
+
+                    Utilidades.coordenadas.setLatitudInicial(Double.valueOf(LatInicial));
+                    Utilidades.coordenadas.setLongitudInicial(Double.valueOf(LongInicial));
+                    Utilidades.coordenadas.setLatitudFinal(Double.valueOf(LatFinal));
+                    Utilidades.coordenadas.setLongitudFinal(Double.valueOf(LongFinal));
+
+                    webServiceObtenerRuta(LatInicial,LongInicial,
+                            LatFinal,LongFinal);
+
+
+                    //llenando campos de coordenadas
+                /*    txtLatInicio.setText(LatInicial);
+                    txtLongInicio.setText(LongInicial);
+                    txtLatFinal.setText(LatFinal);
+                    txtLongFinal.setText(LongFinal);*/
+                    //Animate and Zoom on that map location
+                  //    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                  //  mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                } catch (IndexOutOfBoundsException er) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Direcciones no Validas", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     private void webServiceObtenerRuta(String latitudInicial, String longitudInicial, String latitudFinal, String longitudFinal) {
@@ -266,6 +315,8 @@ public class addRuta extends Fragment {
                             }
                             Utilidades.routes.add(path);
                             if(path != null){
+                                if (pDialog.isShowing())
+                                    pDialog.dismiss();
                                 Intent miIntent=new Intent(getActivity(), MapsActivity.class);
                                 startActivity(miIntent);
                                 return;
