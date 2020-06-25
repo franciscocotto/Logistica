@@ -2,18 +2,25 @@ package com.example.logistica;
 
 public class Ruta {
     private int id_ruta;
-    private String nameruta;
-    private Double latitudInicial;
-    private Double longitudInicial;
-    private Double latitudFinal;
-    private Double longitudFinal;
+    private String nameruta, origen, destino;
+    private String latitudInicial;
+    private String longitudInicial;
+    private String latitudFinal;
+    private String longitudFinal;
 
     public Ruta() {
     }
 
-    public Ruta(int id_ruta, String nameruta, Double latitudInicial, Double longitudInicial, Double latitudFinal, Double longitudFinal) {
-        this.id_ruta = id_ruta;
+    public Ruta(String nameruta,
+                String origen,
+                String destino,
+                String latitudInicial,
+                String longitudInicial,
+                String latitudFinal,
+                String longitudFinal) {
         this.nameruta = nameruta;
+        this.origen = origen;
+        this.destino = destino;
         this.latitudInicial = latitudInicial;
         this.longitudInicial = longitudInicial;
         this.latitudFinal = latitudFinal;
@@ -36,35 +43,51 @@ public class Ruta {
         this.nameruta = nameruta;
     }
 
-    public Double getLatitudInicial() {
+    public String getOrigen() {
+        return origen;
+    }
+
+    public void setOrigen(String origen) {
+        this.origen = origen;
+    }
+
+    public String getDestino() {
+        return destino;
+    }
+
+    public void setDestino(String destino) {
+        this.destino = destino;
+    }
+
+    public String getLatitudInicial() {
         return latitudInicial;
     }
 
-    public void setLatitudInicial(Double latitudInicial) {
+    public void setLatitudInicial(String latitudInicial) {
         this.latitudInicial = latitudInicial;
     }
 
-    public Double getLongitudInicial() {
+    public String getLongitudInicial() {
         return longitudInicial;
     }
 
-    public void setLongitudInicial(Double longitudInicial) {
+    public void setLongitudInicial(String longitudInicial) {
         this.longitudInicial = longitudInicial;
     }
 
-    public Double getLatitudFinal() {
+    public String getLatitudFinal() {
         return latitudFinal;
     }
 
-    public void setLatitudFinal(Double latitudFinal) {
+    public void setLatitudFinal(String latitudFinal) {
         this.latitudFinal = latitudFinal;
     }
 
-    public Double getLongitudFinal() {
+    public String getLongitudFinal() {
         return longitudFinal;
     }
 
-    public void setLongitudFinal(Double longitudFinal) {
+    public void setLongitudFinal(String longitudFinal) {
         this.longitudFinal = longitudFinal;
     }
 }

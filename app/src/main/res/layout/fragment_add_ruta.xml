@@ -86,24 +86,24 @@
             android:id="@+id/clean"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Limpiar"
+            android:text="@string/hint_limpiar"
             android:background="#c3c3c3"
             android:textColor="@android:color/white"/>
             <Button
                 android:id="@+id/addMappas"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Vista Previa"
+                android:text="@string/hint_previa"
                 android:background="#363533"
                 android:layout_marginTop="10dp"
                 android:textColor="@android:color/white"/>
     <Button
-        android:id="@+id/btnDocumento"
+        android:id="@+id/btnRegresar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Guardar Ruta"
+        android:text="@string/hint_regresar"
         android:background="@drawable/gradient_1"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="60dp"
         android:textColor="@android:color/white"/>
 
 

@@ -26,7 +26,7 @@ public class HomeFragment extends Fragment {
 
 
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
-     ImageButton ruta = (ImageButton) view.findViewById(R.id.addruta);
+       ImageButton ruta = (ImageButton) view.findViewById(R.id.addruta);
         //open fragment documentos
         ruta.setOnClickListener(new View.OnClickListener() {
             @Override

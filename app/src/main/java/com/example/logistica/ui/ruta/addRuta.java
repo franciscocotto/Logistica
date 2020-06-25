@@ -40,6 +40,7 @@ import com.example.logistica.Despachador;
 import com.example.logistica.MainActivity;
 import com.example.logistica.MapsActivity;
 import com.example.logistica.R;
+import com.example.logistica.Ruta;
 import com.example.logistica.SharedPrefManager;
 import com.example.logistica.User;
 import com.example.logistica.Utilidades;
@@ -72,6 +73,7 @@ import java.util.Map;
 
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.NameValuePair;
 import cz.msebera.android.httpclient.client.ClientProtocolException;
 import cz.msebera.android.httpclient.client.HttpClient;
 import cz.msebera.android.httpclient.client.methods.HttpPost;
@@ -82,14 +84,13 @@ public class addRuta extends Fragment {
     private GoogleMap mMap;
     ProgressDialog pDialog;
     EditText txtLatInicio,txtLongInicio,txtLatFinal,txtLongFinal, addnameRuta, txtorigen, txtdestino;
-
+    List<NameValuePair> lista;
     JsonObjectRequest jsonObjectRequest;
     RequestQueue request;
 
     public addRuta() {
 
     }
-    String url_guardar = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_ca06025/PostRuta.php";
     ProgressBar progressBar;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,7 +99,7 @@ public class addRuta extends Fragment {
         addnameRuta = (EditText) view.findViewById(R.id.addnameRuta);
         txtorigen= (EditText) view.findViewById(R.id.origen);
         txtdestino= (EditText) view.findViewById(R.id.destino);
-        Button get = (Button) view.findViewById(R.id.btnDocumento);
+        Button regresar = (Button) view.findViewById(R.id.btnRegresar);
         Button addMapas = (Button) view.findViewById(R.id.addMappas);
         Button clean = (Button) view.findViewById(R.id.clean);
         clean.setOnClickListener(new View.OnClickListener() {
@@ -114,16 +115,22 @@ public class addRuta extends Fragment {
         addMapas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final String nameruta = addnameRuta.getText().toString().trim();
                 final String origen = txtorigen.getText().toString().trim();
                 final String destino = txtdestino.getText().toString().trim();
+                if (TextUtils.isEmpty(nameruta)) {
+                    addnameRuta.setError("Favor Ingresar el Nombre de la Ruta");
+                    addnameRuta.requestFocus();
+                    return;
+                }
                 if (TextUtils.isEmpty(origen)) {
-                    txtLatInicio.setError("Favor Ingresar Origen de la Ruta");
-                    txtLatInicio.requestFocus();
+                    txtorigen.setError("Favor Ingresar Origen de la Ruta");
+                    txtorigen.requestFocus();
                     return;
                 }
                 if (TextUtils.isEmpty(destino)) {
-                    txtLatInicio.setError("Favor Ingresar Destino de la Ruta");
-                    txtLatInicio.requestFocus();
+                    txtdestino.setError("Favor Ingresar Destino de la Ruta");
+                    txtdestino.requestFocus();
                     return;
                 }
                 pDialog = new ProgressDialog(getContext());
@@ -135,77 +142,20 @@ public class addRuta extends Fragment {
             }
         });
 
-
-        get.setOnClickListener(new View.OnClickListener() {
+        regresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* txtLatInicio.setText("4.543986"); txtLongInicio.setText("-75.666736");
-                //Unicentro
-                txtLatFinal.setText("4.540026"); txtLongFinal.setText("-75.665479");*/
-                final String nameruta = addnameRuta.getText().toString().trim();
-                final String LatInicio = txtLatInicio.getText().toString().trim();
-                final String LongInicio = txtLongInicio.getText().toString().trim();
-                final String LatFinal = txtLatFinal.getText().toString().trim();
-                final String LongFinal = txtLongFinal.getText().toString().trim();
-                if (TextUtils.isEmpty(nameruta)) {
-                    addnameRuta.setError("Favor Ingresar Nombre de Ruta");
-                    addnameRuta.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(LatInicio)) {
-                    txtLatInicio.setError("Favor Ingresar Latitud Inicial");
-                    txtLatInicio.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(LongInicio)) {
-                    txtLongInicio.setError("Favor Ingresar Longitud Inicial");
-                    txtLongInicio.requestFocus();
-                    return;
-                }
 
-                if (TextUtils.isEmpty(LatFinal)) {
-                    txtLatFinal.setError("Favor Ingresar Latitud Final");
-                    txtLatFinal.requestFocus();
-                    return;
-                }
-                if (TextUtils.isEmpty(LongFinal)) {
-                    txtLongFinal.setError("Favor Ingresar Longitud Final");
-                    txtLongFinal.requestFocus();
-                    return;
-                }
-
-                EnviarForm();
+                RutaFragment rutaFragment = new RutaFragment();
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.nav_host_fragment, new RutaFragment());
+                fr.commit();
             }
-
         });
+
 
         request= Volley.newRequestQueue(getActivity().getApplicationContext());
         return view;
-    }
-
-    /**
-     *Alerta para guardado de datos
-     * */
-
-    public void EnviarForm(){
-        AlertDialog.Builder myBuild = new AlertDialog.Builder(getContext());
-        myBuild.setTitle("Mensaje");
-        myBuild.setMessage("¿Esta seguro de guardar esta ruta?");
-        myBuild.setIcon(R.drawable.ic_warning_black_24dp);
-        myBuild.setPositiveButton("Si", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-              GuardarRuta();
-            }
-        });
-        myBuild.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog dialog = myBuild.create();
-        dialog.show();
     }
 
     public void goToLocationFromAddress(String strAddress, String strAddress2) {
@@ -218,6 +168,7 @@ public class addRuta extends Fragment {
             //Get latLng from String
             address = coder.getFromLocationName(strAddress, 5);
             address2 = coder.getFromLocationName(strAddress2, 5);
+
 
             //check for null
             if (address != null && address2 != null) {
@@ -260,6 +211,8 @@ public class addRuta extends Fragment {
                   //    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                   //  mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
                 } catch (IndexOutOfBoundsException er) {
+                    if (pDialog.isShowing())
+                        pDialog.dismiss();
                     Toast.makeText(getActivity().getApplicationContext(), "Direcciones no Validas", Toast.LENGTH_SHORT).show();
                 }
 
@@ -271,7 +224,7 @@ public class addRuta extends Fragment {
     }
 
 
-    private void webServiceObtenerRuta(String latitudInicial, String longitudInicial, String latitudFinal, String longitudFinal) {
+    private void webServiceObtenerRuta(final String latitudInicial, final String longitudInicial, final String latitudFinal, final String longitudFinal) {
 
         String url="https://maps.googleapis.com/maps/api/directions/json?origin="+latitudInicial+","+longitudInicial
                 +"&destination="+latitudFinal+","+longitudFinal+"&key=AIzaSyCGSDxyyedIRTb3CEzPu1jN8mbvs7BmL2c";
@@ -315,9 +268,25 @@ public class addRuta extends Fragment {
                             }
                             Utilidades.routes.add(path);
                             if(path != null){
+
+                                final String nameruta = addnameRuta.getText().toString().trim();
+                                final String origen = txtorigen.getText().toString().trim();
+                                final String destino = txtdestino.getText().toString().trim();
+
+                               // Ruta ruta=new Ruta(nameruta, origen,destino,latitudInicial,longitudInicial,latitudFinal,longitudFinal);
+
+
+                                Intent miIntent=new Intent(getActivity().getBaseContext(), MapsActivity.class);
+                                miIntent.putExtra("nameruta", nameruta);
+                                miIntent.putExtra("origen", origen);
+                                miIntent.putExtra("destino", destino);
+                                miIntent.putExtra("latinicio", latitudInicial);
+                                miIntent.putExtra("longinicio", longitudInicial);
+                                miIntent.putExtra("latfinal", latitudFinal);
+                                miIntent.putExtra("longfinal", longitudFinal);
+
                                 if (pDialog.isShowing())
                                     pDialog.dismiss();
-                                Intent miIntent=new Intent(getActivity(), MapsActivity.class);
                                 startActivity(miIntent);
                                 return;
                             }
@@ -424,65 +393,6 @@ public class addRuta extends Fragment {
     }
 
 
-    private void GuardarRuta() {
-        final String nameruta = addnameRuta.getText().toString().trim();
-        final String LatInicio = txtLatInicio.getText().toString().trim();
-        final String LongInicio = txtLongInicio.getText().toString().trim();
-        final String LatFinal = txtLatFinal.getText().toString().trim();
-        final String LongFinal = txtLongFinal.getText().toString().trim();
-
-        RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url_guardar,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        try {
-                            //converting response to json object
-                            //JSONObject obj = new JSONObject(response);
-
-                            JSONObject obj = new JSONObject(response);
-
-                            //if no error in response
-                            if (!obj.getBoolean("error")) {
-
-                                Toast.makeText(getActivity(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-
-                            } else {
-                                addnameRuta.setText("");
-                                txtLatInicio.setText("");
-                                txtLongInicio.setText("");
-                                txtLatFinal.setText("");
-                                txtLongFinal.setText("");
-                                Toast.makeText(getActivity(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-               Toast.makeText(getActivity(), error.getMessage(), Toast.LENGTH_SHORT).show();
-
-            }
-        })
-        {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("nameruta", nameruta);
-                params.put("latinicio", LatInicio);
-                params.put("longinicio", LongInicio);
-                params.put("latfinal", LatFinal);
-                params.put("longfinal", LongFinal);
-                return params;
-            }
-        };
-
-        requestQueue.add(stringRequest);
-    }
 
 
 
