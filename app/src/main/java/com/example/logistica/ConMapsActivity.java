@@ -1,18 +1,21 @@
 package com.example.logistica;
 
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -21,8 +24,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.logistica.ui.ruta.ConsultaRutas;
 import com.example.logistica.ui.ruta.addRuta;
+import com.example.logistica.ui.ruta.editRuta;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -31,28 +34,33 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class ConMapsActivity extends FragmentActivity implements OnMapReadyCallback {
+
+    //Declaramos las variables para cada elemento que vamos a obtener desde nuestro fragment_con_documentos
+    EditText txtLatInicio,txtLongInicio,txtLatFinal,txtLongFinal, addnameRuta, txtorigen, txtdestino;
+    private int id_idi, id_cat;
+    Button btnEliminar, btnRegresar;
+    //Declaramos variables para el envío de datos al webService
+    ProgressBar progressBar;
+    ProgressDialog pDialog;
 
     private GoogleMap mMap;
-    ProgressDialog pDialog;
-    Button btnGuardar;
-    String url_guardar = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_ca06025/PostRuta.php";
 
-
+    Button btnEditar;
 
     Double latInicial,longInicial,latFinal,longFinal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.consulta_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -60,9 +68,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         Button regresar = (Button) findViewById(R.id.regresar);
-        btnGuardar = (Button) findViewById(R.id.btnSave);
+        btnEditar = (Button) findViewById(R.id.btnSave);
 
-        btnGuardar.setOnClickListener(new View.OnClickListener() {
+        btnEditar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 EnviarForm();
@@ -77,16 +85,71 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    public void cargarRutaConsultada(){
+        final String URLB = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_ca06025/ws_CargarDatosRuta.php";
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.DEPRECATED_GET_OR_POST, URLB, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                response = response.replace("][", ",");
+                if (response.length() > 0) {
+                    try {
+                        JSONArray bdoc = new JSONArray(response);
+                        Log.i("sizejson", "" + bdoc.length());
+
+                        ArrayList<Ruta> listB = new ArrayList<Ruta>();
+                        for (int i = 0; i < bdoc.length(); i += 9) {
+                            try {
+
+                                listB.add(new Ruta(
+                                        bdoc.getInt(i + 0),
+                                        bdoc.getInt(i + 1),
+                                        bdoc.getString(i + 2),
+                                        bdoc.getString(i + 3),
+                                        bdoc.getString(i + 4),
+                                        bdoc.getString(i + 5),
+                                        bdoc.getString(i + 6),
+                                        bdoc.getString(i + 7),
+                                        bdoc.getString(i+ 8)));
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                       EditarRuta(listB);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "No se encontraron coincidencias", Toast.LENGTH_LONG).show();
+                    if (pDialog.isShowing())
+                        pDialog.dismiss();
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> parametros = new HashMap<String, String>();
+                String busqueda = Ruta.getIdRuta();
+                parametros.put("campo", busqueda);
+                return parametros;
+            }
+        };
+        requestQueue.add(stringRequest);
+
+    }
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -155,12 +218,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void EnviarForm(){
         AlertDialog.Builder myBuild = new AlertDialog.Builder(this);
         myBuild.setTitle("Mensaje");
-        myBuild.setMessage("¿Esta seguro de guardar esta ruta?");
+        myBuild.setMessage("¿Esta seguro de Editar esta ruta?");
         myBuild.setIcon(R.drawable.ic_warning_black_24dp);
         myBuild.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                GuardarRuta();
+                cargarRutaConsultada();
             }
         });
         myBuild.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -173,78 +236,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         dialog.show();
     }
 
+    public void EditarRuta(ArrayList<Ruta> listB){
+        this.getSupportFragmentManager().beginTransaction()
+                .add(R.id.map_conta, new addRuta(), "editRuta").addToBackStack(null).commit();
 
-    private void GuardarRuta() {
-        pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Cargando Coordenadas");
-        pDialog.setCancelable(false);
-        pDialog.show();
-        Intent intent = getIntent();
+    //    Intent miIntent = new Intent(this, editRuta.class);
+     //   miIntent.putExtra("miLista", listB);
+/*
+        miIntent.putExtra("nameruta", listB );
+        miIntent.putExtra("origen", );
+        miIntent.putExtra("destino", ruta.getDestino());
+        miIntent.putExtra("latinicio", ruta.getLatitudInicial());
+        miIntent.putExtra("longinicio", ruta.getLongitudInicial());
+        miIntent.putExtra("latfinal", ruta.getLatitudFinal());
+        miIntent.putExtra("longfinal", ruta.getLongitudFinal());*/
 
-        final String nameruta = intent.getStringExtra("nameruta");
-        final String origen = intent.getStringExtra("origen");
-        final String destino = intent.getStringExtra("destino");
-        final String latinicio = intent.getStringExtra("latinicio");
-        final String longinicio = intent.getStringExtra("longinicio");
-        final String latfinal = intent.getStringExtra("latfinal");
-        final String longfinal = intent.getStringExtra("longfinal");
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url_guardar,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
+   /*     if (pDialog.isShowing())
+            pDialog.dismiss();*/
+       // startActivity(miIntent);
 
-                        try {
-                            //converting response to json object
-                            //JSONObject obj = new JSONObject(response);
-
-                            JSONObject obj = new JSONObject(response);
-
-                            //if no error in response
-                            if (!obj.getBoolean("error")) {
-                                if (pDialog.isShowing())
-                                    pDialog.dismiss();
-                                /*FragmentManager fm = getSupportFragmentManager();
-                                ConsultaRutas fragment = new ConsultaRutas();
-                                fm.beginTransaction().replace(R.id.container_maps,fragment).commit();*/
-                                Intent intent = new Intent(MapsActivity.this, Administrador.class);
-                                startActivity(intent);
-
-                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-
-                            } else {
-                                if (pDialog.isShowing())
-                                    pDialog.dismiss();
-
-                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-
-            }
-        })
-        {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("nameruta", nameruta);
-                params.put("origen", origen);
-                params.put("destino", destino);
-                params.put("latinicio", latinicio);
-                params.put("longinicio", longinicio);
-                params.put("latfinal", latfinal);
-                params.put("longfinal", longfinal);
-                return params;
-            }
-        };
-
-        requestQueue.add(stringRequest);
     }
+
+
 }

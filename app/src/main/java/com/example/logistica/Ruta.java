@@ -1,23 +1,27 @@
 package com.example.logistica;
 
 public class Ruta {
-    private int id_ruta;
+    private int id_ruta, id_estado;
     private String nameruta, origen, destino;
     private String latitudInicial;
     private String longitudInicial;
     private String latitudFinal;
     private String longitudFinal;
-
+    protected static String idRuta;
     public Ruta() {
     }
 
-    public Ruta(String nameruta,
+    public Ruta(int id_ruta,
+                int id_estado,
+                String nameruta,
                 String origen,
                 String destino,
                 String latitudInicial,
                 String longitudInicial,
                 String latitudFinal,
                 String longitudFinal) {
+        this.id_ruta = id_ruta;
+        this.id_estado = id_estado;
         this.nameruta = nameruta;
         this.origen = origen;
         this.destino = destino;
@@ -27,12 +31,28 @@ public class Ruta {
         this.longitudFinal = longitudFinal;
     }
 
+    public static String getIdRuta() {
+        return idRuta;
+    }
+
+    public static void setIdRuta(String idRuta) {
+        Ruta.idRuta = idRuta;
+    }
+
     public int getId_ruta() {
         return id_ruta;
     }
 
     public void setId_ruta(int id_ruta) {
         this.id_ruta = id_ruta;
+    }
+
+    public int getId_estado() {
+        return id_estado;
+    }
+
+    public void setId_estado(int id_estado) {
+        this.id_estado = id_estado;
     }
 
     public String getNameruta() {

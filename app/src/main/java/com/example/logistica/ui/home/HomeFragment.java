@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.logistica.Administrador;
 import com.example.logistica.R;
+import com.example.logistica.ui.ruta.ConsultaRutas;
 import com.example.logistica.ui.ruta.RutaFragment;
 
 public class HomeFragment extends Fragment {
@@ -32,9 +33,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                RutaFragment rutaFragment = new RutaFragment();
+                ConsultaRutas consultaRutas = new ConsultaRutas();
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.nav_host_fragment, new RutaFragment());
+                fr.replace(R.id.nav_host_fragment, new ConsultaRutas());
                 fr.commit();
                 ((Administrador) getActivity()).getSupportActionBar().setTitle("Rutas");
 

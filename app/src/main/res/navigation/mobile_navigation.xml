@@ -15,9 +15,9 @@
 
     <fragment
         android:id="@+id/nav_ruta"
-        android:name="com.example.logistica.ui.ruta.RutaFragment"
+        android:name="com.example.logistica.ui.ruta.ConsultaRutas"
         android:label="@string/menu_ruta"
-        tools:layout="@layout/fragment_ruta" />
+        tools:layout="@layout/fragment_consulta_rutas" />
 
     <fragment
         android:id="@+id/nav_driver"

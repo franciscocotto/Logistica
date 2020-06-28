@@ -33,6 +33,7 @@
     <string name="hint_limpiar">Limpiar</string>
     <string name="hint_previa">Ver Ruta</string>
     <string name="hint_save_ruta">Guardar Ruta</string>
+    <string name="hint_edit_ruta">Editar Ruta</string>
     <string name="hint_tema">Tema</string>
     <string name="hint_titulo">Titulo</string>
     <string name="hint_precio">Precio</string>
@@ -47,8 +48,11 @@
     <string name="hint_years">How Many Years</string>
     <string name="hint_emi">EMI ₹</string>
     <string name="hint_interest_total">Total Interest for Loan ₹</string>
-    <string name="buscar_documentos">Buscar Documentos</string>
-    <string name="ingrese_el_nombre_o_el_id_del_documento">Ingrese el nombre o el ID del documento</string>
+    <string name="rutas">Rutas Turisticas</string>
+    <string name="add_rutas">Nueva Ruta</string>
+    <string name="buscar_rutas">Rutas Disponibles</string>
+    <string name="hint_buscar">Búsqueda</string>
+    <string name="ingrese_el_nombre_o_el_id_de_ruta">Ingrese el nombre de la Ruta</string>
     <string name="buscar_docuemnto">Buscar Docuemnto</string>
     <string name="ingrese_el_nombre_o_el_isbn_del_documento">Ingrese el nombre o el ISBN del documento</string>
     <string name="title_activity_despachador">Despachador</string>
