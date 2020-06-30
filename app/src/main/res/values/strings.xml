@@ -56,6 +56,7 @@
     <string name="edit_rutas">Editar Ruta</string>
     <string name="buscar_rutas">Rutas Disponibles</string>
     <string name="hint_buscar">Búsqueda</string>
+    <string name="hint_voz">Usar Voz</string>
     <string name="ingrese_el_nombre_o_el_id_de_ruta">Ingrese el nombre de la Ruta</string>
     <string name="buscar_docuemnto">Buscar Docuemnto</string>
     <string name="ingrese_el_nombre_o_el_isbn_del_documento">Ingrese el nombre o el ISBN del documento</string>

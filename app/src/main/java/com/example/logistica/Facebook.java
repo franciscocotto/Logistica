@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,7 @@ import java.util.Map;
 
 public class Facebook extends AppCompatActivity {
 
+    private static final int REQUEST_CODE = 1 ;
     private ShareDialog shareDialog;
     private Button logout;
     JsonObjectRequest jsonObjectRequest;
@@ -103,7 +105,7 @@ public class Facebook extends AppCompatActivity {
         new Facebook.DownloadImage((ImageView)findViewById(R.id.profileImage)).execute(imageUrl);
 
         etBuscar = (EditText) findViewById(R.id.edtBuscar);
-        btnBuscar = (Button)findViewById(R.id.btnBuscar);
+      //  btnBuscar = (Button)findViewById(R.id.btnBuscar);
         lista = (ListView) findViewById(R.id.lvRutas);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         btnRegresar = (Button) findViewById(R.id.btnRegresarBusqueda);
@@ -112,6 +114,7 @@ public class Facebook extends AppCompatActivity {
         pDialog.setCancelable(false);
         pDialog.show();
         buscarRuta(" ", 1);
+/*
         btnBuscar.setOnClickListener(new  View.OnClickListener() {
 
             @Override
@@ -132,6 +135,7 @@ public class Facebook extends AppCompatActivity {
 
             }
         });
+*/
 
 
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -158,9 +162,52 @@ public class Facebook extends AppCompatActivity {
 
             }
         });
+        Button voz = (Button) findViewById(R.id.Audio);
+
+        voz.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String DIALOG_TEXT = "Speech recognition demo";
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, DIALOG_TEXT);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, REQUEST_CODE);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-SV");
+
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
 
     }
 
+    String resultSpeech = "";
+    @Override
+    protected void onActivityResult(int requestCode, int resultcode, Intent intent) {
+        super.onActivityResult(requestCode, resultcode, intent);
+        ArrayList<String> speech;
+        if (resultcode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE) {
+                speech = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                resultSpeech = speech.get(0);
+                etBuscar.setText(resultSpeech);
+                if(etBuscar.getText().toString().isEmpty()){
+                    EnviarForm();
+                }
+                else{
+                    pDialog.setMessage("Cargando Datos");
+                    pDialog.setCancelable(false);
+                    pDialog.show();
+                    String busqueda = etBuscar.getText().toString();
+                    buscarRuta(busqueda,2);
+                    if(lista.getCount()== 0){
+                        Toast.makeText(getApplication(), "Busqueda Finalizada", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+        }
+    }
 
     public void buscarRuta(final String busqueda, int accion){
         String URL = null;
