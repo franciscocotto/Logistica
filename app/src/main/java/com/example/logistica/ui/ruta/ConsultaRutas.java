@@ -365,6 +365,7 @@ public class ConsultaRutas extends Fragment {
                             }
                             Utilidades.routes.add(path);
                             if(path != null){
+                                Ruta.setFragmento(1);
                                Intent miIntent=new Intent(getActivity(), ConMapsActivity.class);
                                startActivity(miIntent);
                                 if (pDialog.isShowing())

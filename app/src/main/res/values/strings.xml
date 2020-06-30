@@ -33,6 +33,8 @@
     <string name="hint_limpiar">Limpiar</string>
     <string name="hint_previa">Ver Ruta</string>
     <string name="hint_save_ruta">Guardar Ruta</string>
+    <string name="hint_delete_ruta">Eliminar Ruta</string>
+    <string name="hint_save_new_ruta">Guardar Nueva Ruta</string>
     <string name="hint_edit_ruta">Editar Ruta</string>
     <string name="hint_tema">Tema</string>
     <string name="hint_titulo">Titulo</string>
@@ -50,6 +52,7 @@
     <string name="hint_interest_total">Total Interest for Loan ₹</string>
     <string name="rutas">Rutas Turisticas</string>
     <string name="add_rutas">Nueva Ruta</string>
+    <string name="edit_rutas">Editar Ruta</string>
     <string name="buscar_rutas">Rutas Disponibles</string>
     <string name="hint_buscar">Búsqueda</string>
     <string name="ingrese_el_nombre_o_el_id_de_ruta">Ingrese el nombre de la Ruta</string>

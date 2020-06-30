@@ -8,6 +8,9 @@ public class Ruta {
     private String latitudFinal;
     private String longitudFinal;
     protected static String idRuta;
+    protected static Integer fragmento;
+
+
     public Ruta() {
     }
 
@@ -110,4 +113,10 @@ public class Ruta {
     public void setLongitudFinal(String longitudFinal) {
         this.longitudFinal = longitudFinal;
     }
+
+    public static void setFragmento(int frag){ fragmento = frag;}
+    public static int getFragmento(){
+        return fragmento;
+    }
+
 }
