@@ -10,14 +10,14 @@ import androidx.fragment.app.Fragment;
 
 import com.example.logistica.R;
 
-public class ViajeFragment extends Fragment {
+public class IngresarViaje extends Fragment {
 
     private ViajeViewModel galleryViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_viaje, container, false);
+        View view = inflater.inflate(R.layout.fragment_ingresar_viaje, container, false);
 
         return view;
     }
