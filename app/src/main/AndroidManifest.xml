@@ -37,6 +37,9 @@
         <activity
             android:name=".ConMapsActivity"
             android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".ClienteMapsActivity"
+            android:label="@string/title_activity_maps" />
         <activity android:name=".Facebook" />
 
         <meta-data

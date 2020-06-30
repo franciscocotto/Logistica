@@ -54,8 +54,6 @@ public class ConMapsActivity extends FragmentActivity implements OnMapReadyCallb
 
     //Declaramos las variables para cada elemento que vamos a obtener desde nuestro fragment_con_documentos
     EditText  addnameRuta, txtorigen, txtdestino;
-    private int id_idi, id_cat;
-    Button btnEliminar, btnRegresar;
     //Declaramos variables para el envío de datos al webService
     ProgressBar progressBar;
     ProgressDialog pDialog;

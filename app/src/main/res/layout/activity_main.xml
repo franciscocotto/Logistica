@@ -41,7 +41,7 @@
                 android:layout_alignParentTop="true"
                 android:gravity="center"
                 android:layout_marginTop="30dp"
-                app:srcCompat="@mipmap/ic_spanner"
+                app:srcCompat="@mipmap/ic_ruta"
                 tools:ignore="MissingConstraints" />
 
             <TextView
@@ -54,7 +54,7 @@
                 android:fontFamily="@font/moonlightf"
                 android:gravity="center"
                 android:singleLine="true"
-                android:text="DILOG"
+                android:text="CHOTEAR"
                 android:textColor="#fff"
                 android:textSize="20sp"
                 tools:ignore="MissingConstraints" />

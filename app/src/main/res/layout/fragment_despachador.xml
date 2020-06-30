@@ -23,7 +23,7 @@
                  >
             <TextView
                 android:id="@+id/txtdashboard"
-                android:text="DILOG"
+                android:text="Chotear"
                 android:textSize="12sp"
                 android:fontFamily="@font/moonlightf"
                 android:textColor="#fff"
@@ -32,14 +32,14 @@
                  <TextView
                      android:layout_marginTop="6dp"
                      android:layout_below="@id/txtdashboard"
-                     android:text="Distribución y Logística"
+                     android:text="@string/hint_desc"
                      android:textSize="14sp"
                      android:textColor="#52BAFF"
                      android:layout_width="wrap_content"
                      android:layout_height="wrap_content" />
                  <ImageView
                      android:layout_alignParentRight="true"
-                     android:src="@mipmap/ic_spanner"
+                     android:src="@mipmap/ic_ruta"
                      android:layout_width="wrap_content"
                      android:layout_height="55dp" />
 
@@ -82,7 +82,7 @@
                         android:layout_marginTop="12dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ver Viajes"
+                        android:text="@string/menu_viaje"
                         android:textSize="16dp"
                         android:textColor="#6f6f6f"/>
                 </LinearLayout>

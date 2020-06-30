@@ -9,8 +9,8 @@
     <string name="action_settings">Cerrar Sesión</string>
 
     <string name="menu_home">Inicio</string>
-    <string name="menu_ruta">Ruta</string>
-    <string name="menu_viaje">Viaje</string>
+    <string name="menu_ruta">Rutas</string>
+    <string name="menu_viaje">Viajes</string>
     <string name="menu_reporte">Reporte</string>
     <string name="menu_driver">Conductores</string>
 
@@ -32,6 +32,7 @@
     <string name="hint_regresar">Regresar</string>
     <string name="hint_limpiar">Limpiar</string>
     <string name="hint_previa">Ver Ruta</string>
+    <string name="hint_desc">Las Mejores Experiencias</string>
     <string name="hint_save_ruta">Guardar Ruta</string>
     <string name="hint_delete_ruta">Eliminar Ruta</string>
     <string name="hint_save_new_ruta">Guardar Nueva Ruta</string>
