@@ -48,14 +48,7 @@
                         android:text="@string/rutas"
                         android:textColor="#000"
                         android:textSize="36sp" />
-                    <com.facebook.login.widget.LoginButton
-                        android:id="@+id/logout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="30dp"
-                        android:layout_marginBottom="30dp"
-                        tools:ignore="MissingConstraints" />
+
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -79,6 +72,14 @@
                             android:text=""
                             android:textSize="16dp"
                             android:textColor="#6f6f6f"/>
+                        <com.facebook.login.widget.LoginButton
+                            android:id="@+id/logout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="30dp"
+                            android:layout_marginBottom="30dp"
+                            tools:ignore="MissingConstraints" />
                     </LinearLayout>
 
                 </TableRow>

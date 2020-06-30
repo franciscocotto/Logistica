@@ -292,8 +292,7 @@ public class ConsultaRutas extends Fragment {
     public void EnviarForm(){
         AlertDialog.Builder myBuild = new AlertDialog.Builder(getContext());
         myBuild.setTitle("Mensaje");
-        myBuild.setMessage("No ha Seleccionado una Ruta en Especifico, ¿Desea mostrar todos las Rutas Disponibles" +
-                " de la EISI Disponibles?");
+        myBuild.setMessage("No ha Seleccionado una Ruta en Especifico, ¿Desea mostrar todos las Rutas Disponibles?");
         myBuild.setIcon(R.drawable.ic_error_outline_black_24dp);
         myBuild.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             @Override
