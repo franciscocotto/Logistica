@@ -13,6 +13,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,6 +116,25 @@ public class Facebook extends AppCompatActivity {
         pDialog.setCancelable(false);
         pDialog.show();
         buscarRuta(" ", 1);
+
+
+        etBuscar.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if(etBuscar.getText().toString().isEmpty()){
+                    buscarRuta(" ",1);
+                }
+
+
+            }
+        });
 /*
         btnBuscar.setOnClickListener(new  View.OnClickListener() {
 
@@ -192,10 +213,6 @@ public class Facebook extends AppCompatActivity {
                 speech = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 resultSpeech = speech.get(0);
                 etBuscar.setText(resultSpeech);
-                if(etBuscar.getText().toString().isEmpty()){
-                    EnviarForm();
-                }
-                else{
                     pDialog.setMessage("Cargando Datos");
                     pDialog.setCancelable(false);
                     pDialog.show();
@@ -204,7 +221,7 @@ public class Facebook extends AppCompatActivity {
                     if(lista.getCount()== 0){
                         Toast.makeText(getApplication(), "Busqueda Finalizada", Toast.LENGTH_LONG).show();
                     }
-                }
+
             }
         }
     }
