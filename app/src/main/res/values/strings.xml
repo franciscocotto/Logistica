@@ -70,5 +70,12 @@
     <string name="hint_addNameCon">Nombres</string>
     <string name="hint_addApeCon">Apellidos</string>
     <string name="hint_AddCon">Registrar</string>
-    <string name="hint_addLicTip">Ingrese numero de licencia</string>
+    <string name="hint_addNumLic">Ingrese numero de licencia</string>
+    <string name="hint_addTelCON">Número de contacto</string>
+    <string name="hint_addDuiCon">Número de DUI</string>
+    <string name="hint_addNitCon">Número de NIT</string>
+    <string name="hint_addTipoLic">Ingrese tipo de licencia</string>
+    <string name="my_image_description">Imagen</string>
+    <string name="hint_btnFoto">Foto</string>
+    <string name="ip">https://192.168.0.27</string>
 </resources>
