@@ -112,6 +112,7 @@
                         android:orientation="vertical"
                         >
                         <ImageButton
+                            android:id="@+id/btnConductor"
                             android:background="#00000000"
                             android:scaleType="centerCrop"
                             android:src="@mipmap/ic_driver"
@@ -147,6 +148,7 @@
                         android:orientation="vertical"
                         >
                         <ImageButton
+                            android:id="@+id/btnViajes"
                             android:background="#00000000"
                             android:scaleType="centerCrop"
                             android:src="@mipmap/ic_truck"
@@ -182,6 +184,7 @@
                         android:orientation="vertical"
                         >
                         <ImageButton
+                            android:id="@+id/btnReporte"
                             android:background="#00000000"
                             android:scaleType="centerCrop"
                             android:src="@mipmap/ic_report"

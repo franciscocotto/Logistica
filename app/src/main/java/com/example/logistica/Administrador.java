@@ -19,6 +19,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import static com.example.logistica.R.id.nav_driver;
+
 public class Administrador extends AppCompatActivity implements  View.OnClickListener{
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -43,7 +45,7 @@ public class Administrador extends AppCompatActivity implements  View.OnClickLis
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_ruta, R.id.nav_driver)
+                R.id.nav_home, R.id.nav_ruta, R.id.nav_driver, R.id.nav_viaje)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);

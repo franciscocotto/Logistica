@@ -21,7 +21,14 @@
 
     <fragment
         android:id="@+id/nav_driver"
-        android:name="com.example.logistica.ui.driver.DriverFragment"
+        android:name="com.example.logistica.ui.driver.ConsultaConductor"
         android:label="@string/menu_driver"
-        tools:layout="@layout/driver_fragment" />
+        tools:layout="@layout/fragment_consulta_conductor"/>
+
+    <fragment
+        android:id="@+id/nav_viaje"
+        android:name="com.example.logistica.ui.viajes.ConsultaViajes"
+        android:label="Viajes"
+        tools:layout="@layout/fragment_consulta_viajes"/>
+
 </navigation>

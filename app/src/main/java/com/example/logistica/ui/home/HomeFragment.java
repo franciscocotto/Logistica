@@ -11,8 +11,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.logistica.Administrador;
 import com.example.logistica.R;
+import com.example.logistica.ui.driver.ConsultaConductor;
 import com.example.logistica.ui.ruta.ConsultaRutas;
 import com.example.logistica.ui.ruta.RutaFragment;
+import com.example.logistica.ui.viajes.ConsultaViajes;
 
 public class HomeFragment extends Fragment {
 
@@ -27,7 +29,10 @@ public class HomeFragment extends Fragment {
 
 
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
-       ImageButton ruta = (ImageButton) view.findViewById(R.id.addruta);
+        ImageButton ruta = (ImageButton) view.findViewById(R.id.addruta);
+        ImageButton conductor = (ImageButton) view.findViewById(R.id.btnConductor);
+        ImageButton viaje = (ImageButton) view.findViewById(R.id.btnViajes);
+        ImageButton reporte = (ImageButton) view.findViewById(R.id.btnReporte);
         //open fragment documentos
         ruta.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,6 +44,28 @@ public class HomeFragment extends Fragment {
                 fr.commit();
                 ((Administrador) getActivity()).getSupportActionBar().setTitle("Rutas");
 
+            }
+        });
+
+        conductor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConsultaConductor consultaConductor = new ConsultaConductor();
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.nav_host_fragment, new ConsultaConductor());
+                fr.commit();
+                ((Administrador) getActivity()).getSupportActionBar().setTitle("Conductores");
+            }
+        });
+
+        viaje.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ConsultaViajes consultaViajes = new ConsultaViajes();
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.nav_host_fragment, new ConsultaViajes());
+                fr.commit();
+                ((Administrador) getActivity()).getSupportActionBar().setTitle("Viajes");
             }
         });
 
