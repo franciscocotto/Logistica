@@ -28,7 +28,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -40,11 +39,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
-import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -165,7 +161,7 @@ public class Facebook extends AppCompatActivity {
                 pDialog.setMessage("Cargando Coordenadas");
                 pDialog.setCancelable(false);
                 pDialog.show();
-                Ruta.setIdRuta(idruta[position]);
+                Rutas.setIdRuta(idruta[position]);
                 String LatInicial = latitudInicial[position];
                 String LongInicial = longitudInicial[position];
                 String LatFinal = latitudFinal[position];
@@ -251,11 +247,11 @@ public class Facebook extends AppCompatActivity {
                         JSONArray bdoc = new JSONArray(response);
                         Log.i("sizejson", "" + bdoc.length());
 
-                        ArrayList<Ruta> listB = new ArrayList<Ruta>();
+                        ArrayList<Rutas> listB = new ArrayList<Rutas>();
                         for (int i = 0; i < bdoc.length(); i += 9) {
                             try {
 
-                                listB.add(new Ruta(
+                                listB.add(new Rutas(
                                         bdoc.getInt(i + 0),
                                         bdoc.getInt(i + 1),
                                         bdoc.getString(i + 2),
@@ -310,7 +306,7 @@ public class Facebook extends AppCompatActivity {
         latitudFinal = new String[list.size()];
         longitudFinal = new String[list.size()];
         idruta = new String[list.size()];
-        ArrayList<Ruta> ruta = new ArrayList<Ruta>();
+        ArrayList<Rutas> ruta = new ArrayList<Rutas>();
         ruta = list;
         for (int i=0; i<list.size();i++){
             nameRuta[i] = ruta.get(i).getNameruta().toString();
@@ -357,7 +353,7 @@ public class Facebook extends AppCompatActivity {
     public void EnviarForm(){
         AlertDialog.Builder myBuild = new AlertDialog.Builder(this);
         myBuild.setTitle("Mensaje");
-        myBuild.setMessage("No ha Seleccionado una Ruta en Especifico, ¿Desea mostrar todos las Rutas Disponibles?");
+        myBuild.setMessage("No ha Seleccionado una Rutas en Especifico, ¿Desea mostrar todos las Rutas Disponibles?");
         myBuild.setIcon(R.drawable.ic_error_outline_black_24dp);
         myBuild.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             @Override

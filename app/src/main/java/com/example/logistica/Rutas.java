@@ -1,6 +1,6 @@
 package com.example.logistica;
 
-public class Ruta {
+public class Rutas {
     private int id_ruta, id_estado;
     private String nameruta, origen, destino;
     private String latitudInicial;
@@ -11,18 +11,18 @@ public class Ruta {
     protected static Integer fragmento;
 
 
-    public Ruta() {
+    public Rutas() {
     }
 
-    public Ruta(int id_ruta,
-                int id_estado,
-                String nameruta,
-                String origen,
-                String destino,
-                String latitudInicial,
-                String longitudInicial,
-                String latitudFinal,
-                String longitudFinal) {
+    public Rutas(int id_ruta,
+                 int id_estado,
+                 String nameruta,
+                 String origen,
+                 String destino,
+                 String latitudInicial,
+                 String longitudInicial,
+                 String latitudFinal,
+                 String longitudFinal) {
         this.id_ruta = id_ruta;
         this.id_estado = id_estado;
         this.nameruta = nameruta;
@@ -39,7 +39,7 @@ public class Ruta {
     }
 
     public static void setIdRuta(String idRuta) {
-        Ruta.idRuta = idRuta;
+        Rutas.idRuta = idRuta;
     }
 
     public int getId_ruta() {

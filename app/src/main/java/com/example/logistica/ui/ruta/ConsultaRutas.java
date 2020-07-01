@@ -32,9 +32,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.logistica.ConMapsActivity;
-import com.example.logistica.MapsActivity;
 import com.example.logistica.R;
-import com.example.logistica.Ruta;
+import com.example.logistica.Rutas;
 import com.example.logistica.Utilidades;
 import com.example.logistica.ui.home.HomeFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -129,7 +128,7 @@ public class ConsultaRutas extends Fragment {
                 pDialog.setMessage("Cargando Coordenadas");
                 pDialog.setCancelable(false);
                 pDialog.show();
-                Ruta.setIdRuta(idruta[position]);
+                Rutas.setIdRuta(idruta[position]);
                 String LatInicial = latitudInicial[position];
                 String LongInicial = longitudInicial[position];
                 String LatFinal = latitudFinal[position];
@@ -185,11 +184,11 @@ public class ConsultaRutas extends Fragment {
                             JSONArray bdoc = new JSONArray(response);
                             Log.i("sizejson", "" + bdoc.length());
 
-                            ArrayList<Ruta> listB = new ArrayList<Ruta>();
+                            ArrayList<Rutas> listB = new ArrayList<Rutas>();
                             for (int i = 0; i < bdoc.length(); i += 9) {
                                 try {
 
-                                    listB.add(new Ruta(
+                                    listB.add(new Rutas(
                                             bdoc.getInt(i + 0),
                                             bdoc.getInt(i + 1),
                                             bdoc.getString(i + 2),
@@ -245,7 +244,7 @@ public class ConsultaRutas extends Fragment {
             latitudFinal = new String[list.size()];
             longitudFinal = new String[list.size()];
             idruta = new String[list.size()];
-            ArrayList<Ruta> ruta = new ArrayList<Ruta>();
+            ArrayList<Rutas> ruta = new ArrayList<Rutas>();
             ruta = list;
             for (int i=0; i<list.size();i++){
                 nameRuta[i] = ruta.get(i).getNameruta().toString();
@@ -292,7 +291,7 @@ public class ConsultaRutas extends Fragment {
     public void EnviarForm(){
         AlertDialog.Builder myBuild = new AlertDialog.Builder(getContext());
         myBuild.setTitle("Mensaje");
-        myBuild.setMessage("No ha Seleccionado una Ruta en Especifico, ¿Desea mostrar todos las Rutas Disponibles?");
+        myBuild.setMessage("No ha Seleccionado una Rutas en Especifico, ¿Desea mostrar todos las Rutas Disponibles?");
         myBuild.setIcon(R.drawable.ic_error_outline_black_24dp);
         myBuild.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             @Override
@@ -364,7 +363,7 @@ public class ConsultaRutas extends Fragment {
                             }
                             Utilidades.routes.add(path);
                             if(path != null){
-                                Ruta.setFragmento(1);
+                                Rutas.setFragmento(1);
                                Intent miIntent=new Intent(getActivity(), ConMapsActivity.class);
                                startActivity(miIntent);
                                 if (pDialog.isShowing())

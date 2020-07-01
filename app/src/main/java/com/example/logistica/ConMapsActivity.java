@@ -1,7 +1,6 @@
 package com.example.logistica;
 
 import android.app.AlertDialog;
-import android.app.MediaRouteButton;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -18,9 +16,7 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -30,8 +26,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.logistica.ui.ruta.addRuta;
-import com.example.logistica.ui.ruta.editRuta;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -75,7 +69,7 @@ public class ConMapsActivity extends FragmentActivity implements OnMapReadyCallb
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        int i = Ruta.getFragmento();
+        int i = Rutas.getFragmento();
         addnameRuta = (EditText) findViewById(R.id.addnameRutaEdit);
         txtorigen= (EditText) findViewById(R.id.origenEdit);
         txtdestino= (EditText) findViewById(R.id.destinoEdit);
@@ -129,7 +123,7 @@ public class ConMapsActivity extends FragmentActivity implements OnMapReadyCallb
         origen = new String[list.size()];
         destino = new String[list.size()];
 
-        ArrayList<Ruta> ruta = new ArrayList<Ruta>();
+        ArrayList<Rutas> ruta = new ArrayList<Rutas>();
         ruta = list;
 
         for (int i=0; i<list.size();i++){
@@ -153,17 +147,17 @@ public class ConMapsActivity extends FragmentActivity implements OnMapReadyCallb
                 final String neworigen = txtorigen.getText().toString().trim();
                 final String newdestino = txtdestino.getText().toString().trim();
                 if (TextUtils.isEmpty(newnameruta)) {
-                    addnameRuta.setError("Favor Ingresar el Nombre de la Ruta");
+                    addnameRuta.setError("Favor Ingresar el Nombre de la Rutas");
                     addnameRuta.requestFocus();
                     return;
                 }
                 if (TextUtils.isEmpty(neworigen)) {
-                    txtorigen.setError("Favor Ingresar Origen de la Ruta");
+                    txtorigen.setError("Favor Ingresar Origen de la Rutas");
                     txtorigen.requestFocus();
                     return;
                 }
                 if (TextUtils.isEmpty(newdestino)) {
-                    txtdestino.setError("Favor Ingresar Destino de la Ruta");
+                    txtdestino.setError("Favor Ingresar Destino de la Rutas");
                     txtdestino.requestFocus();
                     return;
                 }
@@ -283,7 +277,7 @@ public class ConMapsActivity extends FragmentActivity implements OnMapReadyCallb
                             }
                             Utilidades.routes.add(path);
                             if(path != null){
-                                Ruta.setFragmento(2);
+                                Rutas.setFragmento(2);
 
                                 Intent miIntent=new Intent(getApplicationContext(), ConMapsActivity.class);
                                 miIntent.putExtra("id_ruta", id);
@@ -418,11 +412,11 @@ public class ConMapsActivity extends FragmentActivity implements OnMapReadyCallb
                         JSONArray bdoc = new JSONArray(response);
                         Log.i("sizejson", "" + bdoc.length());
 
-                        ArrayList<Ruta> listB = new ArrayList<Ruta>();
+                        ArrayList<Rutas> listB = new ArrayList<Rutas>();
                         for (int i = 0; i < bdoc.length(); i += 9) {
                             try {
 
-                                listB.add(new Ruta(
+                                listB.add(new Rutas(
                                         bdoc.getInt(i + 0),
                                         bdoc.getInt(i + 1),
                                         bdoc.getString(i + 2),
@@ -461,7 +455,7 @@ public class ConMapsActivity extends FragmentActivity implements OnMapReadyCallb
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parametros = new HashMap<String, String>();
-                String busqueda = Ruta.getIdRuta();
+                String busqueda = Rutas.getIdRuta();
                 parametros.put("campo", busqueda);
                 return parametros;
             }
@@ -689,7 +683,7 @@ public class ConMapsActivity extends FragmentActivity implements OnMapReadyCallb
     //Método que consume el servicio para eliminar
     public void EliminarRuta(final String id){
         pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Eliminando Ruta");
+        pDialog.setMessage("Eliminando Rutas");
         pDialog.setCancelable(false);
         pDialog.show();
         final String URL = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_ca06025/DeleteRuta.php";
@@ -701,7 +695,7 @@ public class ConMapsActivity extends FragmentActivity implements OnMapReadyCallb
                     pDialog.dismiss();
                 Intent intent = new Intent(ConMapsActivity.this, Administrador.class);
                 startActivity(intent);
-                Toast.makeText(getApplicationContext(), "Ruta Eliminada Satisfactoriamente", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Rutas Eliminada Satisfactoriamente", Toast.LENGTH_LONG).show();
                }
         }, new Response.ErrorListener() {
             @Override
