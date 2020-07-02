@@ -9,6 +9,9 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.speech.RecognizerIntent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +56,8 @@ public class ConsultaRutas extends Fragment {
     public ConsultaRutas() {
         // Required empty public constructor
     }
+    private static final int REQUEST_CODE = 1 ;
+    public static final int RESULT_OK = -1;
     JsonObjectRequest jsonObjectRequest;
     RequestQueue request;
     ProgressBar progressBar;
@@ -97,28 +102,26 @@ public class ConsultaRutas extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
         buscarRuta(" ", 1);
+        etBuscar.addTextChangedListener(new TextWatcher() {
 
-        btnBuscar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(etBuscar.getText().toString().isEmpty()){
-                    EnviarForm();
-                }
-                else{
-                    pDialog = new ProgressDialog(getContext());
-                    pDialog.setMessage("Buscando...");
-                    pDialog.setCancelable(false);
-                    pDialog.show();
-                    String busqueda = etBuscar.getText().toString();
-                    buscarRuta(busqueda,2);
-                    if(lista.getCount()== 0){
-                        Toast.makeText(getActivity().getApplicationContext(), "Busqueda Finalizada", Toast.LENGTH_LONG).show();
-                    }
-                }
+            public void afterTextChanged(Editable s) {
 
             }
-        });
 
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if(etBuscar.getText().toString().isEmpty()){
+                    buscarRuta(" ",1);
+                }else{
+                    String busqueda = etBuscar.getText().toString();
+                    buscarRuta(busqueda,2);
+                }
+            }
+        });
 
 
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -154,9 +157,47 @@ public class ConsultaRutas extends Fragment {
             }
         });
 
+      //  Button voz = (Button) view.findViewById(R.id.Audio);
 
+        btnBuscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String DIALOG_TEXT = "Speech recognition demo";
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, DIALOG_TEXT);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, REQUEST_CODE);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-SV");
+
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
 
         return view;
+    }
+    String resultSpeech = "";
+    @Override
+    public void onActivityResult(int requestCode, int resultcode, Intent intent) {
+        super.onActivityResult(requestCode, resultcode, intent);
+        ArrayList<String> speech;
+        if (resultcode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE) {
+                speech = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                resultSpeech = speech.get(0);
+                etBuscar.setText(resultSpeech);
+                pDialog.setMessage("Buscando...");
+                pDialog.setCancelable(false);
+                pDialog.show();
+                String busqueda = etBuscar.getText().toString();
+                buscarRuta(busqueda,2);
+                if(lista.getCount()== 0){
+                    Toast.makeText(getActivity(), "Busqueda Finalizada", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }
     }
 
     public void buscarRuta(final String busqueda, int accion){

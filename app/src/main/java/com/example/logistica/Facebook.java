@@ -126,9 +126,10 @@ public class Facebook extends AppCompatActivity {
 
                 if(etBuscar.getText().toString().isEmpty()){
                     buscarRuta(" ",1);
+                }else{
+                    String busqueda = etBuscar.getText().toString();
+                    buscarRuta(busqueda,2);
                 }
-
-
             }
         });
 /*
@@ -209,7 +210,7 @@ public class Facebook extends AppCompatActivity {
                 speech = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                 resultSpeech = speech.get(0);
                 etBuscar.setText(resultSpeech);
-                    pDialog.setMessage("Cargando Datos");
+                    pDialog.setMessage("Buscando...");
                     pDialog.setCancelable(false);
                     pDialog.show();
                     String busqueda = etBuscar.getText().toString();
