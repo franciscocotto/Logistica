@@ -117,16 +117,23 @@
                 android:id="@+id/input_TipoLic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
-                <EditText
-                    android:id="@+id/addTipoLic"
+                <TextView
+                    android:id="@+id/txt33"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-                    android:hint="@string/hint_addTipoLic"
-                    android:inputType="text"
-                    android:maxLength="150"
-                    android:singleLine="true" />
+                    android:text="@string/selectTipoLic"
+                    android:textColor="#757575"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"/>
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/addTipoLic"
+                    android:layout_marginTop="20dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -140,6 +147,21 @@
                     android:layout_height="wrap_content"
                     android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
                     android:hint="@string/hint_addNumLic"
+                    android:inputType="text"
+                    android:maxLength="150"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_dir"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/addDirCon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                    android:hint="@string/hint_addDirCon"
                     android:inputType="text"
                     android:maxLength="150"
                     android:singleLine="true" />

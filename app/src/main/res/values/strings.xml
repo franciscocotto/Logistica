@@ -78,4 +78,6 @@
     <string name="my_image_description">Imagen</string>
     <string name="hint_btnFoto">Foto</string>
     <string name="ip">https://192.168.0.27</string>
+    <string name="selectTipoLic">Seleccione Tipo Licencia</string>
+    <string name="hint_addDirCon">Direccion</string>
 </resources>

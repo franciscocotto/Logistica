@@ -5,14 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.logistica.Administrador;
 import com.example.logistica.R;
-import com.example.logistica.Conductor;
-import com.example.logistica.ui.driver.DriverFragment;
+import com.example.logistica.ui.driver.Conductor;
 import com.example.logistica.ui.ruta.ConsultaRutas;
 import com.example.logistica.ui.viajes.ConsultaViajes;
 
@@ -50,11 +50,15 @@ public class HomeFragment extends Fragment {
         conductor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DriverFragment driverFragment = new DriverFragment();
-                FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.nav_host_fragment, new DriverFragment());
-                fr.commit();
-                ((Administrador) getActivity()).getSupportActionBar().setTitle("Conductores");
+                try {
+                    Conductor conductor = new Conductor();
+                    FragmentTransaction fr = getFragmentManager().beginTransaction();
+                    fr.replace(R.id.nav_host_fragment, new Conductor());
+                    fr.commit();
+                    ((Administrador) getActivity()).getSupportActionBar().setTitle("Conductores");
+                }catch (Exception e){
+                    Toast.makeText(getContext(),"Ha ocurrido un error",Toast.LENGTH_SHORT);
+                }
             }
         });
 
