@@ -2,11 +2,12 @@ package com.example.logistica;
 
 public class Conductores {
     private int id_conductor;
-    private String nombre, apellido, telefono, url_foto, tipo_licencia;
+    private String dui, nombre, apellido, telefono, url_foto, tipo_licencia;
 
     public Conductores(){}
 
-    public Conductores(int id_conductor, String nombre, String apellido, String telefono, String url_foto, String tipo_licencia) {
+    public Conductores(int id_conductor, String dui, String nombre, String apellido, String telefono, String url_foto, String tipo_licencia) {
+        this.dui = dui;
         this.id_conductor = id_conductor;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -17,6 +18,10 @@ public class Conductores {
 
     public int getId_conductor() {
         return id_conductor;
+    }
+
+    public String getDui() {
+        return dui;
     }
 
     public String getNombre() {
@@ -44,6 +49,9 @@ public class Conductores {
         this.id_conductor = id_conductor;
     }
 
+    public void setDui(String dui) {
+        this.dui = dui;
+    }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;

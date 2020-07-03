@@ -45,6 +45,7 @@
                     android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
                     android:hint="Nombre del viaje"
                     android:inputType="text"
+                    android:textSize="16sp"
                     android:maxLength="150"
                     android:singleLine="true"
                     android:layout_marginBottom="10sp"/>
@@ -52,50 +53,213 @@
                 <AutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textSize="16sp"
                     android:id="@+id/acRutas"
-                    android:hint="Ingrese el nombre de la ruta"
-                    android:layout_marginBottom="10sp"/>
+                    android:hint="Ingrese el nombre de la ruta"/>
 
             <LinearLayout
-                android:layout_width="300sp"
-                android:layout_height="350sp"
+                android:layout_width="match_parent"
+                android:layout_height="400sp"
                 android:orientation="vertical"
-                android:padding="15sp"
+                android:background="@drawable/myrect"
+                android:elevation="7dp"
+                android:padding="10sp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10sp"
                 android:layout_marginBottom="10sp">
 
                 <com.google.android.gms.maps.MapView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:elevation="7dp"
                     android:id="@+id/mvRuta"/>
 
             </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                    android:text="Origen:"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:id="@+id/tvOrigen"
+                        android:elevation="7dp"
+                        android:background="@drawable/text_border"
+                        android:textColor="#000000"
+                        android:gravity="center_horizontal"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        android:layout_marginTop="10sp"
+                        android:text="Destino:"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tvDestino"
+                        android:textSize="16sp"
+                        android:elevation="7dp"
+                        android:background="@drawable/text_border"
+                        android:textColor="#000000"
+                        android:gravity="center_horizontal"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="15dp">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/input_layout_fecha1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
+
+                        <EditText
+                            android:textColor="#757575"
+                            android:id="@+id/etFechaInicio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:hint="Fecha de inicio"
+                            android:inputType="date"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/input_layout_hora1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
+
+                        <EditText
+                            android:textColor="#757575"
+                            android:id="@+id/etHoraInicio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:hint="Hora de inicio"
+                            android:inputType="time"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/input_layout_fecha2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
+
+                        <EditText
+                            android:textColor="#757575"
+                            android:id="@+id/etFechaFinal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:hint="Fecha de finalizacion"
+                            android:inputType="date"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/input_layout_hora2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp">
+
+                        <EditText
+                            android:textColor="#757575"
+                            android:id="@+id/etHoraFinal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:textSize="16sp"
+                            android:hint="Hora de finalizacion"
+                            android:inputType="time"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
 
                 <AutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:id="@+id/acConductor"
-                    android:hint="Ingrese el nombre del conductor"
-                    android:layout_marginBottom="10sp"/>
+                    android:textSize="16sp"
+                    android:hint="Ingrese el nombre del conductor" />
 
                 <LinearLayout
                     android:layout_width="300sp"
                     android:layout_height="350sp"
                     android:orientation="vertical"
-                    android:padding="15sp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10sp"
-                    android:layout_marginBottom="10sp">
+                    android:layout_gravity="center_horizontal">
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:elevation="7dp"
-                        android:layout_margin="15sp"
+                        android:padding="10sp"
+                        android:layout_margin="10sp"
                         android:background="@drawable/myrect"
                         android:id="@+id/imgConductor"/>
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="20sp">
+                    <LinearLayout
+                        android:layout_width="130sp"
+                        android:layout_marginRight="30sp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:text="Telefono:"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tvTelefono"
+                            android:textSize="16sp"
+                            android:elevation="7dp"
+                            android:background="@drawable/text_border"
+                            android:textColor="#000000"
+                            android:gravity="center_horizontal"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:text="Tipo de licencia:"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tvTipoLicencia"
+                            android:textSize="16sp"
+                            android:elevation="7dp"
+                            android:background="@drawable/text_border"
+                            android:textColor="#000000"
+                            android:gravity="center_horizontal"/>
+                    </LinearLayout>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/textView15"
@@ -108,101 +272,75 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/spVehiculo"
+                    android:textSize="16sp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginBottom="10sp"/>
+                    android:layout_alignParentLeft="true"/>
 
                 <LinearLayout
                     android:layout_width="350sp"
                     android:layout_height="300sp"
                     android:orientation="vertical"
-                    android:padding="15sp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10sp"
-                    android:layout_marginBottom="10sp">
+                    android:padding="10sp"
+                    android:layout_gravity="center_horizontal">
 
                     <ImageView
                         android:id="@+id/imgVehiculo"
                         android:elevation="7dp"
                         android:padding="10sp"
-                        android:layout_margin="15sp"
+                        android:layout_margin="10sp"
                         android:background="@drawable/myrect"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
                 </LinearLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input_layout_fecha1"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp">
-
-                    <EditText
-                        android:textColor="#757575"
-                        android:id="@+id/etFechaInicio"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="15sp">
+                    <LinearLayout
+                        android:layout_width="130sp"
+                        android:layout_marginRight="30sp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:text="Codigo:"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tvCodigoV"
+                            android:textSize="16sp"
+                            android:elevation="7dp"
+                            android:background="@drawable/text_border"
+                            android:textColor="#000000"
+                            android:gravity="center_horizontal"/>
+                    </LinearLayout>
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="false"
-                        android:hint="Fecha de inicio"
-                        android:inputType="date"
-                        android:maxLines="1" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input_layout_hora1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:text="Numero de placa:"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/tvPlaca"
+                            android:textSize="16sp"
+                            android:elevation="7dp"
+                            android:background="@drawable/text_border"
+                            android:textColor="#000000"
+                            android:gravity="center_horizontal"/>
+                    </LinearLayout>
+                </LinearLayout>
 
-                    <EditText
-                        android:textColor="#757575"
-                        android:id="@+id/etHoraInicio"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="false"
-                        android:hint="Hora de inicio"
-                        android:inputType="time"
-                        android:maxLines="1" />
-                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input_layout_fecha2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp">
-
-                    <EditText
-                        android:textColor="#757575"
-                        android:id="@+id/etFechaFinal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="false"
-                        android:hint="Fecha de finalizacion"
-                        android:inputType="date"
-                        android:maxLines="1" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/input_layout_hora2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp">
-
-                    <EditText
-                        android:textColor="#757575"
-                        android:id="@+id/etHoraFinal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="false"
-                        android:hint="Hora de finalizacion"
-                        android:inputType="time"
-                        android:maxLines="1" />
-                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
 

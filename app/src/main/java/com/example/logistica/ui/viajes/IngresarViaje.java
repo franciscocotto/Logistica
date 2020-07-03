@@ -1,9 +1,13 @@
 package com.example.logistica.ui.viajes;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -25,19 +30,29 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.logistica.ConMapsActivity;
 import com.example.logistica.Conductores;
+import com.example.logistica.DirectionsJSONParser;
 import com.example.logistica.R;
 import com.example.logistica.Rutas;
+import com.example.logistica.Utilidades;
 import com.example.logistica.Vehiculos;
+import com.example.logistica.WS;
 import com.example.logistica.dialog.DatePickerFragment;
 import com.example.logistica.dialog.TimePickerFragment;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.squareup.picasso.Picasso;
@@ -48,7 +63,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class IngresarViaje extends Fragment implements OnMapReadyCallback{
 
@@ -63,9 +84,13 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
     String[] vehiculosV;
 
     //Variables
-    private String url_conductor, url_vehiculo;
+    private String url_conductor, url_vehiculo, latIni, longIni, latFin, longFin, t_origen, t_destino;
     private GoogleMap mapa;
+    WS ws;
+    Polyline polyline;
 
+
+    private TextView tvOrigen, tvDestino, tvTelefono, tvTipoLicencia, tvCodV, tvPlaca;
     private AutoCompleteTextView acRutas, acConductores;
     private Spinner spVehiculo;
     private EditText etFechaInicio, etHoraInicio, etFechaFinal, etHoraFinal;
@@ -95,12 +120,22 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
 
         View view = inflater.inflate(R.layout.fragment_ingresar_viaje, container, false);
 
+        ws = new Retrofit.Builder().baseUrl("https://maps.googleapis.com/").addConverterFactory(ScalarsConverterFactory.create()).build().create(WS.class);
+
         //Declaracion  de AutoCompleteTextView
         acRutas = (AutoCompleteTextView)view.findViewById(R.id.acRutas);
         acConductores = (AutoCompleteTextView)view.findViewById(R.id.acConductor);
 
         //Declaracion de Spinner
         spVehiculo = (Spinner)view.findViewById(R.id.spVehiculo);
+
+        //Declaracion de TextView
+        tvOrigen = (TextView)view.findViewById(R.id.tvOrigen);
+        tvDestino = (TextView)view.findViewById(R.id.tvDestino);
+        tvTelefono = (TextView) view.findViewById(R.id.tvTelefono);
+        tvTipoLicencia = (TextView) view.findViewById(R.id.tvTipoLicencia);
+        tvCodV = (TextView) view.findViewById(R.id.tvCodigoV);
+        tvPlaca = (TextView) view.findViewById(R.id.tvPlaca);
 
         //Declaracion de EditText
         etFechaInicio = (EditText)view.findViewById(R.id.etFechaInicio);
@@ -125,14 +160,43 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
         cargarComplementos("https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_cargar_campos_viajes.php",2,"conductores");
         cargarComplementos("https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_cargar_campos_viajes.php",3,"vehiculos");
 
+        //Evento de seleccion de Ruta
+        acRutas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                for(int i = 0; i<rutas.size();i++){
+                    if(acRutas.getText().toString().equals(rutasV[i])){
+                        latIni = rutas.get(i).getLatitudInicial();
+                        longIni = rutas.get(i).getLongitudInicial();
+                        latFin = rutas.get(i).getLatitudFinal();
+                        longFin = rutas.get(i).getLongitudFinal();
+                        t_origen = rutas.get(i).getOrigen();
+                        t_destino = rutas.get(i).getDestino();
+                        obtenerRutaWs(latIni, longIni, latFin, longFin);
+                        tvOrigen.setText(t_origen);
+                        tvDestino.setText(t_destino);
+                    }
+                    else {
+                        mapa.clear();
+                    }
+                }
+            }
+        });
+
         //Evento de seleccion de Conductor
         acConductores.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                url_conductor = conductores.get(position).getUrl_foto();
-                Toast.makeText(getContext(), url_conductor, Toast.LENGTH_LONG).show();
+                for(int i = 0; i<conductores.size();i++){
+                    if(acConductores.getText().toString().equals(conductoresV[i])){
+                        url_conductor = conductores.get(i).getUrl_foto();
+                        tvTelefono.setText(conductores.get(i).getTelefono());
+                        tvTipoLicencia.setText(conductores.get(i).getTipo_licencia());
+                    }
+                }
                 Picasso.get().load(url_conductor).into(imgConductor);
             }
+
         });
 
         //Evento de seleccion de Spinner
@@ -142,6 +206,8 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
                 if(position>0){
                     url_vehiculo = vehiculos.get(position-1).getUrl_img();
                     Picasso.get().load(url_vehiculo).into(imgVehiculo);
+                    tvCodV.setText(vehiculos.get(position).getCod_vehiculo());
+                    tvPlaca.setText(vehiculos.get(position).getPlaca());
                 }
             }
 
@@ -237,8 +303,9 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.mapa = googleMap;
-        mapa.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-        mapa.addPolyline(new PolylineOptions().add(new LatLng(13.6976341,-89.1911956), new LatLng(13.343611099999999,-89.00638889999999)).width(5).color(Color.RED));
+        LatLng center = new LatLng(13.748168,-88.932602);
+        mapa.animateCamera(CameraUpdateFactory.newLatLngZoom(center, 7));
+        //mapa.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
         UiSettings uiSettings = mapa.getUiSettings();
         uiSettings.setZoomControlsEnabled(true);
     }
@@ -281,6 +348,7 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
                                 for (int i = 0; i<consulta.length();i++){
                                     JSONObject object = consulta.getJSONObject(i);
                                     conductores.add(new Conductores(object.getInt("id_conductor"),
+                                            object.getString("dui"),
                                             object.getString("nombre"),
                                             object.getString("apellido"),
                                             object.getString("telefono"),
@@ -305,6 +373,7 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
                                             object.getString("marca"),
                                             object.getString("modelo"),
                                             object.getString("tipo"),
+                                            object.getString("placa"),
                                             object.getString("url_img")));
                                 }
                                 cargarVehiculos(vehiculos);
@@ -358,7 +427,7 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
         conductoresV = new String[conductores.size()];
 
         for (int i = 0; i<conductores.size(); i++){
-            conductoresV[i] = conductores.get(i).getNombre()+" "+conductores.get(i).getApellido();
+            conductoresV[i] = conductores.get(i).getDui()+" "+conductores.get(i).getNombre()+" "+conductores.get(i).getApellido();
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, conductoresV);
         acConductores.setAdapter(adapter);
@@ -377,4 +446,100 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
         spVehiculo.setAdapter(adapter);
     }
 
+    //Metodo que manda las coordenadas al servicio de Google maps
+    private void obtenerRutaWs(String lat_origen, String long_origen, String lat_destino, String long_destino){
+        String url;
+        try {
+            url = "https://maps.googleapis.com/maps/api/directions/json?" +
+                    "origin="+lat_origen+","+long_origen+
+                    "&destination="+lat_destino+","+long_destino +
+                    "&key=AIzaSyCGSDxyyedIRTb3CEzPu1jN8mbvs7BmL2c";
+
+            Log.e("URL","url");
+            ws.obtenerRuta(url).enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                    new ParserTask().execute(response.body().toString());
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+
+                }
+            });
+        }
+        catch (Exception e){
+
+        }
+    }
+
+    //Metodo que convierte los datos en puntos geograficos
+    public class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>>>{
+
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.setMessage("Cargando...");
+            progressDialog.show();
+        }
+
+        @Override
+        protected List<List<HashMap<String, String>>> doInBackground(String... strings) {
+            JSONObject jsonObject;
+            List<List<HashMap<String,String>>> routes = null;
+            try {
+                jsonObject = new JSONObject(strings[0]);
+                DirectionsJSONParser parser = new DirectionsJSONParser();
+                routes = parser.parse(jsonObject);
+            }
+            catch (Exception e){
+                Log.e("error",e.toString());
+            }
+            return routes;
+        }
+
+        @Override
+        protected void onPostExecute(List<List<HashMap<String, String>>> lists) {
+            super.onPostExecute(lists);
+            progressDialog.dismiss();
+            mapa.clear();
+            ArrayList points = null;
+            PolylineOptions polylineOptions = null;
+            for (int i = 0; i<lists.size();i++){
+                points = new ArrayList<LatLng>();
+                polylineOptions = new PolylineOptions();
+                List<HashMap<String, String>>path = lists.get(i);
+                for (int j = 2; j<path.size();j++){
+                    HashMap<String, String> point = path.get(j);
+                    double lat = Double.parseDouble(point.get("lat"));
+                    double lng = Double.parseDouble(point.get("lng"));
+                    LatLng position = new LatLng(lat,lng);
+                    points.add(position);
+                }
+                polylineOptions.addAll(points);
+                polylineOptions.width(10);
+                polylineOptions.color(getContext().getResources().getColor(R.color.colorPrimary));
+                polylineOptions.geodesic(true);
+            }
+            polyline = mapa.addPolyline(polylineOptions);
+
+            LatLng origen = new LatLng(Double.valueOf(latIni), Double.valueOf(longIni));
+            mapa.addMarker(new MarkerOptions().position(origen).title("Origen: "+t_origen));
+
+            LatLng destino = new LatLng(Double.valueOf(latFin), Double.valueOf(longFin));
+            mapa.addMarker(new MarkerOptions().position(destino).title("Destino: "+t_destino));
+
+            LatLngBounds.Builder constructor = new LatLngBounds.Builder();
+            constructor.include(origen);
+            constructor.include(destino);
+
+            LatLngBounds limites = constructor.build();
+            int ancho = getResources().getDisplayMetrics().widthPixels;
+            int alto = getResources().getDisplayMetrics().heightPixels;
+            int padding = (int)(alto*0.25);
+            CameraUpdate centro = CameraUpdateFactory.newLatLngBounds(limites, ancho, alto, padding);
+            mapa.animateCamera(centro);
+        }
+    }
 }
