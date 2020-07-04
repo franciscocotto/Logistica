@@ -42,6 +42,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.logistica.BuildConfig;
 import com.example.logistica.R;
 import com.example.logistica.HandlerService;
 
@@ -57,6 +58,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import cz.msebera.android.httpclient.HttpResponse;
 import cz.msebera.android.httpclient.NameValuePair;
@@ -71,7 +73,7 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static androidx.core.content.PermissionChecker.checkSelfPermission;
-
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class Conductor extends Fragment implements AdapterView.OnItemSelectedListener{
@@ -583,7 +585,9 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
             String authorities=getActivity().getApplicationContext().getPackageName()+".provider";
             Toast.makeText(getActivity().getApplicationContext().getApplicationContext(), authorities, Toast.LENGTH_LONG).show();
             //error en esta linea
-            Uri imageUri= FileProvider.getUriForFile(getActivity().getApplicationContext().getApplicationContext(),authorities,imagen);
+            Uri imageUri=    FileProvider.getUriForFile(Objects.requireNonNull(getApplicationContext()),
+                    BuildConfig.APPLICATION_ID + ".provider", imagen);
+          //  Uri imageUri= FileProvider.getUriForFile(getActivity().getApplicationContext().getApplicationContext(),authorities,imagen);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         }else
         {
