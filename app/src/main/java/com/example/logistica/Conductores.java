@@ -2,7 +2,7 @@ package com.example.logistica;
 
 public class Conductores {
     private int id_conductor;
-    private String dui, nombre, apellido, telefono, url_foto, tipo_licencia;
+    private String dui, nombre, apellido, telefono, url_foto, tipo_licencia, datos;
 
     public Conductores(){}
 
@@ -14,6 +14,7 @@ public class Conductores {
         this.telefono = telefono;
         this.url_foto = url_foto;
         this.tipo_licencia = tipo_licencia;
+        this.datos = this.dui+" "+this.nombre+" "+this.apellido;
     }
 
     public int getId_conductor() {
@@ -44,6 +45,9 @@ public class Conductores {
         return tipo_licencia;
     }
 
+    public String getDatos() {
+        return datos;
+    }
 
     public void setId_conductor(int id_conductor) {
         this.id_conductor = id_conductor;
@@ -71,5 +75,9 @@ public class Conductores {
 
     public void setTipo_licencia(String tipo_licencia) {
         this.tipo_licencia = tipo_licencia;
+    }
+
+    public void setDatos(String datos) {
+        this.datos = datos;
     }
 }

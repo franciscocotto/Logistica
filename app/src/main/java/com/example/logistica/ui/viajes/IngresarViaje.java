@@ -3,6 +3,7 @@ package com.example.logistica.ui.viajes;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,6 +42,7 @@ import com.example.logistica.R;
 import com.example.logistica.Rutas;
 import com.example.logistica.Utilidades;
 import com.example.logistica.Vehiculos;
+import com.example.logistica.Viajes;
 import com.example.logistica.WS;
 import com.example.logistica.dialog.DatePickerFragment;
 import com.example.logistica.dialog.TimePickerFragment;
@@ -78,24 +81,29 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
     ArrayList<Conductores> conductores = new ArrayList<Conductores>();
     ArrayList<Vehiculos> vehiculos = new ArrayList<Vehiculos>();
 
+    //Instancias
+    Viajes viajes = new Viajes();
+
     //Vectores
     String[] rutasV;
     String[] conductoresV;
     String[] vehiculosV;
 
     //Variables
+    private Context context;
     private String url_conductor, url_vehiculo, latIni, longIni, latFin, longFin, t_origen, t_destino;
     private GoogleMap mapa;
     WS ws;
     Polyline polyline;
 
 
-    private TextView tvOrigen, tvDestino, tvTelefono, tvTipoLicencia, tvCodV, tvPlaca;
+    private TextView tvOrigen, tvDestino, tvTelefono, tvTipoLicencia, tvTipoV, tvPlaca;
     private AutoCompleteTextView acRutas, acConductores;
     private Spinner spVehiculo;
-    private EditText etFechaInicio, etHoraInicio, etFechaFinal, etHoraFinal;
+    private EditText etNomViaje, etFechaInicio, etHoraInicio, etFechaFinal, etHoraFinal;
     private ImageView imgConductor, imgVehiculo;
     private MapView mvRutas;
+    private Button btnViaje, btnRegresar;
 
     @Override
     public void onResume(){
@@ -120,6 +128,8 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
 
         View view = inflater.inflate(R.layout.fragment_ingresar_viaje, container, false);
 
+        context = getContext();
+
         ws = new Retrofit.Builder().baseUrl("https://maps.googleapis.com/").addConverterFactory(ScalarsConverterFactory.create()).build().create(WS.class);
 
         //Declaracion  de AutoCompleteTextView
@@ -134,10 +144,11 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
         tvDestino = (TextView)view.findViewById(R.id.tvDestino);
         tvTelefono = (TextView) view.findViewById(R.id.tvTelefono);
         tvTipoLicencia = (TextView) view.findViewById(R.id.tvTipoLicencia);
-        tvCodV = (TextView) view.findViewById(R.id.tvCodigoV);
+        tvTipoV = (TextView) view.findViewById(R.id.tvTipoV);
         tvPlaca = (TextView) view.findViewById(R.id.tvPlaca);
 
         //Declaracion de EditText
+        etNomViaje = (EditText)view.findViewById(R.id.etNomViaje);
         etFechaInicio = (EditText)view.findViewById(R.id.etFechaInicio);
         etFechaFinal = (EditText)view.findViewById(R.id.etFechaFinal);
         etHoraInicio = (EditText)view.findViewById(R.id.etHoraInicio);
@@ -151,7 +162,10 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
         mvRutas = (MapView)view.findViewById(R.id.mvRuta);
         mvRutas.onCreate(savedInstanceState);
         mvRutas.getMapAsync(this);
-        //Prueba
+
+        //Declaracion de Buttons
+        btnViaje = (Button)view.findViewById(R.id.btnViaje);
+        btnRegresar = (Button)view.findViewById(R.id.btnRegresar);
 
         //Llamada a metodos de carga
 
@@ -206,8 +220,8 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
                 if(position>0){
                     url_vehiculo = vehiculos.get(position-1).getUrl_img();
                     Picasso.get().load(url_vehiculo).into(imgVehiculo);
-                    tvCodV.setText(vehiculos.get(position).getCod_vehiculo());
-                    tvPlaca.setText(vehiculos.get(position).getPlaca());
+                    tvTipoV.setText(vehiculos.get(position-1).getTipo());
+                    tvPlaca.setText(vehiculos.get(position-1).getPlaca());
                 }
             }
 
@@ -242,6 +256,13 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
             @Override
             public void onClick(View v) {
                 showTimePickerDialog(2);
+            }
+        });
+
+        btnViaje.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                generarViaje();
             }
         });
 
@@ -414,7 +435,7 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
         rutasV = new String[rutas.size()];
 
         for (int i = 0; i<rutas.size(); i++){
-            rutasV[i] = rutas.get(i).getNameruta();
+            rutasV[i] = rutas.get(i).getDatos();
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, rutasV);
         acRutas.setAdapter(adapter);
@@ -427,7 +448,7 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
         conductoresV = new String[conductores.size()];
 
         for (int i = 0; i<conductores.size(); i++){
-            conductoresV[i] = conductores.get(i).getDui()+" "+conductores.get(i).getNombre()+" "+conductores.get(i).getApellido();
+            conductoresV[i] = conductores.get(i).getDatos();
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, conductoresV);
         acConductores.setAdapter(adapter);
@@ -440,10 +461,92 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
         vehiculosV = new String[vehiculos.size()+1];
         vehiculosV[0] = " ";
         for (int i = 0; i<vehiculos.size(); i++){
-            vehiculosV[i+1] = vehiculos.get(i).getMarca()+" "+vehiculos.get(i).getModelo();
+            vehiculosV[i+1] = vehiculos.get(i).getDatos();
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, vehiculosV);
         spVehiculo.setAdapter(adapter);
+    }
+
+    //Metodo que ingresa o modifica viajes
+    private void generarViaje(){
+        if(etNomViaje.getText().toString().isEmpty() || acRutas.getText().toString().isEmpty() || etFechaInicio.getText().toString().isEmpty() ||
+        etHoraInicio.getText().toString().isEmpty() || etFechaFinal.getText().toString().isEmpty() ||
+                etHoraFinal.getText().toString().isEmpty() || acConductores.getText().toString().isEmpty() || (spVehiculo.getSelectedItemId()==0)){
+            if(etNomViaje.getText().toString().isEmpty()){
+                etNomViaje.setError("Campo obligatorio");
+            }
+            if(acRutas.getText().toString().isEmpty()){
+                acRutas.setError("Campo obligatorio");
+            }
+            if(etFechaInicio.getText().toString().isEmpty()){
+                etFechaInicio.setError("Campo obligatorio");
+            }
+            if(etHoraInicio.getText().toString().isEmpty()){
+                etHoraInicio.setError("Campo obligatorio");
+            }
+            if(etFechaFinal.getText().toString().isEmpty()){
+                etFechaFinal.setError("Campo obligatorio");
+            }
+            if(etHoraFinal.getText().toString().isEmpty()){
+                etHoraFinal.setError("Campo obligatorio");
+            }
+            if(acConductores.getText().toString().isEmpty()){
+                acConductores.setError("Campo obligatorio");
+            }
+            if(spVehiculo.getSelectedItemId()==0){
+                Toast.makeText(getContext(), "Seleccione un vehiculo", Toast.LENGTH_SHORT).show();
+            }
+            Toast.makeText(getContext(), "Faltan datos obligatorios", Toast.LENGTH_LONG).show();
+        }
+        else {
+            if(!acRutas.getText().toString().isEmpty() && !acConductores.getText().toString().isEmpty()){
+                boolean ruta = false;
+                boolean conductor = false;
+                if(!acRutas.getText().toString().isEmpty()){
+                    for (int i = 0; i<rutasV.length;i++){
+                        if (acRutas.getText().toString().equals(rutasV[i])){
+                            ruta = true;
+                        }
+                    }
+                    if (ruta==false){
+                        acRutas.setError("Dato invalido");
+                    }
+                }
+                if(!acConductores.getText().toString().isEmpty()){
+                    for (int i = 0; i<conductoresV.length;i++){
+                        if (acConductores.getText().toString().equals(conductoresV[i])){
+                            conductor = true;
+                        }
+                    }
+                    if (conductor==false){
+                        acConductores.setError("Dato invalido");
+                    }
+                }
+                if(ruta==false || conductor==false){
+                    Toast.makeText(getContext(), "Algunos datos son invalidos",Toast.LENGTH_LONG).show();
+                }
+                else {
+                    viajes.setNomViaje(etNomViaje.getText().toString());
+                    viajes.setInicio(etFechaInicio.getText().toString()+" "+etHoraInicio.getText().toString());
+                    viajes.setFinalizacion(etFechaFinal.getText().toString()+" "+etHoraFinal.getText().toString());
+
+                    for (int i = 0; i<rutasV.length;i++){
+                        if(acRutas.getText().toString().equals(rutas.get(i).getDatos())){
+                            viajes.setId_ruta(rutas.get(i).getId_ruta());
+                        }
+                    }
+                    for (int i = 0;i<conductoresV.length;i++){
+                        if(acConductores.getText().toString().equals(conductores.get(i).getDatos())){
+                            viajes.setId_conductor(conductores.get(i).getId_conductor());
+                        }
+                    }
+                    viajes.setId_vehiculo(vehiculos.get(spVehiculo.getSelectedItemPosition()-1).getId_vehiculo());
+
+                    viajes.cargarViajes(context,"https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_viajes.php","insertar");
+                }
+
+            }
+        }
     }
 
     //Metodo que manda las coordenadas al servicio de Google maps

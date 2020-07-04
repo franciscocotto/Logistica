@@ -7,6 +7,7 @@ public class Rutas {
     private String longitudInicial;
     private String latitudFinal;
     private String longitudFinal;
+    private String datos;
     protected static String idRuta;
     protected static Integer fragmento;
 
@@ -32,6 +33,12 @@ public class Rutas {
         this.longitudInicial = longitudInicial;
         this.latitudFinal = latitudFinal;
         this.longitudFinal = longitudFinal;
+        this.datos = this.nameruta+" | "+this.origen+" | "+this.destino;
+
+    }
+
+    public String getDatos() {
+        return datos;
     }
 
     public static String getIdRuta() {
@@ -119,4 +126,11 @@ public class Rutas {
         return fragmento;
     }
 
+    public void setDatos(String datos) {
+        this.datos = datos;
+    }
+
+    public static void setFragmento(Integer fragmento) {
+        Rutas.fragmento = fragmento;
+    }
 }
