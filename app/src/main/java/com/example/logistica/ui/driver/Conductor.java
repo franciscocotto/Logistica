@@ -43,7 +43,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.logistica.R;
-import com.example.logistica.ServiceHandler;
+import com.example.logistica.HandlerService;
 
 
 import org.json.JSONArray;
@@ -526,8 +526,8 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
     public class getTipoLicencias extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... arg0) {
-            ServiceHandler jsonParser = new ServiceHandler();
-            String json = jsonParser.makeServiceCall(URL_TIPOLICENCIA, ServiceHandler.GET);
+            HandlerService jsonParser = new HandlerService();
+            String json = jsonParser.makeServiceCall(URL_TIPOLICENCIA, HandlerService.GET);
             Log.e("Response: ", "> " + json);
             if (json != null) {
                 try {

@@ -18,14 +18,14 @@ import cz.msebera.android.httpclient.client.methods.HttpPost;
 import cz.msebera.android.httpclient.client.utils.URLEncodedUtils;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 
-public class ServiceHandler {
+public class HandlerService {
 
     static InputStream is = null;
     static String response = null;
     public final static int GET = 1;
     public final static int POST = 2;
 
-    public ServiceHandler() {
+    public HandlerService() {
 
     }
 
