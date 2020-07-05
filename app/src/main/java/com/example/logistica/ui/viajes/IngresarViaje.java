@@ -1,11 +1,10 @@
 package com.example.logistica.ui.viajes;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,21 +25,20 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.logistica.ConMapsActivity;
+import com.example.logistica.Administrador;
 import com.example.logistica.Conductores;
 import com.example.logistica.DirectionsJSONParser;
 import com.example.logistica.R;
 import com.example.logistica.Rutas;
-import com.example.logistica.Utilidades;
 import com.example.logistica.Vehiculos;
 import com.example.logistica.Viajes;
 import com.example.logistica.WS;
@@ -54,7 +52,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -91,12 +88,15 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
 
     //Variables
     private Context context;
+    private Activity activity;
+    private FragmentTransaction fr;
     private String url_conductor, url_vehiculo, latIni, longIni, latFin, longFin, t_origen, t_destino;
     private GoogleMap mapa;
     WS ws;
     Polyline polyline;
 
-
+    //Objetos
+    private Toast mensaje;
     private TextView tvOrigen, tvDestino, tvTelefono, tvTipoLicencia, tvTipoV, tvPlaca;
     private AutoCompleteTextView acRutas, acConductores;
     private Spinner spVehiculo;
@@ -128,7 +128,9 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
 
         View view = inflater.inflate(R.layout.fragment_ingresar_viaje, container, false);
 
+        fr = getFragmentManager().beginTransaction();
         context = getContext();
+        activity = getActivity();
 
         ws = new Retrofit.Builder().baseUrl("https://maps.googleapis.com/").addConverterFactory(ScalarsConverterFactory.create()).build().create(WS.class);
 
@@ -526,6 +528,7 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
                     Toast.makeText(getContext(), "Algunos datos son invalidos",Toast.LENGTH_LONG).show();
                 }
                 else {
+                    viajes = new Viajes();
                     viajes.setNomViaje(etNomViaje.getText().toString());
                     viajes.setInicio(etFechaInicio.getText().toString()+" "+etHoraInicio.getText().toString());
                     viajes.setFinalizacion(etFechaFinal.getText().toString()+" "+etHoraFinal.getText().toString());
@@ -541,12 +544,18 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
                         }
                     }
                     viajes.setId_vehiculo(vehiculos.get(spVehiculo.getSelectedItemPosition()-1).getId_vehiculo());
-
-                    viajes.cargarViajes(context,"https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_viajes.php","insertar");
+                    viajes.cargarViajes(context,"https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_viajes.php","insertar", fr, activity);
                 }
-
             }
         }
+    }
+
+    public static void regresarConsulta(FragmentTransaction fr, Activity activity){
+        ConsultaViajes consultaViajes = new ConsultaViajes();
+        fr.replace(R.id.nav_host_fragment, new ConsultaViajes());
+        fr.commit();
+        ((Administrador)activity).getSupportActionBar().setTitle("Consultar viajes");
+
     }
 
     //Metodo que manda las coordenadas al servicio de Google maps

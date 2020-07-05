@@ -1,7 +1,11 @@
 package com.example.logistica;
 
+import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -10,21 +14,29 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.logistica.ui.viajes.ConsultaViajes;
+import com.example.logistica.ui.viajes.IngresarViaje;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Viajes {
+public class Viajes extends Fragment {
 
-    private static boolean result;
+    public static int idViaje;
+    public static int accionar;
     private int id_viaje, id_ruta, id_vehiculo, id_conductor;
     private String inicio, finalizacion, nomViaje;
+    private boolean resultado;
 
     public Viajes(){}
+
+    public Viajes(int id_viaje, String nomViaje){
+        this.id_viaje = id_viaje;
+        this.nomViaje = nomViaje;
+    }
 
     public Viajes(int id_viaje, int id_ruta, int id_vehiculo, int id_conductor, String inicio, String finalizacion, String nomViaje) {
         this.id_viaje = id_viaje;
@@ -36,9 +48,6 @@ public class Viajes {
         this.nomViaje = nomViaje;
     }
 
-    public static boolean getResult() {
-        return result;
-    }
 
     public int getId_viaje() {
         return id_viaje;
@@ -68,10 +77,10 @@ public class Viajes {
         return nomViaje;
     }
 
-
-    public static void setResult(boolean result) {
-        Viajes.result = result;
+    public boolean isResultado() {
+        return resultado;
     }
+
 
     public void setId_viaje(int id_viaje) {
         this.id_viaje = id_viaje;
@@ -101,22 +110,26 @@ public class Viajes {
         this.nomViaje = nomViaje;
     }
 
+    public void setResultado(boolean resultado) {
+        this.resultado = resultado;
+    }
 
-    public void cargarViajes(final Context context, String URL, final String accion){
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+    public void cargarViajes(final Context contextF, String URL, final String accion, final FragmentTransaction fr, final Activity activity){
+        RequestQueue requestQueue = Volley.newRequestQueue(contextF);
         StringRequest stringRequest = new StringRequest(Request.Method.DEPRECATED_GET_OR_POST, URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject consulta = new JSONObject(response);
-
-                    String mensaje = null;
-                    Viajes.setResult(consulta.getBoolean("error"));
-                    mensaje = consulta.getString("message");
-                    Toast.makeText(context, mensaje, Toast.LENGTH_SHORT).show();
-
+                    boolean result = consulta.getBoolean("error");
+                    String mensaje = consulta.getString("message");
+                    Toast.makeText(contextF, mensaje, Toast.LENGTH_SHORT).show();
+                    if(result==false){
+                        IngresarViaje.regresarConsulta(fr, activity);
+                    }
                 }catch (JSONException e){
-                    Toast.makeText(context, e.toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(contextF, e.toString(), Toast.LENGTH_LONG).show();
                 }
             }
         }, new Response.ErrorListener() {

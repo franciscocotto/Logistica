@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.logistica.Administrador;
 import com.example.logistica.R;
 import com.example.logistica.ui.driver.Conductor;
+import com.example.logistica.ui.reportes.Reporte;
 import com.example.logistica.ui.ruta.ConsultaRutas;
 import com.example.logistica.ui.viajes.ConsultaViajes;
 
@@ -70,6 +71,17 @@ public class HomeFragment extends Fragment {
                 fr.replace(R.id.nav_host_fragment, new ConsultaViajes());
                 fr.commit();
                 ((Administrador) getActivity()).getSupportActionBar().setTitle("Viajes");
+            }
+        });
+
+        reporte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Reporte reporte = new Reporte();
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.nav_host_fragment, new Reporte());
+                fr.commit();
+                ((Administrador) getActivity()).getSupportActionBar().setTitle("Reportes");
             }
         });
 
