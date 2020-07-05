@@ -80,4 +80,9 @@
     <string name="ip">https://192.168.0.27</string>
     <string name="selectTipoLic">Seleccione Tipo Licencia</string>
     <string name="hint_addDirCon">Direccion</string>
+    <string name="hint_btnSearchDriver">Buscar Conductor</string>
+    <string name="hint_btnAgregarCond">Agregar Nuevo Conductor</string>
+    <string name="buscar_conductor">Buscar Conductores</string>
+    <string name="hint_Bconduc">Ingrese Nombre o Apellido</string>
+    <string name="buscar_btnDriver">Buscar</string>
 </resources>

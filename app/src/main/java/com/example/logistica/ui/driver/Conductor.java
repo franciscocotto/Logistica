@@ -32,7 +32,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
-import android.app.ProgressDialog;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
@@ -81,7 +80,6 @@ import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static androidx.core.content.PermissionChecker.checkSelfPermission;
 import static com.facebook.FacebookSdk.getApplicationContext;
-import com.example.logistica.ui.driver.VolleySingleton;
 
 
 public class Conductor extends Fragment implements AdapterView.OnItemSelectedListener{
@@ -121,8 +119,8 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
     String path;//almacena la ruta de la imagen
     ///--------------------------------------------------------------------------------------------------
 
-    private Spinner spinnerIdio;
-    private ArrayList<Licencia> idiomaList;
+    private Spinner spinnerTipoLicencia;
+    private ArrayList<Licencia> tipoLicenciaList;
     ProgressBar progressBar;
     ProgressDialog pDialog;
 
@@ -143,7 +141,7 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
         /*----------------Inicializació de variables----------------------*/
         progressBar = view.findViewById(R.id.progressBar);
         //Inicializamos los spinner que muestran las categorias y los idiomas
-        spinnerIdio = (Spinner) view.findViewById(R.id.addTipoLic);
+        spinnerTipoLicencia = (Spinner) view.findViewById(R.id.addTipoLic);
         //get other data form
         //EditText edNombre, edApellido, edTelefono,edNDUI, edNit, edNumLicencia;
         edNombre = (EditText) view.findViewById(R.id.addNameCon);
@@ -157,11 +155,11 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
         btnRegresar = (Button) view.findViewById(R.id.btnRegresar);
 
         //Initializing the ArrayList
-        idiomaList = new ArrayList<Licencia>();
+        tipoLicenciaList = new ArrayList<Licencia>();
         /*----------------Inicializació de variables----------------------*/
 
         //Call Actions
-        spinnerIdio.setOnItemSelectedListener(this);
+        spinnerTipoLicencia.setOnItemSelectedListener(this);
         new getTipoLicencias().execute();
         /**
          Con el siguiente método se obtienen los elementos del documento, mediante el OnClick al botón de Modificar
@@ -232,6 +230,8 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
                 ConfirmarEliminarDoc();
             }
         });*/
+        String esModReg = ConsultaConductor.gethintEdit();
+        cargarConductorBuscado(esModReg);
 
         view.findViewById(R.id.btnRegresar).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -392,7 +392,7 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
                 final String setnumeroNIT =  edNit.getText().toString().trim();
                 final String setDireccion =  edDireccion.getText().toString().trim();
                 final String setnumeroLicencia =  edNumLicencia.getText().toString().trim();
-                final String setd_idi =  spinnerIdio.getSelectedItem().toString().trim();
+                final String setd_idi =  spinnerTipoLicencia.getSelectedItem().toString().trim();
                 String imagen=convertirImgString(bitmap);
                 Map<String,String> parametros=new HashMap<>();
                 parametros.put("dui", setnumeroDui);
@@ -504,6 +504,102 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
         dialog.show();
     }
 
+    /*En el siguiente método nos conectamos al ws que realiza la consulta de los conductores
+    y los obtenemos recorriendo el json que trae todos los datos y luego los alojamos en un ArrayList del tipo
+    de la Clase ConsultaConductor que hará uso de todos sus atributos, para traer el solicitado hacemos uso de la variable contenida
+    en la Clase ConsultaConductor idConductorAux*/
+    public void cargarConductorBuscado(String modReg){
+      if (modReg == "mod"){
+          final String URLB = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_vc17009/ws_buscarConductorId.php";
+          RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
+          StringRequest stringRequest = new StringRequest(Request.Method.POST, URLB, new Response.Listener<String>() {
+              @Override
+              public void onResponse(String response) {
+                  response = response.replace("][", ",");
+                  if (response.length() > 0) {
+                      try {
+                          JSONArray bdoc = new JSONArray(response);
+                          Log.i("sizejson", "" + bdoc.length());
+                          ArrayList<ConsultaConductor> listB = new ArrayList<ConsultaConductor>();
+                          for (int i = 0; i < bdoc.length(); i += 11) {
+                              try {
+                                  listB.add(new ConsultaConductor(
+                                          bdoc.getString(i+1 ),
+                                          bdoc.getString(i + 2),
+                                          bdoc.getString(i + 3),
+                                          bdoc.getString(i + 4),
+                                          bdoc.getString(i + 5),
+                                          bdoc.getString(i + 6),
+                                          bdoc.getString(i + 7),
+                                          bdoc.getString(i + 8),
+                                          bdoc.getString(i + 9),
+                                          bdoc.getString(i + 10)));
+                              } catch (JSONException e) {
+                                  e.printStackTrace();
+                              }
+                          }
+                          cargarCampos(listB);
+                      } catch (JSONException e) {
+                          e.printStackTrace();
+                      }
+                  }
+              }
+          }, new Response.ErrorListener() {
+              @Override
+              public void onErrorResponse(VolleyError error) {
+
+              }
+          }) {
+              @Override
+              protected Map<String, String> getParams() throws AuthFailureError {
+                  Map<String, String> parametros = new HashMap<String, String>();
+                  String busqueda = ConsultaConductor.getIdConductorAux();
+                  parametros.put("campo", busqueda);
+                  return parametros;
+              }
+          };
+          requestQueue.add(stringRequest);
+      }
+    }
+
+    /*Seteamos los valores obtenidos del ArrayList lleno obtenido del método cargarConductorBuscado, lo recorremos y lo asignamos a la propiedad Text de cada EditText*/
+    public void cargarCampos(ArrayList list){
+        for (int i=0; i<list.size();i++){
+            ArrayList<ConsultaConductor> conductor = new ArrayList<ConsultaConductor>();
+            conductor = list;
+            edNombre.setText(conductor.get(i).getNombre().toString());
+            edApellido.setText(conductor.get(i).getApellido().toString());
+            edTelefono.setText(conductor.get(i).getTelefono().toString());
+            edNDUI.setText(conductor.get(i).getDui().toString());
+            edNit.setText(conductor.get(i).getNit().toString());
+            edNumLicencia.setText(conductor.get(i).getLicencia().toString());
+            edDireccion.setText(conductor.get(i).getDireccion().toString());
+
+            List<String> lables = new ArrayList<String>();
+            // Creating adapter for spinner
+            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+                    android.R.layout.simple_spinner_item, lables);
+            spinnerTipoLicencia.setSelection(obtenerPosicionItem(spinnerTipoLicencia, conductor.get(i).getTipo_licencia().toString()));
+        }
+    }
+
+    //Método para obtener la posición de un ítem del spinner
+    public int obtenerPosicionItem(Spinner spinner, String obtenido) {
+        //Creamos la variable posicion y lo inicializamos en 0
+        int posicion = 0;
+        //Recorre el spinner en busca del ítem que coincida con el parametro String obtenido
+        //que lo pasaremos posteriormente
+        for (int i = 0; i < spinner.getCount(); i++) {
+            //Almacena la posición del ítem que coincida con la búsqueda
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(obtenido)) {
+                posicion = i;
+            }
+        }
+        //Devuelve un valor entero (si encontro una coincidencia devuelve la
+        // posición 0 o N, de lo contrario devuelve 0 = posición inicial)
+        return posicion;
+    }
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -512,7 +608,6 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
-
     /*EnviarDatos, primero obtenemos los elementos y los asignamos a nuestras variables auxiliares
       luego añadimos a nuestra lista de tipo ArrayList todos los campos obteneidos, luego devolvemos la lista cargada que es la que pasamos
        al método EnviarForm */
@@ -530,7 +625,7 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
             final String setnumeroNIT =  edNit.getText().toString().trim();
             final String setDireccion =  edDireccion.getText().toString().trim();
             final String setnumeroLicencia =  edNumLicencia.getText().toString().trim();
-            final String setd_idi =  spinnerIdio.getSelectedItem().toString().trim();
+            final String setd_idi =  spinnerTipoLicencia.getSelectedItem().toString().trim();
             cliente = new DefaultHttpClient();
             post = new HttpPost(URL_REGISTRAR);
             lista = new  ArrayList<NameValuePair>(11);
@@ -577,7 +672,6 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
         }
     }
 
-
     //Método para limpiar después de cada acción realizada
     public void LimpiarElementos(){
         edNombre.setText("");
@@ -592,8 +686,8 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
     /*Método para cargar los idiomas al spinner tipos de licencias*/
     private void populateSpinnerIdioma() {
         List<String> TiposLicencias = new ArrayList<String>();
-        for (int i = 0; i < idiomaList.size(); i++) {
-            TiposLicencias.add(idiomaList.get(i).getIdioma());
+        for (int i = 0; i < tipoLicenciaList.size(); i++) {
+            TiposLicencias.add(tipoLicenciaList.get(i).getIdioma());
         }
         // Creating adapter for spinner
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
@@ -602,9 +696,8 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
         spinnerAdapter
                 .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // attaching data adapter to spinner
-        spinnerIdio.setAdapter(spinnerAdapter);
+        spinnerTipoLicencia.setAdapter(spinnerAdapter);
     }
-
 
     /*Cargar List de idiomas mediante un hilo secundario AsyncTask*/
     public class getTipoLicencias extends AsyncTask<Void, Void, Void> {
@@ -624,7 +717,7 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
                             JSONObject idiObj = (JSONObject) language.get(i);
                             Licencia idi = new Licencia (idiObj.getInt("id"),
                                     idiObj.getString("name"));
-                            idiomaList.add(idi);
+                            tipoLicenciaList.add(idi);
                         }
                     }
                 } catch (JSONException e) {

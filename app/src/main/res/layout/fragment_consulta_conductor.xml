@@ -5,10 +5,77 @@
     android:layout_height="match_parent"
     tools:context=".ui.driver.ConsultaConductor">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingTop="0dp"
+            android:paddingRight="20dp"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/billabong"
+                android:text="@string/buscar_conductor"
+                android:textColor="#000"
+                android:textSize="36sp" />
+
+            <EditText
+                android:id="@+id/edtBuscar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:autofillHints=""
+                android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                android:hint="@string/hint_Bconduc"
+                android:inputType="textMultiLine"
+                android:lines="5"
+                android:maxLength="180"
+                android:maxLines="5"
+                android:singleLine="true" />
+
+            <Button
+                android:id="@+id/btnBuscar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/gradient_1"
+                android:text="@string/buscar_btnDriver"
+                android:textColor="@android:color/white"
+                tools:ignore="MissingConstraints" />
+
+            <RelativeLayout android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" >
+
+                <ListView
+                    android:id="@+id/lvLibros"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:smoothScrollbar="true"
+
+                    tools:ignore="MissingConstraints" />
+            </RelativeLayout>
+            <Button
+                android:id="@+id/btnRegresar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_regresar"
+                android:background="@drawable/gradient_1"
+                android:layout_marginTop="60dp"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </FrameLayout>
