@@ -18,6 +18,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,18 +29,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.app.ProgressDialog;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.logistica.BuildConfig;
@@ -51,6 +56,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -70,10 +76,12 @@ import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 import cz.msebera.android.httpclient.message.BasicNameValuePair;
 import cz.msebera.android.httpclient.util.EntityUtils;
 
+
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static androidx.core.content.PermissionChecker.checkSelfPermission;
 import static com.facebook.FacebookSdk.getApplicationContext;
+import com.example.logistica.ui.driver.VolleySingleton;
 
 
 public class Conductor extends Fragment implements AdapterView.OnItemSelectedListener{
@@ -95,12 +103,22 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
     private final String CARPETA_RAIZ="misImagenesPrueba/";
     private final String RUTA_IMAGEN=CARPETA_RAIZ+"misFotos";
 
+    File fileImagen;
+    Bitmap bitmap;
+
     final int COD_SELECCIONA=10;
     final int COD_FOTO=20;
+    ProgressDialog progreso;
+
+    RelativeLayout layoutRegistrar;//permisos
+    // RequestQueue request;
+    JsonObjectRequest jsonObjectRequest;
+
+    StringRequest stringRequest;
 
     Button botonCargar;
     ImageView imagen;
-    String path;
+    String path;//almacena la ruta de la imagen
     ///--------------------------------------------------------------------------------------------------
 
     private Spinner spinnerIdio;
@@ -236,8 +254,6 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
                 cargarImagen();
             }
         });
-
-
         return view;
     }
 
@@ -262,8 +278,6 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
 
         return false;
     }
-
-
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -342,9 +356,70 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
         alertOpciones.show();
     }
 
+    private void cargarWebService() {
+        progreso=new ProgressDialog(getContext());
+        progreso.setMessage("Cargando...");
+        progreso.show();
+        //String ip=getString(R.string.ip);
+         String url="https://inventario-pdm115.000webhostapp.com/Logistica/ws_vc17009/registrarConductor.php";
+       // String url="http://192.168.0.27/VC17009/registrarConductor.php";
+        stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progreso.hide();
+                if (response.trim().equalsIgnoreCase("registra")){
+                    LimpiarElementos();
+                    Toast.makeText(getContext(),"Se ha registrado con exito",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getContext(),"No se ha registrado ",Toast.LENGTH_SHORT).show();
+                    Log.i("RESPUESTA: ",""+response);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            //Ete error notifica errores en el web service
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getContext(),"No se ha podido conectar",Toast.LENGTH_SHORT).show();
+                progreso.hide();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                final String setnombreCon = edNombre.getText().toString().trim();
+                final String setapellidoCon =  edApellido.getText().toString().trim();
+                final String settelefonoCon =  edTelefono.getText().toString().trim();
+                final String setnumeroDui =  edNDUI.getText().toString().trim();
+                final String setnumeroNIT =  edNit.getText().toString().trim();
+                final String setDireccion =  edDireccion.getText().toString().trim();
+                final String setnumeroLicencia =  edNumLicencia.getText().toString().trim();
+                final String setd_idi =  spinnerIdio.getSelectedItem().toString().trim();
+                String imagen=convertirImgString(bitmap);
+                Map<String,String> parametros=new HashMap<>();
+                parametros.put("dui", setnumeroDui);
+                parametros.put("nombre", setnombreCon);
+                parametros.put("apellido", setapellidoCon);
+                parametros.put("nit", setnumeroNIT);
+                parametros.put("telefono", settelefonoCon);
+                parametros.put("direccion", setDireccion);
+                parametros.put("url_foto", "abvc");
+                parametros.put("licencia", setnumeroLicencia);
+                parametros.put("tipo_licencia", setd_idi);
+                parametros.put("imagen",imagen);
+                return parametros;
+            }
+        };
+        //request.add(stringRequest);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        VolleySingleton.getIntanciaVolley(getContext()).addToRequestQueue(stringRequest);
+    }
 
-
-
+    private String convertirImgString(Bitmap bitmap) {
+        ByteArrayOutputStream array=new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,array);
+        byte[] imagenByte=array.toByteArray();
+        String imagenString= Base64.encodeToString(imagenByte,Base64.DEFAULT);
+        return imagenString;
+    }
 
     //Metodo para regresar a pantalla Busqueda de Documentos
     public  void RegresarBusqueda(){
@@ -354,7 +429,6 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
         //   fr.replace(R.id.nav_host_fragment, new BuscarDocumento());
         //   fr.commit();
     }
-
 
     //Método que notifica al usuario si esta seguro de confirmar eliminar
     public void ConfirmarEliminarDoc(){
@@ -416,7 +490,8 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
         myBuild.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                new Conductor.EnviarDatos(getActivity()).execute();
+               // new Conductor.EnviarDatos(getActivity()).execute();
+                cargarWebService();
             }
         });
         myBuild.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -428,6 +503,7 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
         AlertDialog dialog = myBuild.create();
         dialog.show();
     }
+
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
@@ -436,6 +512,7 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
     /*EnviarDatos, primero obtenemos los elementos y los asignamos a nuestras variables auxiliares
       luego añadimos a nuestra lista de tipo ArrayList todos los campos obteneidos, luego devolvemos la lista cargada que es la que pasamos
        al método EnviarForm */
@@ -499,6 +576,8 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
 
         }
     }
+
+
     //Método para limpiar después de cada acción realizada
     public void LimpiarElementos(){
         edNombre.setText("");
@@ -509,6 +588,7 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
         edDireccion.setText("");
         edNumLicencia.setText("");
     }
+
     /*Método para cargar los idiomas al spinner tipos de licencias*/
     private void populateSpinnerIdioma() {
         List<String> TiposLicencias = new ArrayList<String>();
@@ -524,6 +604,8 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
         // attaching data adapter to spinner
         spinnerIdio.setAdapter(spinnerAdapter);
     }
+
+
     /*Cargar List de idiomas mediante un hilo secundario AsyncTask*/
     public class getTipoLicencias extends AsyncTask<Void, Void, Void> {
         @Override
@@ -604,6 +686,13 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
                 case COD_SELECCIONA:
                     Uri miPath=data.getData();
                     imagen.setImageURI(miPath);
+                    try {
+                        bitmap=MediaStore.Images.Media.getBitmap(getContext().getContentResolver(),miPath);
+                        imagen.setImageBitmap(bitmap);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     break;
 
                 case COD_FOTO:
@@ -614,10 +703,9 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
                                     Log.i("Ruta de almacenamiento","Path: "+path);
                                 }
                             });
-
-                    Bitmap bitmap= BitmapFactory.decodeFile(path);
+                    //Bitmap bitmap= BitmapFactory.decodeFile(path);
+                    bitmap= BitmapFactory.decodeFile(path);
                     imagen.setImageBitmap(bitmap);
-
                     break;
             }}}
 
