@@ -1,7 +1,6 @@
 package com.example.logistica.ui.driver;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -48,7 +47,9 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.logistica.Administrador;
 import com.example.logistica.BuildConfig;
+import com.example.logistica.ConMapsActivity;
 import com.example.logistica.HandlerService;
 import com.example.logistica.R;
 
@@ -60,23 +61,15 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.DatagramPacket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import cz.msebera.android.httpclient.HttpResponse;
 import cz.msebera.android.httpclient.NameValuePair;
-import cz.msebera.android.httpclient.client.ClientProtocolException;
 import cz.msebera.android.httpclient.client.HttpClient;
-import cz.msebera.android.httpclient.client.entity.UrlEncodedFormEntity;
 import cz.msebera.android.httpclient.client.methods.HttpPost;
-import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
-import cz.msebera.android.httpclient.message.BasicNameValuePair;
-import cz.msebera.android.httpclient.util.EntityUtils;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -92,7 +85,7 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
     }
 
     //Declaramos las variables para cada elemento que vamos a obtener desde nuestro fragment driver
-    private EditText id_conductor, edNombre, edApellido, edTelefono,edNDUI, edNit, edNumLicencia, edDireccion;
+    private EditText id_conductor, id_url, edNombre, edApellido, edTelefono,edNDUI, edNit, edNumLicencia, edDireccion;
     private int id_idi;
     Button btnEliminar, btnRegresar, btnEditar;
     //Declaramos variables para el envío de datos al webService
@@ -148,6 +141,7 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
         //get other data form
         //EditText edNombre, edApellido, edTelefono,edNDUI, edNit, edNumLicencia;
         id_conductor = (EditText) view.findViewById(R.id.id_conductor);
+        id_url = (EditText) view.findViewById(R.id.id_url);
         edNombre = (EditText) view.findViewById(R.id.addNameCon);
         edApellido = (EditText) view.findViewById(R.id.addApeCon);
         edTelefono = (EditText) view.findViewById(R.id.addTelCon);
@@ -234,7 +228,7 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
         view.findViewById(R.id.btnDelete).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              //  ConfirmarEliminarDoc();
+               ConfirmarEliminarConductor();
             }
         });
 
@@ -266,21 +260,13 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
     }
 
     private void cargarImagen(String urlImagen) {
-       // urlImagen=urlImagen.replace(" ","%20");
+       //urlImagen=urlImagen.replace(" ","%20");
 
-        final String miPath=urlImagen.replace(" ","%20");
-        imagen.setImageURI(Uri.parse(miPath));
         ImageRequest imageRequest=new ImageRequest(urlImagen, new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
-                try {
-                    bitmap=MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(miPath));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                imagen.setImageBitmap(bitmap);
                // bitmap=response;//SE MODIFICA
-              //  imagen.setImageBitmap(response);
+                imagen.setImageBitmap(response);
             }
         }, 0, 0, ImageView.ScaleType.CENTER, null, new Response.ErrorListener() {
             @Override
@@ -444,25 +430,38 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
                 final String setDireccion =  edDireccion.getText().toString().trim();
                 final String setnumeroLicencia =  edNumLicencia.getText().toString().trim();
                 final String setd_idi =  spinnerTipoLicencia.getSelectedItem().toString().trim();
-                try{
-                String urlImagen=convertirImgString(bitmap);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-                String imagen=convertirImgString(bitmap);
-                Map<String,String> parametros=new HashMap<>();
-                parametros.put("id_conductor", setId);
-                parametros.put("dui", setnumeroDui);
-                parametros.put("nombre", setnombreCon);
-                parametros.put("apellido", setapellidoCon);
-                parametros.put("nit", setnumeroNIT);
-                parametros.put("telefono", settelefonoCon);
-                parametros.put("direccion", setDireccion);
-                parametros.put("url_foto", "abvc");
-                parametros.put("licencia", setnumeroLicencia);
-                parametros.put("tipo_licencia", setd_idi);
-                parametros.put("imagen",imagen);
+                try {
+                    String imagen=convertirImgString(bitmap);
+
+                    Map<String,String> parametros=new HashMap<>();
+                    parametros.put("id_conductor", setId);
+                    parametros.put("dui", setnumeroDui);
+                    parametros.put("nombre", setnombreCon);
+                    parametros.put("apellido", setapellidoCon);
+                    parametros.put("nit", setnumeroNIT);
+                    parametros.put("telefono", settelefonoCon);
+                    parametros.put("direccion", setDireccion);
+                    parametros.put("url_foto", "abvc");
+                    parametros.put("licencia", setnumeroLicencia);
+                    parametros.put("tipo_licencia", setd_idi);
+                    parametros.put("imagen",imagen);
                     return parametros;
+                }catch (Exception e){
+                    final String seturl = "null";
+                    Map<String,String> parametros=new HashMap<>();
+                    parametros.put("id_conductor", setId);
+                    parametros.put("dui", setnumeroDui);
+                    parametros.put("nombre", setnombreCon);
+                    parametros.put("apellido", setapellidoCon);
+                    parametros.put("nit", setnumeroNIT);
+                    parametros.put("url_foto", "abvc");
+                    parametros.put("telefono", settelefonoCon);
+                    parametros.put("direccion", setDireccion);
+                    parametros.put("licencia", setnumeroLicencia);
+                    parametros.put("tipo_licencia", setd_idi);
+                    parametros.put("imagen",seturl);
+                    return parametros;
+                }
 
             }
         };
@@ -488,15 +487,15 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
     }
 
     //Método que notifica al usuario si esta seguro de confirmar eliminar
-    public void ConfirmarEliminarDoc(){
+    public void ConfirmarEliminarConductor(){
         AlertDialog.Builder myBuild = new AlertDialog.Builder(getContext());
         myBuild.setTitle("Mensaje");
-        myBuild.setMessage("¿Esta Seguro que desea Eliminar el Documento?");
+        myBuild.setMessage("¿Esta Seguro que desea Eliminar el Conductor?");
         myBuild.setIcon(R.drawable.ic_error_outline_black_24dp);
         myBuild.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // EliminarDocumento();
+                EliminarConductor();
             }
         });
         myBuild.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -510,15 +509,36 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
     }
 
     //Método que consume el servicio para eliminar
-    public void EliminarDocumento(){
-        final String URL = "https://invetariopdm115.000webhostapp.com/ws_vc17009/ws_eliminarDocumento.php ";
+    public void EliminarConductor(){
+        final String URL = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_vc17009/DeleteConductor.php";
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
         StringRequest stringRequest = new StringRequest(Request.Method.POST,URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(getActivity().getApplicationContext(), "Documento Eliminado Satisfactoriamente", Toast.LENGTH_LONG).show();
-                //LimpiarElementos();
-                // RegresarBusqueda();
+                try {
+                    JSONObject obj = new JSONObject(response);
+
+                    //if no error in response
+                    if (!obj.getBoolean("error")) {
+                        if (pDialog.isShowing())
+                            pDialog.dismiss();
+                        consultarConductor consultarConductor = new consultarConductor();
+                        FragmentTransaction fr = getFragmentManager().beginTransaction();
+                        fr.replace(R.id.nav_host_fragment, new consultarConductor());
+                        fr.commit();
+                        ((Administrador) getActivity()).getSupportActionBar().setTitle("Conductores");
+
+                        Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        if (pDialog.isShowing())
+                            pDialog.dismiss();
+
+                        Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
@@ -529,7 +549,7 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parametros = new HashMap<String, String>();
-                // parametros.put("isbn", edisbn.getText().toString());
+                parametros.put("id_conductor", id_conductor.getText().toString());
                 return parametros;
             }
         };
@@ -631,6 +651,7 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
             edNit.setText(conductor.get(i).getNit().toString());
             edNumLicencia.setText(conductor.get(i).getLicencia().toString());
             edDireccion.setText(conductor.get(i).getDireccion().toString());
+            id_url.setText(conductor.get(i).getUrl_foto().toString());
             cargarImagen(conductor.get(i).getUrl_foto().toString());
 
             List<String> lables = new ArrayList<String>();
