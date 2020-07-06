@@ -47,9 +47,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.logistica.Administrador;
 import com.example.logistica.BuildConfig;
+import com.example.logistica.ConMapsActivity;
 import com.example.logistica.R;
 import com.example.logistica.HandlerService;
+import com.example.logistica.ui.viajes.ConsultaViajes;
 
 
 import org.json.JSONArray;
@@ -154,7 +157,7 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
         edDireccion= (EditText) view.findViewById(R.id.addDirCon);
         btnRegistrar = (Button) view.findViewById(R.id.btnRegistrar);
         btnRegresar = (Button) view.findViewById(R.id.btnRegresar);
-
+        pDialog = new ProgressDialog(getContext());
         //Initializing the ArrayList
         tipoLicenciaList = new ArrayList<Licencia>();
         /*----------------Inicializació de variables----------------------*/
@@ -358,22 +361,35 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
     }
 
     private void cargarWebService() {
-        progreso=new ProgressDialog(getContext());
-        progreso.setMessage("Cargando...");
-        progreso.show();
+        pDialog.setMessage("Cargando Datos");
+        pDialog.setCancelable(false);
+        pDialog.show();
         //String ip=getString(R.string.ip);
          String url="https://inventario-pdm115.000webhostapp.com/Logistica/ws_vc17009/registrarConductor.php";
        // String url="http://192.168.0.27/VC17009/registrarConductor.php";
         stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                progreso.hide();
-                if (response.trim().equalsIgnoreCase("registra")){
-                    LimpiarElementos();
-                    Toast.makeText(getContext(),"Se ha registrado con exito",Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(getContext(),"No se ha registrado ",Toast.LENGTH_SHORT).show();
-                    Log.i("RESPUESTA: ",""+response);
+                try {
+                    JSONObject obj = new JSONObject(response);
+
+                    //if no error in response
+                    if (!obj.getBoolean("error")) {
+                        if (pDialog.isShowing())
+                            pDialog.dismiss();
+                        consultarConductor consultarConductor = new consultarConductor();
+                        FragmentTransaction fr = getFragmentManager().beginTransaction();
+                        fr.replace(R.id.nav_host_fragment, new consultarConductor());
+                        fr.commit();
+                        Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        if (pDialog.isShowing())
+                            pDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
