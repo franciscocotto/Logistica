@@ -50,14 +50,9 @@ public class GenerarReporte extends Fragment{
     public GenerarReporte() { }
 
     ArrayList<Reporte> reportes = new ArrayList<Reporte>();
-    ArrayList<String> rutasArchivos;
-    ArrayList<String> nombreArchivos;
 
     String URLViajes = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_reporte_viajes.php";
 
-    public File carpeta;
-
-    ListView lvArchivos;
     Button btnReporteViajes, btnRegresar;
 
     @Override
@@ -66,12 +61,9 @@ public class GenerarReporte extends Fragment{
 
         View view = inflater.inflate(R.layout.fragment_reporte, container, false);
 
-        lvArchivos = (ListView)view.findViewById(R.id.lvArchivos);
-
         btnReporteViajes = (Button)view.findViewById(R.id.btnReporteViajes);
         btnRegresar = (Button)view.findViewById(R.id.btnRegresar);
 
-        cargarArchivos();
 
         btnReporteViajes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,12 +72,6 @@ public class GenerarReporte extends Fragment{
             }
         });
 
-        lvArchivos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                abrirReporteExel(rutasArchivos.get(position));
-            }
-        });
         return view;
     }
     private void datosReporteViajes(String URL){
@@ -132,36 +118,27 @@ public class GenerarReporte extends Fragment{
         requestQueue.add(stringRequest);
     }
 
-    private void cargarArchivos(){
-        rutasArchivos = new ArrayList<String>();
-        nombreArchivos = new ArrayList<String>();
-
-        carpeta = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "Logistica");
-        if(!carpeta.exists()){
-            carpeta.mkdirs();
-        }
-
-        File[] listaArchivos = carpeta.listFiles();
-
-        for (File archivo : listaArchivos){
-            rutasArchivos.add(archivo.getPath());
-        }
-
-        for (int i = 0; i<listaArchivos.length; i++){
-            File archivo = new File(rutasArchivos.get(i));
-            nombreArchivos.add(archivo.getName());
-        }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, nombreArchivos);
-        lvArchivos.setAdapter(adapter);
-        updateListViewHeight(lvArchivos);
-    }
+    private static final int WRITE_REQUES_CODE = 43;
 
     private void abrirReporteExel(String URI){
-        Intent intent = new Intent();
+        /*Intent intent = new Intent();
         intent.setAction(Intent.ACTION_DEFAULT);
         intent.setDataAndType(Uri.parse(URI), "application/vnd.ms-excel");
 
-        startActivity(intent);
+        startActivity(intent);*/
+        /*File file = new File(URI);
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("application/vnd.ms-excel");
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
+        startActivity(intent);*/
+
+
+
+        File file = new File(URI);
+        Intent intent = new Intent(Intent.ACTION_DEFAULT);
+        intent.setDataAndType(Uri.parse(URI),"application/vnd.ms-excel");
+        startActivityForResult(intent, WRITE_REQUES_CODE);
     }
 
     private void generarReporteViajes(ArrayList list){
@@ -285,38 +262,22 @@ public class GenerarReporte extends Fragment{
             celda = fila.createCell(12);
             celda.setCellValue(reportes.get(i).getFinalViaje());
         }
-        File file = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)+"/Logistica/", "prueba_16.xls");
-
+        File carpeta = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "Logistica");
+        if(!carpeta.mkdirs()){
+            carpeta.mkdirs();
+        }
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Logistica/", "prueba_17.xls");
         FileOutputStream outputStream = null;
 
         try {
             file.createNewFile();
             outputStream = new FileOutputStream(file);
             reporteViajes.write(outputStream);
-            Toast.makeText(getContext(), "Ok", Toast.LENGTH_LONG).show();
-            cargarArchivos();
+            Toast.makeText(getContext(), "Reporte creado con exito", Toast.LENGTH_LONG).show();
         }
         catch (IOException e){
             e.printStackTrace();
         }
     }
-    public static void updateListViewHeight(ListView lista) {
-        ListAdapter myListAdapter = lista.getAdapter();
-        if (myListAdapter == null) {
-            return;
-        }
-        // get listview height
-        int totalHeight = 0;
-        int adapterCount = myListAdapter.getCount();
-        for (int size = 0; size < adapterCount; size++) {
-            View listItem = myListAdapter.getView(size, null, lista);
-            listItem.measure(0, 0);
-            totalHeight += listItem.getMeasuredHeight();
-        }
-        // Change Height of ListView
-        ViewGroup.LayoutParams params = lista.getLayoutParams();
-        params.height = (totalHeight
-                + (lista.getDividerHeight() * (adapterCount)));
-        lista.setLayoutParams(params);
-    }
+
 }
