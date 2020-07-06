@@ -34,7 +34,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.logistica.R;
 import com.example.logistica.ui.home.HomeFragment;
-import com.example.logistica.ui.ruta.addRuta;
+//import com.example.logistica.ui.ruta.addRuta;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -133,9 +133,9 @@ public class consultarConductor extends Fragment {
 
                     ConsultaConductor.setIdConductorAux(idConductor[position]);
                     ConsultaConductor.sethintEdit("mod");
-                    Conductor conductor = new Conductor();
+                    Conductormod conductormod = new Conductormod();
                     FragmentTransaction fr = getFragmentManager().beginTransaction();
-                    fr.replace(R.id.nav_host_fragment, new Conductor());
+                    fr.replace(R.id.nav_host_fragment, new Conductormod());
                     fr.commit();
             }
         });
@@ -246,7 +246,7 @@ public class consultarConductor extends Fragment {
             docu = list;
             for (int i=0; i<list.size();i++){
                 nombres[i] = docu.get(i).getNombre().toString();
-                idConductor[i] = docu.get(i).getId_conductor().toString();
+                idConductor[i] = docu.get(i).getDui().toString();
             }
             adapter= new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, nombres);
             lista.setAdapter(adapter);

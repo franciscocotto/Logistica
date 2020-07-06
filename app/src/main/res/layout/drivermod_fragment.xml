@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:id="@+id/mapView"
+    tools:context=".ui.ruta.addRuta">
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
+            android:id="@+id/idLayoutRegistrar"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingTop="0dp">
+            <!-- TODO: Update blank fragment layout -->
+
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Conductores"
+                android:textColor="#000"
+                android:fontFamily="@font/moonlightf"
+                android:textSize="14sp"
+                android:layout_marginBottom="10dp"/>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_layout_autor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/addNameCon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                    android:hint="@string/hint_addNameCon"
+                    android:inputType="text"
+                    android:maxLength="150"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_origen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/addApeCon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                    android:hint="@string/hint_addApeCon"
+                    android:inputType="text"
+                    android:maxLength="150"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_telefono"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/addTelCon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                    android:hint="@string/hint_addTelCON"
+                    android:inputType="text"
+                    android:maxLength="150"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_dui"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/addDuiCon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                android:hint="@string/hint_addDuiCon"
+                android:inputType="text"
+                android:maxLength="150"
+                android:singleLine="true" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_nit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/addNitCon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                    android:hint="@string/hint_addNitCon"
+                    android:inputType="text"
+                    android:maxLength="150"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_TipoLic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/txt33"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/selectTipoLic"
+                    android:textColor="#757575"
+                    android:textSize="16sp"
+                    android:layout_marginTop="10dp"/>
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/addTipoLic"
+                    android:layout_marginTop="20dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_numLicencia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/addNumLic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                    android:hint="@string/hint_addNumLic"
+                    android:inputType="text"
+                    android:maxLength="150"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/input_dir"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/addDirCon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+                    android:hint="@string/hint_addDirCon"
+                    android:inputType="text"
+                    android:maxLength="150"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imgFoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/my_image_description"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_add_photo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <Button
+                    android:id="@+id/btnFoto"
+                    android:layout_width="127dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="18dp"
+                    android:background="@drawable/gradient_1"
+                    android:text="@string/hint_btnFoto"
+                    android:textColor="@android:color/white" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:layout_marginTop="25dp"
+                android:id="@+id/clean"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_limpiar"
+                android:background="#c3c3c3"
+                android:textColor="@android:color/white"/>
+            <Button
+                android:id="@+id/btnREditar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_ModCon"
+                android:background="#363533"
+                android:layout_marginTop="10dp"
+                android:textColor="@android:color/white"/>
+            <Button
+                android:id="@+id/btnRegresar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_regresar"
+                android:background="@drawable/gradient_1"
+                android:layout_marginTop="60dp"
+                android:textColor="@android:color/white"/>
+
+
+        </LinearLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
