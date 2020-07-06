@@ -153,7 +153,7 @@ public class GenerarReporte extends Fragment{
     private void abrirReporteExel(String URI){
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-        intent.setDataAndType(Uri.parse(URI), "application/xls");
+        intent.setDataAndType(Uri.parse(URI), "file/*");
         startActivity(intent);
     }
 
