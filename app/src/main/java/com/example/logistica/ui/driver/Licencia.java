@@ -7,24 +7,24 @@ public class Licencia {
     public Licencia() {
     }
 
-    public Licencia(int id_idioma, String idioma) {
-        this.id_lic = id_idioma;
-        this.licencia = idioma;
+    public Licencia(int id_lic, String licencia) {
+        this.id_lic = id_lic;
+        this.licencia = licencia;
     }
 
-    public int getId_idioma() {
+    public int getId_lic() {
         return id_lic;
     }
 
-    public void setId_idioma(int id_idioma) {
-        this.id_lic = id_idioma;
+    public void setId_lic(int id_lic) {
+        this.id_lic = id_lic;
     }
 
-    public String getIdioma() {
+    public String getLicencia() {
         return licencia;
     }
 
-    public void setIdioma(String idioma) {
-        this.licencia = idioma;
+    public void setLicencia(String licencia) {
+        this.licencia = licencia;
     }
 }

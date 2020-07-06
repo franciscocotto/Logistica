@@ -155,11 +155,11 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
         edDireccion= (EditText) view.findViewById(R.id.addDirCon);
         btnEditar = (Button) view.findViewById(R.id.btnREditar);
         btnRegresar = (Button) view.findViewById(R.id.btnRegresar);
+        btnEliminar = (Button) view.findViewById(R.id.btnDelete);
 
         //Initializing the ArrayList
         tipoLicenciaList = new ArrayList<Licencia>();
         /*----------------Inicializació de variables----------------------*/
-
         //Call Actions
         spinnerTipoLicencia.setOnItemSelectedListener(this);
         new getTipoLicencias().execute();
@@ -225,14 +225,14 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
         });
 
         //Método que recibe la acción OnClick luego se llama al método de confirmación
-        /*
-        view.findViewById(R.id.btnEliminar).setOnClickListener(new View.OnClickListener() {
+
+        view.findViewById(R.id.btnDelete).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ConfirmarEliminarDoc();
+              //  ConfirmarEliminarDoc();
             }
-        });*/
-        cargarConductorBuscado();
+        });
+
 
         view.findViewById(R.id.btnRegresar).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -507,7 +507,7 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
     public void EnviarForm(){
         AlertDialog.Builder myBuild = new AlertDialog.Builder(getContext());
         myBuild.setTitle("Mensaje");
-        myBuild.setMessage("¿Esta Seguro que desea Registrar nuevo Conductor?");
+        myBuild.setMessage("¿Esta Seguro que desea Modificar el Conductor Actual?");
         myBuild.setIcon(R.drawable.ic_error_outline_black_24dp);
         myBuild.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             @Override
@@ -543,10 +543,11 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
                           JSONArray bdoc = new JSONArray(response);
                           Log.i("sizejson", "" + bdoc.length());
                           ArrayList<ConsultaConductor> listB = new ArrayList<ConsultaConductor>();
-                          for (int i = 0; i < bdoc.length(); i += 11) {
+                          for (int i = 0; i < bdoc.length(); i += 10) {
                               try {
                                   listB.add(new ConsultaConductor(
-                                          bdoc.getString(i+1 ),
+                                          bdoc.getString(i+0 ),
+                                          bdoc.getString(i + 1),
                                           bdoc.getString(i + 2),
                                           bdoc.getString(i + 3),
                                           bdoc.getString(i + 4),
@@ -554,8 +555,7 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
                                           bdoc.getString(i + 6),
                                           bdoc.getString(i + 7),
                                           bdoc.getString(i + 8),
-                                          bdoc.getString(i + 9),
-                                          bdoc.getString(i + 10)));
+                                          bdoc.getString(i + 9)));
                               } catch (JSONException e) {
                                   e.printStackTrace();
                               }
@@ -599,10 +599,17 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
             cargarImagen(conductor.get(i).getUrl_foto().toString());
 
             List<String> lables = new ArrayList<String>();
+            for (int j = 0; j < tipoLicenciaList.size(); j++) {
+                lables.add(tipoLicenciaList.get(j).getLicencia());
+            }
             // Creating adapter for spinner
             ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
                     android.R.layout.simple_spinner_item, lables);
-            spinnerTipoLicencia.setSelection(obtenerPosicionItem(spinnerTipoLicencia, conductor.get(i).getTipo_licencia().toString()));
+            spinnerTipoLicencia.setAdapter(spinnerAdapter);
+            spinnerAdapter.notifyDataSetChanged();
+            spinnerTipoLicencia.setSelection(spinnerAdapter.getPosition(conductor.get(i).getTipo_licencia().toString()));
+          //  spinnerTipoLicencia.setSelection(obtenerPosicionItem(spinnerTipoLicencia, conductor.get(i).getTipo_licencia().toString()));
+
         }
     }
 
@@ -707,10 +714,10 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
     }
 
     /*Método para cargar los idiomas al spinner tipos de licencias*/
-    private void populateSpinnerIdioma() {
+    private void populateSpinnerLicencia() {
         List<String> TiposLicencias = new ArrayList<String>();
         for (int i = 0; i < tipoLicenciaList.size(); i++) {
-            TiposLicencias.add(tipoLicenciaList.get(i).getIdioma());
+            TiposLicencias.add(tipoLicenciaList.get(i).getLicencia());
         }
         // Creating adapter for spinner
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
@@ -734,7 +741,7 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
                     JSONObject jsonObj = new JSONObject(json);
                     if (jsonObj != null) {
                         JSONArray language = jsonObj
-                                .getJSONArray("idiomas");
+                                .getJSONArray("licencias");
 
                         for (int i = 0; i < language.length(); i++) {
                             JSONObject idiObj = (JSONObject) language.get(i);
@@ -754,7 +761,9 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            populateSpinnerIdioma();
+            cargarConductorBuscado();
+
+            //  populateSpinnerLicencia();
         }
     }
 

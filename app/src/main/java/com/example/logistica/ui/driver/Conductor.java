@@ -47,12 +47,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.logistica.Administrador;
 import com.example.logistica.BuildConfig;
-import com.example.logistica.ConMapsActivity;
 import com.example.logistica.R;
 import com.example.logistica.HandlerService;
-import com.example.logistica.ui.viajes.ConsultaViajes;
 
 
 import org.json.JSONArray;
@@ -700,10 +697,10 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
     }
 
     /*Método para cargar los idiomas al spinner tipos de licencias*/
-    private void populateSpinnerIdioma() {
+    private void populateSpinnerLicencia() {
         List<String> TiposLicencias = new ArrayList<String>();
         for (int i = 0; i < tipoLicenciaList.size(); i++) {
-            TiposLicencias.add(tipoLicenciaList.get(i).getIdioma());
+            TiposLicencias.add(tipoLicenciaList.get(i).getLicencia());
         }
         // Creating adapter for spinner
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
@@ -727,7 +724,7 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
                     JSONObject jsonObj = new JSONObject(json);
                     if (jsonObj != null) {
                         JSONArray language = jsonObj
-                                .getJSONArray("idiomas");
+                                .getJSONArray("licencias");
 
                         for (int i = 0; i < language.length(); i++) {
                             JSONObject idiObj = (JSONObject) language.get(i);
@@ -747,7 +744,7 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            populateSpinnerIdioma();
+            populateSpinnerLicencia();
         }
     }
 

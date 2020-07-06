@@ -246,7 +246,7 @@ public class consultarConductor extends Fragment {
             docu = list;
             for (int i=0; i<list.size();i++){
                 nombres[i] = docu.get(i).getNombre().toString();
-                idConductor[i] = docu.get(i).getDui().toString();
+                idConductor[i] = docu.get(i).getId_conductor().toString();
             }
             adapter= new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, nombres);
             lista.setAdapter(adapter);

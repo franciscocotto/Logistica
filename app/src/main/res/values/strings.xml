@@ -88,4 +88,7 @@
     <string name="hint_Bconduc">Ingrese Nombre o Apellido</string>
     <string name="buscar_btnDriver">Buscar</string>
     <string name="hint_ModCon">Modificar</string>
+    <string name="hint_DelCon">Eliminar</string>
+    <string name="edit">Editar Conductor</string>
+    <string name="addConductor">Agregar Conductor</string>
 </resources>
