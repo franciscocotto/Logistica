@@ -2,12 +2,12 @@ package com.example.logistica;
 
 public class Reporte {
     private int id_viaje;
-    private String nombreRuta, origenRuta, destinoRuta, codVehiculo, placaVehiculo, duiConductor, nonbleConductor,
+    private String nombreRuta, origenRuta, destinoRuta, codVehiculo, placaVehiculo, duiConductor, nombreConductor,
                     apellidoConductor, licenciaConductor, inicioViaje, finalViaje, nombreViaje;
 
     public Reporte(){}
 
-    public Reporte(int id_viaje, String nombreRuta, String origenRuta, String destinoRuta, String codVehiculo, String placaVehiculo, String duiConductor, String nonbleConductor, String apellidoConductor, String licenciaConductor, String inicioViaje, String finalViaje, String nombreViaje) {
+    public Reporte(int id_viaje, String nombreRuta, String origenRuta, String destinoRuta, String codVehiculo, String placaVehiculo, String duiConductor, String nombreConductor, String apellidoConductor, String licenciaConductor, String inicioViaje, String finalViaje, String nombreViaje) {
         this.id_viaje = id_viaje;
         this.nombreRuta = nombreRuta;
         this.origenRuta = origenRuta;
@@ -15,7 +15,7 @@ public class Reporte {
         this.codVehiculo = codVehiculo;
         this.placaVehiculo = placaVehiculo;
         this.duiConductor = duiConductor;
-        this.nonbleConductor = nonbleConductor;
+        this.nombreConductor = nombreConductor;
         this.apellidoConductor = apellidoConductor;
         this.licenciaConductor = licenciaConductor;
         this.inicioViaje = inicioViaje;
@@ -51,8 +51,8 @@ public class Reporte {
         return duiConductor;
     }
 
-    public String getNonbleConductor() {
-        return nonbleConductor;
+    public String getNombreConductor() {
+        return nombreConductor;
     }
 
     public String getApellidoConductor() {
@@ -104,8 +104,8 @@ public class Reporte {
         this.duiConductor = duiConductor;
     }
 
-    public void setNonbleConductor(String nonbleConductor) {
-        this.nonbleConductor = nonbleConductor;
+    public void setNombreConductor(String nombreConductor) {
+        this.nombreConductor = nombreConductor;
     }
 
     public void setApellidoConductor(String apellidoConductor) {
