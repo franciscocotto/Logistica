@@ -12,6 +12,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.logistica.Administrador;
 import com.example.logistica.R;
+import com.example.logistica.ui.driver.Conductor;
+import com.example.logistica.ui.driver.consultarConductor;
 import com.example.logistica.ui.driver.opcionesConductor;
 import com.example.logistica.ui.reportes.GenerarReporte;
 import com.example.logistica.ui.ruta.ConsultaRutas;
@@ -52,9 +54,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    opcionesConductor opConductor = new opcionesConductor();
+                    consultarConductor consultarConductor = new consultarConductor();
                     FragmentTransaction fr = getFragmentManager().beginTransaction();
-                    fr.replace(R.id.nav_host_fragment, new opcionesConductor());
+                    fr.replace(R.id.nav_host_fragment, new consultarConductor());
                     fr.commit();
                     ((Administrador) getActivity()).getSupportActionBar().setTitle("Conductores");
                 }catch (Exception e){

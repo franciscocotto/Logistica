@@ -691,11 +691,29 @@ public class ConMapsActivity extends FragmentActivity implements OnMapReadyCallb
         StringRequest stringRequest = new StringRequest(Request.Method.POST,URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                if (pDialog.isShowing())
-                    pDialog.dismiss();
-                Intent intent = new Intent(ConMapsActivity.this, Administrador.class);
-                startActivity(intent);
-                Toast.makeText(getApplicationContext(), "Rutas Eliminada Satisfactoriamente", Toast.LENGTH_LONG).show();
+
+                try {
+                    JSONObject obj = new JSONObject(response);
+
+                    //if no error in response
+                    if (!obj.getBoolean("error")) {
+                        if (pDialog.isShowing())
+                            pDialog.dismiss();
+                        Intent intent = new Intent(ConMapsActivity.this, Administrador.class);
+                        startActivity(intent);
+
+                        Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        if (pDialog.isShowing())
+                            pDialog.dismiss();
+
+                        Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                }
         }, new Response.ErrorListener() {
             @Override
