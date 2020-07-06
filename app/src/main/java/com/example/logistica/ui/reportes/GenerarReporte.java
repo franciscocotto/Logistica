@@ -136,7 +136,7 @@ public class GenerarReporte extends Fragment{
         rutasArchivos = new ArrayList<String>();
         nombreArchivos = new ArrayList<String>();
 
-        carpeta = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "Logistica");
+        carpeta = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath(), "Logistica");
         if(!carpeta.exists()){
             carpeta.mkdirs();
         }
@@ -160,7 +160,7 @@ public class GenerarReporte extends Fragment{
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_DEFAULT);
         intent.setDataAndType(Uri.parse(URI), "application/vnd.ms-excel");
-        
+
         startActivity(intent);
     }
 
@@ -285,9 +285,7 @@ public class GenerarReporte extends Fragment{
             celda = fila.createCell(12);
             celda.setCellValue(reportes.get(i).getFinalViaje());
         }
-        //carpeta = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "Logistica");
-
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Logistica/", "prueba_16.xls");
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath()+"/Logistica/", "prueba_16.xls");
 
         FileOutputStream outputStream = null;
 
