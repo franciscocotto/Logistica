@@ -55,6 +55,8 @@ public class GenerarReporte extends Fragment{
 
     String URLViajes = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_reporte_viajes.php";
 
+    public File carpeta;
+
     ListView lvArchivos;
     Button btnReporteViajes, btnRegresar;
 
@@ -134,36 +136,42 @@ public class GenerarReporte extends Fragment{
         rutasArchivos = new ArrayList<String>();
         nombreArchivos = new ArrayList<String>();
 
-
-        File carpeta = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "Logistica");
+        carpeta = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "Logistica");
         if(!carpeta.exists()){
             carpeta.mkdirs();
         }
 
-        File directorioActual = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)+"/Logistica");
-        File[] listaArchivos = directorioActual.listFiles();
+        File[] listaArchivos = carpeta.listFiles();
 
-        if(listaArchivos!=null){
-            for (File archivo : listaArchivos){
-                rutasArchivos.add(archivo.getPath());
-            }
+        //carpeta = Environment.getDataDirectory();
 
-            for (int i = 0; i<listaArchivos.length; i++){
-                File archivo = new File(rutasArchivos.get(i));
-                nombreArchivos.add(archivo.getName());
-            }
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, nombreArchivos);
-            lvArchivos.setAdapter(adapter);
-            updateListViewHeight(lvArchivos);
+
+        //File[] listaArchivos = Environment.get
+
+
+        for (File archivo : listaArchivos){
+            rutasArchivos.add(archivo.getPath());
         }
+
+        for (int i = 0; i<listaArchivos.length; i++){
+            File archivo = new File(rutasArchivos.get(i));
+            nombreArchivos.add(archivo.getName());
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, nombreArchivos);
+        lvArchivos.setAdapter(adapter);
+        updateListViewHeight(lvArchivos);
+
 
     }
 
     private void abrirReporteExel(String URI){
         Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-        intent.setDataAndType(Uri.parse(URI), "file/*");
-        startActivity(intent);
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        //intent.setDataAndType(Uri.parse(URI), "application/vnd.ms-excel");
+
+        Intent share = Intent.createChooser(intent, null);
+        startActivity(share);
     }
 
     private void generarReporteViajes(ArrayList list){
@@ -289,7 +297,7 @@ public class GenerarReporte extends Fragment{
         }
         //File file = new File(getContext().getExternalFilesDir(null), "prueba10.xls");
 
-        File file = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)+"/Logistica", "prueba_11.xls");
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "prueba_14.xls");
 
         FileOutputStream outputStream = null;
 
