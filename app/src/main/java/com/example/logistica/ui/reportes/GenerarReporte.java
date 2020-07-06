@@ -136,18 +136,12 @@ public class GenerarReporte extends Fragment{
         rutasArchivos = new ArrayList<String>();
         nombreArchivos = new ArrayList<String>();
 
-        carpeta = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "Logistica");
+        carpeta = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "Logistica");
         if(!carpeta.exists()){
             carpeta.mkdirs();
         }
 
         File[] listaArchivos = carpeta.listFiles();
-
-        //carpeta = Environment.getDataDirectory();
-
-
-        //File[] listaArchivos = Environment.get
-
 
         for (File archivo : listaArchivos){
             rutasArchivos.add(archivo.getPath());
@@ -160,18 +154,14 @@ public class GenerarReporte extends Fragment{
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, nombreArchivos);
         lvArchivos.setAdapter(adapter);
         updateListViewHeight(lvArchivos);
-
-
     }
 
     private void abrirReporteExel(String URI){
         Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.setType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        //intent.setDataAndType(Uri.parse(URI), "application/vnd.ms-excel");
-
-        Intent share = Intent.createChooser(intent, null);
-        startActivity(share);
+        intent.setAction(Intent.ACTION_DEFAULT);
+        intent.setDataAndType(Uri.parse(URI), "application/vnd.ms-excel");
+        
+        startActivity(intent);
     }
 
     private void generarReporteViajes(ArrayList list){
@@ -295,9 +285,9 @@ public class GenerarReporte extends Fragment{
             celda = fila.createCell(12);
             celda.setCellValue(reportes.get(i).getFinalViaje());
         }
-        //File file = new File(getContext().getExternalFilesDir(null), "prueba10.xls");
+        //carpeta = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "Logistica");
 
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "prueba_14.xls");
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Logistica/", "prueba_16.xls");
 
         FileOutputStream outputStream = null;
 
