@@ -1,10 +1,12 @@
 package com.example.logistica.ui.viajes;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -265,7 +267,7 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
         btnViaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                generarViaje();
+               EnviarForm();
             }
         });
   btnRegresar.setOnClickListener(new View.OnClickListener() {
@@ -276,6 +278,32 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
   });
         return view;
     }
+    /**
+     *Alerta para guardado de datos
+     * */
+
+    public void EnviarForm(){
+        AlertDialog.Builder myBuild = new AlertDialog.Builder(getActivity());
+        myBuild.setTitle("Mensaje");
+        myBuild.setMessage("¿Esta seguro de guardar este viaje?");
+        myBuild.setIcon(R.drawable.ic_warning_black_24dp);
+        myBuild.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                generarViaje();
+            }
+        });
+        myBuild.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog dialog = myBuild.create();
+        dialog.show();
+    }
+
+
     public  void RegresarBusqueda(){
         HomeFragment homeFragment = new HomeFragment();
         FragmentTransaction fr = getFragmentManager().beginTransaction();

@@ -1,12 +1,15 @@
 package com.example.logistica.ui.viajes;
 
 import android.app.DownloadManager;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -48,13 +52,15 @@ public class ConsultaViajes extends Fragment {
     public ConsultaViajes() {
         // Required empty public constructor
     }
-
+    private static final int REQUEST_CODE = 1 ;
+    public static final int RESULT_OK = -1;
     ArrayList<Viajes> viajes = new ArrayList<Viajes>();
 
     String[] viajesV;
 
     String URLBusqueda = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_busqueda_viajes.php";
-
+    ProgressBar progressBar;
+    ProgressDialog pDialog;
     EditText etBuscar;
     ImageButton btnIngresarViaje;
     ListView lvViajes;
@@ -68,7 +74,10 @@ public class ConsultaViajes extends Fragment {
         btnIngresarViaje = (ImageButton) view.findViewById(R.id.agregarViaje);
         etBuscar = (EditText)view.findViewById(R.id.edtBuscar);
         btnRegresar = (Button) view.findViewById(R.id.btnRegresarBusqueda);
-
+        pDialog = new ProgressDialog(getContext());
+        pDialog.setMessage("Cargando Datos");
+        pDialog.setCancelable(false);
+        pDialog.show();
         buscarViajes(URLBusqueda, " ");
 
         btnIngresarViaje.setOnClickListener(new View.OnClickListener() {
@@ -117,9 +126,48 @@ public class ConsultaViajes extends Fragment {
                 RegresarBusqueda();
             }
         });
+      Button  btnBuscar = (Button)view.findViewById(R.id.btnBuscar);
+        btnBuscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String DIALOG_TEXT = "Speech recognition demo";
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, DIALOG_TEXT);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, REQUEST_CODE);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-SV");
+
+                startActivityForResult(intent, REQUEST_CODE);
+            }
+        });
 
         return view;
     }
+    String resultSpeech = "";
+    @Override
+    public void onActivityResult(int requestCode, int resultcode, Intent intent) {
+        super.onActivityResult(requestCode, resultcode, intent);
+        ArrayList<String> speech;
+        if (resultcode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE) {
+                speech = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                resultSpeech = speech.get(0);
+                etBuscar.setText(resultSpeech);
+                pDialog.setMessage("Buscando...");
+                pDialog.setCancelable(false);
+                pDialog.show();
+                String busqueda = etBuscar.getText().toString();
+                buscarViajes(URLBusqueda, busqueda);
+                if(lvViajes.getCount()== 0){
+                    Toast.makeText(getActivity(), "Busqueda Finalizada", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }
+    }
+
     public  void RegresarBusqueda(){
         HomeFragment homeFragment = new HomeFragment();
         FragmentTransaction fr = getFragmentManager().beginTransaction();
@@ -143,7 +191,8 @@ public class ConsultaViajes extends Fragment {
                     }
                     cargarLista(viajes);
                 }catch (JSONException e){
-                    Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                  //  Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
                 }
             }
         }, new Response.ErrorListener() {
@@ -168,9 +217,11 @@ public class ConsultaViajes extends Fragment {
         for(int i = 0; i<viajes.size();i++){
             viajesV[i] = viajes.get(i).getNomViaje();
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, viajesV);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, viajesV);
         lvViajes.setAdapter(adapter);
         updateListViewHeight(lvViajes);
+        if (pDialog.isShowing())
+            pDialog.dismiss();
     }
     public static void updateListViewHeight(ListView lista) {
         ListAdapter myListAdapter = lista.getAdapter();

@@ -3,7 +3,11 @@ package com.example.logistica.ui.driver;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +50,8 @@ public class consultarConductor extends Fragment {
     public consultarConductor() {
         // Required empty public constructor
     }
-
+    private static final int REQUEST_CODE = 1 ;
+    public static final int RESULT_OK = -1;
     ProgressBar progressBar;
     ProgressDialog pDialog;
     EditText etBuscar;
@@ -85,24 +90,41 @@ public class consultarConductor extends Fragment {
         pDialog.setCancelable(false);
         pDialog.show();
         buscarConductor(" ", 1);
-        btnBuscar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        etBuscar.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
                 if(etBuscar.getText().toString().isEmpty()){
-                    EnviarForm();
-                }
-                else{
-                    pDialog = new ProgressDialog(getContext());
-                    pDialog.setMessage("Buscando...");
-                    pDialog.setCancelable(false);
-                    pDialog.show();
+                    buscarConductor(" ",1);
+                }else{
                     String busqueda = etBuscar.getText().toString();
                     buscarConductor(busqueda,2);
                     if(lista.getCount()== 0){
                         Toast.makeText(getActivity().getApplicationContext(), "Busqueda Finalizada", Toast.LENGTH_LONG).show();
                     }
                 }
+            }
+        });
+        btnBuscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String DIALOG_TEXT = "Speech recognition demo";
+                Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, DIALOG_TEXT);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                        RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, REQUEST_CODE);
+                intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-SV");
 
+                startActivityForResult(intent, REQUEST_CODE);
             }
         });
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -124,6 +146,29 @@ public class consultarConductor extends Fragment {
             }
         });
         return view;
+    }
+
+    String resultSpeech = "";
+    @Override
+    public void onActivityResult(int requestCode, int resultcode, Intent intent) {
+        super.onActivityResult(requestCode, resultcode, intent);
+        ArrayList<String> speech;
+        if (resultcode == RESULT_OK) {
+            if (requestCode == REQUEST_CODE) {
+                speech = intent.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                resultSpeech = speech.get(0);
+                etBuscar.setText(resultSpeech);
+                pDialog.setMessage("Buscando...");
+                pDialog.setCancelable(false);
+                pDialog.show();
+                String busqueda = etBuscar.getText().toString();
+                buscarConductor(busqueda,2);
+                if(lista.getCount()== 0){
+                    Toast.makeText(getActivity().getApplicationContext(), "Busqueda Finalizada", Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }
     }
 
     public void buscarConductor(final String busqueda, int accion){
