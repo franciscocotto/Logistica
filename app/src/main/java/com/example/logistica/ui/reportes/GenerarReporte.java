@@ -53,7 +53,8 @@ public class GenerarReporte extends Fragment{
     ArrayList<String> rutasArchivos;
     ArrayList<String> nombreArchivos;
 
-    String direccion = Environment.getExternalStorageDirectory().getPath()+"/Logistica/";
+    String direccionCarp = Environment.getExternalStorageDirectory().getPath()+"/Logistica/";
+    String direccionNoCarp = Environment.getExternalStorageDirectory().getPath();
     String URLViajes = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_reporte_viajes.php";
 
     ListView lvArchivos;
@@ -134,7 +135,13 @@ public class GenerarReporte extends Fragment{
     private void cargarArchivos(){
         rutasArchivos = new ArrayList<String>();
         nombreArchivos = new ArrayList<String>();
-        File directorioActual = new File(direccion);
+        File carpeta = new File(direccionNoCarp, "Logistica");
+
+        if (!carpeta.exists()){
+            carpeta.mkdirs();
+        }
+
+        File directorioActual = new File(direccionCarp);
         File[] listaArchivos = directorioActual.listFiles();
 
         for (File archivo : listaArchivos){
@@ -286,12 +293,12 @@ public class GenerarReporte extends Fragment{
             celda.setCellValue(reportes.get(i).getFinalViaje());
         }
         //File file = new File(getContext().getExternalFilesDir(null), "prueba10.xls");
-        File carpeta = new File(Environment.getExternalStorageDirectory().getPath(), "Logistica");
+        File carpeta = new File(direccionNoCarp, "Logistica");
         if(!carpeta.exists()){
             carpeta.mkdirs();
         }
 
-        File file = new File(direccion, "prueba_11.xls");
+        File file = new File(direccionCarp, "prueba_11.xls");
 
         FileOutputStream outputStream = null;
 
