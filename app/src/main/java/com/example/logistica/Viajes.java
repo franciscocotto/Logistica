@@ -26,6 +26,14 @@ import java.util.Map;
 
 public class Viajes extends Fragment {
 
+    public static int getIdViaje() {
+        return idViaje;
+    }
+
+    public static void setIdViaje(int idViaje) {
+        Viajes.idViaje = idViaje;
+    }
+
     public static int idViaje;
     public static int accionar;
     private int id_viaje, id_ruta, id_vehiculo, id_conductor;

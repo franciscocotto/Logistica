@@ -35,6 +35,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.logistica.Administrador;
 import com.example.logistica.R;
+import com.example.logistica.Rutas;
 import com.example.logistica.Viajes;
 import com.example.logistica.ui.home.HomeFragment;
 
@@ -57,7 +58,7 @@ public class ConsultaViajes extends Fragment {
     ArrayList<Viajes> viajes = new ArrayList<Viajes>();
 
     String[] viajesV;
-
+    Integer[] idViaje = new Integer[0];
     String URLBusqueda = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_busqueda_viajes.php";
     ProgressBar progressBar;
     ProgressDialog pDialog;
@@ -116,6 +117,8 @@ public class ConsultaViajes extends Fragment {
         lvViajes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Viajes.setIdViaje(idViaje[position]);
                 Viajes.accionar = 2;
 
             }
@@ -214,8 +217,10 @@ public class ConsultaViajes extends Fragment {
     public void cargarLista(ArrayList list){
         this.viajes = list;
         viajesV = new String[viajes.size()];
+        idViaje = new Integer[viajes.size()];
         for(int i = 0; i<viajes.size();i++){
             viajesV[i] = viajes.get(i).getNomViaje();
+            idViaje[i] = viajes.get(i).getId_viaje();
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_list_item_1, viajesV);
         lvViajes.setAdapter(adapter);
