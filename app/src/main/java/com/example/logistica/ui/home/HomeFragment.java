@@ -12,9 +12,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.logistica.Administrador;
 import com.example.logistica.R;
-import com.example.logistica.ui.driver.Conductor;
 import com.example.logistica.ui.driver.opcionesConductor;
-import com.example.logistica.ui.reportes.Reporte;
+import com.example.logistica.ui.reportes.GenerarReporte;
 import com.example.logistica.ui.ruta.ConsultaRutas;
 import com.example.logistica.ui.viajes.ConsultaViajes;
 
@@ -78,9 +77,9 @@ public class HomeFragment extends Fragment {
         reporte.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Reporte reporte = new Reporte();
+                GenerarReporte generarReporte = new GenerarReporte();
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.nav_host_fragment, new Reporte());
+                fr.replace(R.id.nav_host_fragment, new GenerarReporte());
                 fr.commit();
                 ((Administrador) getActivity()).getSupportActionBar().setTitle("Reportes");
             }

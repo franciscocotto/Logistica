@@ -10,7 +10,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.logistica.R;
+import com.example.logistica.Reporte;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -24,13 +31,16 @@ import org.apache.poi.ss.usermodel.Workbook;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 
-public class Reporte extends Fragment{
+public class GenerarReporte extends Fragment{
 
-    public Reporte() {
-        // Required empty public constructor
-    }
+    public GenerarReporte() { }
+
+    ArrayList<Reporte> reportes = new ArrayList<Reporte>();
+
+    String URLViajes = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_reporte_viajes.php";
 
     Button btnReporteViajes;
 
@@ -39,6 +49,8 @@ public class Reporte extends Fragment{
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_reporte, container, false);
+
+        cargarArchivos();
 
         btnReporteViajes = (Button)view.findViewById(R.id.btnReporteViajes);
 
@@ -49,6 +61,36 @@ public class Reporte extends Fragment{
             }
         });
         return view;
+    }
+    private void datosReporteViajes(String URL){
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        StringRequest stringRequest = new StringRequest(Request.Method.DEPRECATED_GET_OR_POST, URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+    }
+
+    private void cargarArchivos(){
+        ArrayList<String> rutasArchivos = new ArrayList<String>();
+        ArrayList<String> nombreArchivos = new ArrayList<String>();
+        File directorioActual = new File(String.valueOf(getContext().getExternalFilesDir(null)));
+        File[] listaArchivos = directorioActual.listFiles();
+
+        for (File archivo : listaArchivos){
+            rutasArchivos.add(archivo.getPath());
+        }
+
+        for (int i = 0; i<listaArchivos.length; i++){
+            File archivo = new File(rutasArchivos.get(i));
+            nombreArchivos.add(archivo.getName());
+        }
     }
 
     private void generarReporteViajes(){
@@ -78,10 +120,12 @@ public class Reporte extends Fragment{
         cell = row.createCell(1);
         cell.setCellValue("Sergio");
 
-        File file = new File(getContext().getExternalFilesDir(null), "usuarios.xls");
+        File file = new File(getContext().getExternalFilesDir(null), "usua3.xls");
+
         FileOutputStream outputStream = null;
 
         try {
+            file.createNewFile();
             outputStream = new FileOutputStream(file);
             workbook.write(outputStream);
             Toast.makeText(getContext(), "Ok", Toast.LENGTH_LONG).show();
