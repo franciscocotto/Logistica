@@ -21,7 +21,7 @@
 
     <fragment
         android:id="@+id/nav_driver"
-        android:name="com.example.logistica.ui.driver.ConsultaConductor"
+        android:name="com.example.logistica.ui.driver.consultarConductor"
         android:label="@string/menu_driver"
         tools:layout="@layout/fragment_consulta_conductor"/>
 
@@ -30,5 +30,11 @@
         android:name="com.example.logistica.ui.viajes.ConsultaViajes"
         android:label="Viajes"
         tools:layout="@layout/fragment_consulta_viajes"/>
+    <fragment
+        android:id="@+id/nav_reporte"
+        android:name="com.example.logistica.ui.reportes.GenerarReporte"
+        android:label="Viajes"
+        tools:layout="@layout/fragment_consulta_viajes"/>
+
 
 </navigation>

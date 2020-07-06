@@ -53,6 +53,7 @@
     <string name="hint_interest_total">Total Interest for Loan ₹</string>
     <string name="rutas">Rutas Turisticas</string>
     <string name="add_rutas">Nueva Ruta</string>
+    <string name="add_viaje">Nuevo Viaje</string>
     <string name="add_conductor">Nuevo Conductor</string>
     <string name="edit_rutas">Editar Ruta</string>
     <string name="buscar_rutas">Rutas Disponibles</string>

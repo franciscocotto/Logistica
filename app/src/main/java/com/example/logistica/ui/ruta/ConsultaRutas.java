@@ -252,7 +252,7 @@ public class ConsultaRutas extends Fragment {
                         }
                     }
                     else{
-                        Toast.makeText(getActivity().getApplicationContext(), "No se encontraron coincidencias", Toast.LENGTH_LONG).show();
+                      //  Toast.makeText(getActivity().getApplicationContext(), "No se encontraron coincidencias", Toast.LENGTH_LONG).show();
                         if (pDialog.isShowing())
                             pDialog.dismiss();
                     }

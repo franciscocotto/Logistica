@@ -36,6 +36,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -423,11 +424,10 @@ public class Conductor extends Fragment implements AdapterView.OnItemSelectedLis
 
     //Metodo para regresar a pantalla Busqueda de Documentos
     public  void RegresarBusqueda(){
-        // Documentos.setFragmento(1);
-        // BuscarDocumento conDocumentos = new BuscarDocumento();
-        //   FragmentTransaction fr = getFragmentManager().beginTransaction();
-        //   fr.replace(R.id.nav_host_fragment, new BuscarDocumento());
-        //   fr.commit();
+        consultarConductor consultarConductor = new consultarConductor();
+        FragmentTransaction fr = getFragmentManager().beginTransaction();
+         fr.replace(R.id.nav_host_fragment, new consultarConductor());
+         fr.commit();
     }
 
     //Método que notifica al usuario si esta seguro de confirmar eliminar

@@ -44,6 +44,7 @@ import com.example.logistica.Viajes;
 import com.example.logistica.WS;
 import com.example.logistica.dialog.DatePickerFragment;
 import com.example.logistica.dialog.TimePickerFragment;
+import com.example.logistica.ui.home.HomeFragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -267,9 +268,22 @@ public class IngresarViaje extends Fragment implements OnMapReadyCallback{
                 generarViaje();
             }
         });
-
+  btnRegresar.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+          RegresarBusqueda();
+      }
+  });
         return view;
     }
+    public  void RegresarBusqueda(){
+        HomeFragment homeFragment = new HomeFragment();
+        FragmentTransaction fr = getFragmentManager().beginTransaction();
+        fr.replace(R.id.nav_host_fragment, new HomeFragment());
+        fr.commit();
+
+    }
+
 
     //Metodo para mostrar DatePickerDialog
     private void showDatePickerDialog(final int id) {

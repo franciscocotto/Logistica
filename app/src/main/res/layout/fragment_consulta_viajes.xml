@@ -58,7 +58,7 @@
                                 android:id="@+id/agregarViaje"
                                 android:background="#00000000"
                                 android:scaleType="centerCrop"
-                                android:src="@mipmap/ic_agregar"
+                                android:src="@mipmap/ic_truck"
                                 android:layout_width="100dp"
                                 android:layout_height="100dp"/>
 
@@ -66,7 +66,7 @@
                                 android:layout_marginTop="12dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Nuevo viaje"
+                                android:text="@string/add_viaje"
                                 android:textSize="16dp"
                                 android:textColor="#6f6f6f"/>
                         </LinearLayout>

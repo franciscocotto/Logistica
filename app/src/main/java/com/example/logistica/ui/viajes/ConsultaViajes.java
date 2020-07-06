@@ -32,6 +32,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.logistica.Administrador;
 import com.example.logistica.R;
 import com.example.logistica.Viajes;
+import com.example.logistica.ui.home.HomeFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -57,7 +58,7 @@ public class ConsultaViajes extends Fragment {
     EditText etBuscar;
     ImageButton btnIngresarViaje;
     ListView lvViajes;
-
+    Button btnRegresar;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,6 +67,7 @@ public class ConsultaViajes extends Fragment {
         lvViajes = (ListView)view.findViewById(R.id.lvViajes);
         btnIngresarViaje = (ImageButton) view.findViewById(R.id.agregarViaje);
         etBuscar = (EditText)view.findViewById(R.id.edtBuscar);
+        btnRegresar = (Button) view.findViewById(R.id.btnRegresarBusqueda);
 
         buscarViajes(URLBusqueda, " ");
 
@@ -109,8 +111,21 @@ public class ConsultaViajes extends Fragment {
 
             }
         });
+        btnRegresar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RegresarBusqueda();
+            }
+        });
 
         return view;
+    }
+    public  void RegresarBusqueda(){
+        HomeFragment homeFragment = new HomeFragment();
+        FragmentTransaction fr = getFragmentManager().beginTransaction();
+        fr.replace(R.id.nav_host_fragment, new HomeFragment());
+        fr.commit();
+
     }
 
     private void buscarViajes(String URL, final String campo){
