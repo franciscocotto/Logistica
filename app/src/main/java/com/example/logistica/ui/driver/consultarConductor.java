@@ -32,6 +32,7 @@ import com.example.logistica.ui.home.HomeFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,6 +94,7 @@ public class consultarConductor extends Fragment {
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                     ConsultaConductor.setIdConductorAux(idConductor[position]);
                     ConsultaConductor.sethintEdit("mod");
                     Conductor conductor = new Conductor();
@@ -125,26 +127,26 @@ public class consultarConductor extends Fragment {
             StringRequest stringRequest = new StringRequest(Request.Method.DEPRECATED_GET_OR_POST, URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
-                    response = response.replace("][", ",");
                     if (response.length() > 0) {
                         try {
                             JSONArray bdoc = new JSONArray(response);
                             Log.i("sizejson", "" + bdoc.length());
 
                             ArrayList<ConsultaConductor> listB = new ArrayList<ConsultaConductor>();
-                            for (int i = 0; i < bdoc.length(); i += 11) {
+                            for (int i = 0; i < bdoc.length(); i++) {
+                                JSONObject objeto = bdoc.getJSONObject(i);
                                 try {
                                     listB.add(new ConsultaConductor(
-                                            bdoc.getString(i+1 ),
-                                            bdoc.getString(i + 2),
-                                            bdoc.getString(i + 3),
-                                            bdoc.getString(i + 4),
-                                            bdoc.getString(i + 5),
-                                            bdoc.getString(i + 6),
-                                            bdoc.getString(i + 7),
-                                            bdoc.getString(i + 8),
-                                            bdoc.getString(i + 9),
-                                            bdoc.getString(i + 10)));
+                                            objeto.getString("id_conductor"),
+                                            objeto.getString("dui"),
+                                            objeto.getString("nombre"),
+                                            objeto.getString("apellido"),
+                                            objeto.getString("nit"),
+                                            objeto.getString("telefono"),
+                                            objeto.getString("direccion"),
+                                            objeto.getString("url_foto"),
+                                            objeto.getString("licencia"),
+                                            objeto.getString("tipo_licencia")));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
