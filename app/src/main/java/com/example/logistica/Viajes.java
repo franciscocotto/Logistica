@@ -2,7 +2,6 @@ package com.example.logistica;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -15,8 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.logistica.ui.viajes.ConsultaViajes;
-import com.example.logistica.ui.viajes.IngresarViaje;
+import com.example.logistica.ui.viajes.MantenimientoViajes;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -136,7 +134,7 @@ public class Viajes extends Fragment {
                     Toast.makeText(contextF, mensaje, Toast.LENGTH_SHORT).show();
 
                     if(result==false){
-                        IngresarViaje.regresarConsulta(fr, activity);
+                        MantenimientoViajes.regresarConsulta(fr, activity);
                     }
                 }catch (JSONException e){
                     Toast.makeText(contextF, e.toString(), Toast.LENGTH_LONG).show();

@@ -8,7 +8,7 @@
     android:paddingRight="16sp"
     android:paddingLeft="16sp"
     android:paddingBottom="16sp"
-    tools:context=".ui.viajes.IngresarViaje">
+    tools:context=".ui.viajes.MantenimientoViajes">
 
     <LinearLayout
         android:layout_marginTop="40sp"

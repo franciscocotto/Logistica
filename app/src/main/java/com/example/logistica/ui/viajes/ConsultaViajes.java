@@ -1,8 +1,6 @@
 package com.example.logistica.ui.viajes;
 
-import android.app.DownloadManager;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -15,7 +13,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -35,7 +32,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.logistica.Administrador;
 import com.example.logistica.R;
-import com.example.logistica.Rutas;
 import com.example.logistica.Viajes;
 import com.example.logistica.ui.home.HomeFragment;
 
@@ -85,9 +81,9 @@ public class ConsultaViajes extends Fragment {
             @Override
             public void onClick(View v) {
                 Viajes.accionar = 1;
-                IngresarViaje ingresarViaje = new IngresarViaje();
+                MantenimientoViajes mantenimientoViajes = new MantenimientoViajes();
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
-                fr.replace(R.id.nav_host_fragment, new IngresarViaje());
+                fr.replace(R.id.nav_host_fragment, new MantenimientoViajes());
                 fr.commit();
                 ((Administrador) getActivity()).getSupportActionBar().setTitle("Ingresar viaje");
             }

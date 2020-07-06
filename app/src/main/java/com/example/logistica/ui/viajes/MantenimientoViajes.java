@@ -74,7 +74,7 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-public class IngresarViaje extends Fragment implements OnMapReadyCallback{
+public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
 
     //ArrayList
     ArrayList<Rutas> rutas = new ArrayList<Rutas>();
