@@ -61,6 +61,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.DatagramPacket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +92,7 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
     }
 
     //Declaramos las variables para cada elemento que vamos a obtener desde nuestro fragment driver
-    private EditText edNombre, edApellido, edTelefono,edNDUI, edNit, edNumLicencia, edDireccion;
+    private EditText id_conductor, edNombre, edApellido, edTelefono,edNDUI, edNit, edNumLicencia, edDireccion;
     private int id_idi;
     Button btnEliminar, btnRegresar, btnEditar;
     //Declaramos variables para el envío de datos al webService
@@ -146,6 +147,7 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
         spinnerTipoLicencia = (Spinner) view.findViewById(R.id.addTipoLic);
         //get other data form
         //EditText edNombre, edApellido, edTelefono,edNDUI, edNit, edNumLicencia;
+        id_conductor = (EditText) view.findViewById(R.id.id_conductor);
         edNombre = (EditText) view.findViewById(R.id.addNameCon);
         edApellido = (EditText) view.findViewById(R.id.addApeCon);
         edTelefono = (EditText) view.findViewById(R.id.addTelCon);
@@ -156,7 +158,10 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
         btnEditar = (Button) view.findViewById(R.id.btnREditar);
         btnRegresar = (Button) view.findViewById(R.id.btnRegresar);
         btnEliminar = (Button) view.findViewById(R.id.btnDelete);
-
+        pDialog = new ProgressDialog(getContext());
+        pDialog.setMessage("Cargando Datos");
+        pDialog.setCancelable(false);
+        pDialog.show();
         //Initializing the ArrayList
         tipoLicenciaList = new ArrayList<Licencia>();
         /*----------------Inicializació de variables----------------------*/
@@ -261,13 +266,21 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
     }
 
     private void cargarImagen(String urlImagen) {
-        urlImagen=urlImagen.replace(" ","%20");
+       // urlImagen=urlImagen.replace(" ","%20");
 
+        final String miPath=urlImagen.replace(" ","%20");
+        imagen.setImageURI(Uri.parse(miPath));
         ImageRequest imageRequest=new ImageRequest(urlImagen, new Response.Listener<Bitmap>() {
             @Override
             public void onResponse(Bitmap response) {
+                try {
+                    bitmap=MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.parse(miPath));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                imagen.setImageBitmap(bitmap);
                // bitmap=response;//SE MODIFICA
-                imagen.setImageBitmap(response);
+              //  imagen.setImageBitmap(response);
             }
         }, 0, 0, ImageView.ScaleType.CENTER, null, new Response.ErrorListener() {
             @Override
@@ -380,22 +393,35 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
     }
 
     private void cargarWebService() {
-        progreso=new ProgressDialog(getContext());
-        progreso.setMessage("Cargando...");
-        progreso.show();
+        pDialog.setMessage("Cargando Datos");
+        pDialog.setCancelable(false);
+        pDialog.show();
         //String ip=getString(R.string.ip);
-         String url="https://inventario-pdm115.000webhostapp.com/Logistica/ws_vc17009/registrarConductor.php";
+         String url="https://inventario-pdm115.000webhostapp.com/Logistica/ws_vc17009/UpdateConductor.php";
        // String url="http://192.168.0.27/VC17009/registrarConductor.php";
         stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                progreso.hide();
-                if (response.trim().equalsIgnoreCase("registra")){
-                    LimpiarElementos();
-                    Toast.makeText(getContext(),"Se ha registrado con exito",Toast.LENGTH_SHORT).show();
-                }else{
-                    Toast.makeText(getContext(),"No se ha registrado ",Toast.LENGTH_SHORT).show();
-                    Log.i("RESPUESTA: ",""+response);
+                try {
+                    JSONObject obj = new JSONObject(response);
+
+                    //if no error in response
+                    if (!obj.getBoolean("error")) {
+                        if (pDialog.isShowing())
+                            pDialog.dismiss();
+                        consultarConductor consultarConductor = new consultarConductor();
+                        FragmentTransaction fr = getFragmentManager().beginTransaction();
+                        fr.replace(R.id.nav_host_fragment, new consultarConductor());
+                        fr.commit();
+                        Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        if (pDialog.isShowing())
+                            pDialog.dismiss();
+                        Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         }, new Response.ErrorListener() {
@@ -408,6 +434,8 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
         }){
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
+
+                final String setId = id_conductor.getText().toString().trim();
                 final String setnombreCon = edNombre.getText().toString().trim();
                 final String setapellidoCon =  edApellido.getText().toString().trim();
                 final String settelefonoCon =  edTelefono.getText().toString().trim();
@@ -416,8 +444,14 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
                 final String setDireccion =  edDireccion.getText().toString().trim();
                 final String setnumeroLicencia =  edNumLicencia.getText().toString().trim();
                 final String setd_idi =  spinnerTipoLicencia.getSelectedItem().toString().trim();
+                try{
+                String urlImagen=convertirImgString(bitmap);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
                 String imagen=convertirImgString(bitmap);
                 Map<String,String> parametros=new HashMap<>();
+                parametros.put("id_conductor", setId);
                 parametros.put("dui", setnumeroDui);
                 parametros.put("nombre", setnombreCon);
                 parametros.put("apellido", setapellidoCon);
@@ -428,7 +462,8 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
                 parametros.put("licencia", setnumeroLicencia);
                 parametros.put("tipo_licencia", setd_idi);
                 parametros.put("imagen",imagen);
-                return parametros;
+                    return parametros;
+
             }
         };
         //request.add(stringRequest);
@@ -531,7 +566,6 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
     de la Clase ConsultaConductor que hará uso de todos sus atributos, para traer el solicitado hacemos uso de la variable contenida
     en la Clase ConsultaConductor idConductorAux*/
     public void cargarConductorBuscado(){
-
           final String URLB = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_vc17009/ws_buscarConductorId.php";
           RequestQueue requestQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
           StringRequest stringRequest = new StringRequest(Request.Method.POST, URLB, new Response.Listener<String>() {
@@ -589,6 +623,7 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
         for (int i=0; i<list.size();i++){
             ArrayList<ConsultaConductor> conductor = new ArrayList<ConsultaConductor>();
             conductor = list;
+            id_conductor.setText(conductor.get(i).getId_conductor().toString());
             edNombre.setText(conductor.get(i).getNombre().toString());
             edApellido.setText(conductor.get(i).getApellido().toString());
             edTelefono.setText(conductor.get(i).getTelefono().toString());
@@ -608,8 +643,8 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
             spinnerTipoLicencia.setAdapter(spinnerAdapter);
             spinnerAdapter.notifyDataSetChanged();
             spinnerTipoLicencia.setSelection(spinnerAdapter.getPosition(conductor.get(i).getTipo_licencia().toString()));
-          //  spinnerTipoLicencia.setSelection(obtenerPosicionItem(spinnerTipoLicencia, conductor.get(i).getTipo_licencia().toString()));
-
+            if (pDialog.isShowing())
+                pDialog.dismiss();
         }
     }
 
@@ -638,69 +673,7 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
-    /*EnviarDatos, primero obtenemos los elementos y los asignamos a nuestras variables auxiliares
-      luego añadimos a nuestra lista de tipo ArrayList todos los campos obteneidos, luego devolvemos la lista cargada que es la que pasamos
-       al método EnviarForm */
-    class EnviarDatos extends AsyncTask<String, Integer, String > {
-        private Activity contexto;
-        EnviarDatos(Activity context){
-            this.contexto = context;
-        }
-        @Override
-        protected String doInBackground(String... strings) {
-            final String setnombreCon = edNombre.getText().toString().trim();
-            final String setapellidoCon =  edApellido.getText().toString().trim();
-            final String settelefonoCon =  edTelefono.getText().toString().trim();
-            final String setnumeroDui =  edNDUI.getText().toString().trim();
-            final String setnumeroNIT =  edNit.getText().toString().trim();
-            final String setDireccion =  edDireccion.getText().toString().trim();
-            final String setnumeroLicencia =  edNumLicencia.getText().toString().trim();
-            final String setd_idi =  spinnerTipoLicencia.getSelectedItem().toString().trim();
-            cliente = new DefaultHttpClient();
-            post = new HttpPost(URL_REGISTRAR);
-            lista = new  ArrayList<NameValuePair>(11);
-            lista.add(new BasicNameValuePair("dui", setnumeroDui));
-            lista.add(new BasicNameValuePair("nombre", setnombreCon));
-            lista.add(new BasicNameValuePair("apellido", setapellidoCon));
-            lista.add(new BasicNameValuePair("nit", setnumeroNIT));
-            lista.add(new BasicNameValuePair("telefono", settelefonoCon));
-            lista.add(new BasicNameValuePair("direccion", setDireccion));
-            lista.add(new BasicNameValuePair("url_foto", "abvc"));
-            lista.add(new BasicNameValuePair("licencia", setnumeroLicencia));
-            lista.add(new BasicNameValuePair("tipo_licencia", setd_idi));
-            String responseStr =" ";
-            try{
-                post.setEntity(new UrlEncodedFormEntity(lista, "utf-8"));
-                HttpResponse response = cliente.execute(post);
-                responseStr = EntityUtils.toString(response.getEntity());
-                return responseStr;
-            }catch (UnsupportedEncodingException e){
-                responseStr ="Error";
-            }catch (ClientProtocolException e){
-                responseStr ="Error";
-                return responseStr;
-            }catch (IOException e){
-                responseStr ="Error";
-                return responseStr;
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(String responseStr) {
-            if(responseStr.equals("{\"error\":true,\"message\":\"Error en Guardar Conductor\"}")){
-                Toast.makeText(contexto,"Error en Guardar Conductor", Toast.LENGTH_SHORT).show();
-            }
-            else if(responseStr.equals("{\"error\":true,\"message\":\"Conductor ya Existe\"}")){
-                Toast.makeText(contexto,"Numero de Dui ya esta registrado", Toast.LENGTH_SHORT).show();
-            }
-            else{
-                Toast.makeText(contexto,"Datos de Conductor registrados exitosamente", Toast.LENGTH_SHORT).show();
-                LimpiarElementos();
-                RegresarBusqueda();
-            }
 
-        }
-    }
 
     //Método para limpiar después de cada acción realizada
     public void LimpiarElementos(){
@@ -713,21 +686,6 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
         edNumLicencia.setText("");
     }
 
-    /*Método para cargar los idiomas al spinner tipos de licencias*/
-    private void populateSpinnerLicencia() {
-        List<String> TiposLicencias = new ArrayList<String>();
-        for (int i = 0; i < tipoLicenciaList.size(); i++) {
-            TiposLicencias.add(tipoLicenciaList.get(i).getLicencia());
-        }
-        // Creating adapter for spinner
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-                android.R.layout.simple_spinner_item, TiposLicencias);
-        // Drop down layout style - list view with radio button
-        spinnerAdapter
-                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // attaching data adapter to spinner
-        spinnerTipoLicencia.setAdapter(spinnerAdapter);
-    }
 
     /*Cargar List de idiomas mediante un hilo secundario AsyncTask*/
     public class getTipoLicencias extends AsyncTask<Void, Void, Void> {
