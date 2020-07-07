@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -23,8 +25,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.logistica.Administrador;
 import com.example.logistica.R;
 import com.example.logistica.Reporte;
+import com.example.logistica.ui.home.HomeFragment;
+import com.example.logistica.ui.viajes.ConsultaViajes;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -48,7 +53,7 @@ import java.util.ArrayList;
 public class GenerarReporte extends Fragment{
 
     public GenerarReporte() { }
-
+    String nombre;
     ArrayList<Reporte> reportes = new ArrayList<Reporte>();
     ArrayList<String> rutasArchivos;
     ArrayList<String> nombreArchivos;
@@ -63,6 +68,7 @@ public class GenerarReporte extends Fragment{
         View view = inflater.inflate(R.layout.fragment_reporte, container, false);
         lvArchivos = (ListView)view.findViewById(R.id.lvArchivos);
 
+        final EditText etNom = (EditText)view.findViewById(R.id.etNomReporte);
         btnReporteViajes = (Button)view.findViewById(R.id.btnReporteViajes);
         btnRegresar = (Button)view.findViewById(R.id.btnRegresar);
 
@@ -70,10 +76,27 @@ public class GenerarReporte extends Fragment{
         btnReporteViajes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                datosReporteViajes(URLViajes);
+                if(etNom.getText().toString().isEmpty()){
+                    Toast.makeText(getContext(), "Ingrese el nombre del archivo", Toast.LENGTH_SHORT).show();
+                }else {
+                    nombre = etNom.getText().toString();
+                    datosReporteViajes(URLViajes);
+                }
+
             }
         });
-
+        btnRegresar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                regresar();
+            }
+        });
+        lvArchivos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                abrirReporteExel(rutasArchivos.get(position));
+            }
+        });
         return view;
     }
     private void datosReporteViajes(String URL){
@@ -120,27 +143,13 @@ public class GenerarReporte extends Fragment{
         requestQueue.add(stringRequest);
     }
 
-    private static final int WRITE_REQUES_CODE = 43;
 
     private void abrirReporteExel(String URI){
-        /*Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_DEFAULT);
-        intent.setDataAndType(Uri.parse(URI), "application/vnd.ms-excel");
-
-        startActivity(intent);*/
-        /*File file = new File(URI);
         Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.setType("application/vnd.ms-excel");
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
-        startActivity(intent);*/
-
-
-
-        File file = new File(URI);
-        Intent intent = new Intent(Intent.ACTION_DEFAULT);
-        intent.setDataAndType(Uri.parse(URI),"application/vnd.ms-excel");
-        startActivityForResult(intent, WRITE_REQUES_CODE);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setDataAndType(Uri.parse(URI), "application/vnd.ms-excel");
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        startActivity(intent);
     }
 
     private void generarReporteViajes(ArrayList list){
@@ -264,17 +273,15 @@ public class GenerarReporte extends Fragment{
             celda = fila.createCell(12);
             celda.setCellValue(reportes.get(i).getFinalViaje());
         }
-   //     File carpeta = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS));
-    //    if(!carpeta.mkdirs()){
-      //      carpeta.mkdirs();
-        //}
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Logistica/", "prueba_17.xls");
+
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Logistica/", nombre+".xls");
         FileOutputStream outputStream = null;
 
         try {
             file.createNewFile();
             outputStream = new FileOutputStream(file);
             reporteViajes.write(outputStream);
+            cargarArchivos();
             Toast.makeText(getContext(), "Reporte creado con exito", Toast.LENGTH_LONG).show();
         }
         catch (IOException e){
@@ -322,5 +329,11 @@ public class GenerarReporte extends Fragment{
         params.height = (totalHeight
                 + (lista.getDividerHeight() * (adapterCount)));
         lista.setLayoutParams(params);
+    }
+    private void regresar(){
+        HomeFragment homeFragment = new HomeFragment();
+        FragmentTransaction fr = getFragmentManager().beginTransaction();
+        fr.replace(R.id.nav_host_fragment, new HomeFragment());
+        fr.commit();
     }
 }

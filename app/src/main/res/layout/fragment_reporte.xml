@@ -17,6 +17,15 @@
             android:layout_marginTop="20sp"
             android:layout_marginLeft="20sp"
             android:layout_marginRight="20sp">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/etNomReporte"
+                android:layout_marginTop="20sp"
+                android:hint="Ingrese el nombre del archivo"
+                android:inputType="text"
+                android:digits="abcdefghijklmnopqrstvuwxyz123456789"/>
+
 
             <Button
                 android:id="@+id/btnReporteViajes"
