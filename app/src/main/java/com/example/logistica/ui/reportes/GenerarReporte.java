@@ -50,9 +50,10 @@ public class GenerarReporte extends Fragment{
     public GenerarReporte() { }
 
     ArrayList<Reporte> reportes = new ArrayList<Reporte>();
-
+    ArrayList<String> rutasArchivos;
+    ArrayList<String> nombreArchivos;
     String URLViajes = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_reporte_viajes.php";
-
+    ListView lvArchivos;
     Button btnReporteViajes, btnRegresar;
 
     @Override
@@ -60,11 +61,12 @@ public class GenerarReporte extends Fragment{
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_reporte, container, false);
+        lvArchivos = (ListView)view.findViewById(R.id.lvArchivos);
 
         btnReporteViajes = (Button)view.findViewById(R.id.btnReporteViajes);
         btnRegresar = (Button)view.findViewById(R.id.btnRegresar);
 
-
+        cargarArchivos();
         btnReporteViajes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -262,11 +264,11 @@ public class GenerarReporte extends Fragment{
             celda = fila.createCell(12);
             celda.setCellValue(reportes.get(i).getFinalViaje());
         }
-        File carpeta = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "Logistica");
-        if(!carpeta.mkdirs()){
-            carpeta.mkdirs();
-        }
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/Logistica/", "prueba_17.xls");
+   //     File carpeta = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS));
+    //    if(!carpeta.mkdirs()){
+      //      carpeta.mkdirs();
+        //}
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Logistica/", "prueba_17.xls");
         FileOutputStream outputStream = null;
 
         try {
@@ -279,5 +281,46 @@ public class GenerarReporte extends Fragment{
             e.printStackTrace();
         }
     }
+    private void cargarArchivos(){
+        rutasArchivos = new ArrayList<String>();
+        nombreArchivos = new ArrayList<String>();
 
+        File carpeta = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),  "Logistica");
+        if(!carpeta.exists()){
+            carpeta.mkdirs();
+        }
+
+        File[] listaArchivos = carpeta.listFiles();
+
+        for (File archivo : listaArchivos){
+            rutasArchivos.add(archivo.getPath());
+        }
+
+        for (int i = 0; i<listaArchivos.length; i++){
+            File archivo = new File(rutasArchivos.get(i));
+            nombreArchivos.add(archivo.getName());
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, nombreArchivos);
+        lvArchivos.setAdapter(adapter);
+        updateListViewHeight(lvArchivos);
+    }
+    public static void updateListViewHeight(ListView lista) {
+        ListAdapter myListAdapter = lista.getAdapter();
+        if (myListAdapter == null) {
+            return;
+        }
+        // get listview height
+        int totalHeight = 0;
+        int adapterCount = myListAdapter.getCount();
+        for (int size = 0; size < adapterCount; size++) {
+            View listItem = myListAdapter.getView(size, null, lista);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+        // Change Height of ListView
+        ViewGroup.LayoutParams params = lista.getLayoutParams();
+        params.height = (totalHeight
+                + (lista.getDividerHeight() * (adapterCount)));
+        lista.setLayoutParams(params);
+    }
 }
