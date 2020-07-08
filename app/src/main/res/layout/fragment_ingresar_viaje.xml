@@ -353,6 +353,14 @@
                         android:layout_marginTop="40dp"
                         android:textColor="@android:color/white"/>
                     <Button
+                        android:id="@+id/btnEliminarViaje"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Eliminar viaje"
+                        android:background="@drawable/gradient_1"
+                        android:layout_marginTop="10dp"
+                        android:textColor="@android:color/white"/>
+                    <Button
                         android:id="@+id/btnRegresar"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"

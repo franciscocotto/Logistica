@@ -116,6 +116,11 @@ public class ConsultaViajes extends Fragment {
 
                 Viajes.setIdViaje(idViaje[position]);
                 Viajes.accionar = 2;
+                MantenimientoViajes mantenimientoViajes = new MantenimientoViajes();
+                FragmentTransaction fr = getFragmentManager().beginTransaction();
+                fr.replace(R.id.nav_host_fragment, new MantenimientoViajes());
+                fr.commit();
+                ((Administrador) getActivity()).getSupportActionBar().setTitle("Modificar viaje");
 
             }
         });
@@ -223,7 +228,7 @@ public class ConsultaViajes extends Fragment {
         updateListViewHeight(lvViajes);
         if (pDialog.isShowing())
             pDialog.dismiss();
-    }
+        }
     public static void updateListViewHeight(ListView lista) {
         ListAdapter myListAdapter = lista.getAdapter();
         if (myListAdapter == null) {

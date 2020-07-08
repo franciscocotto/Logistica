@@ -47,6 +47,7 @@ import com.example.logistica.WS;
 import com.example.logistica.dialog.DatePickerFragment;
 import com.example.logistica.dialog.TimePickerFragment;
 import com.example.logistica.ui.home.HomeFragment;
+import com.google.android.gms.common.internal.safeparcel.SafeParcelable;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -82,7 +83,8 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
     ArrayList<Vehiculos> vehiculos = new ArrayList<Vehiculos>();
 
     //Instancias
-    Viajes viajes = new Viajes();
+    Viajes viajes;
+    Viajes viajeCargado;
 
     //Vectores
     String[] rutasV;
@@ -106,7 +108,8 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
     private EditText etNomViaje, etFechaInicio, etHoraInicio, etFechaFinal, etHoraFinal;
     private ImageView imgConductor, imgVehiculo;
     private MapView mvRutas;
-    private Button btnViaje, btnRegresar;
+    private Button btnViaje, btnRegresar, btnEliminar;
+    private ProgressDialog pDialog;
 
     @Override
     public void onResume(){
@@ -130,6 +133,11 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
                              ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_ingresar_viaje, container, false);
+
+        pDialog = new ProgressDialog(getContext());
+        pDialog.setMessage("Cargando Datos");
+        pDialog.setCancelable(false);
+        pDialog.show();
 
         fr = getFragmentManager().beginTransaction();
         context = getContext();
@@ -171,13 +179,15 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
         //Declaracion de Buttons
         btnViaje = (Button)view.findViewById(R.id.btnViaje);
         btnRegresar = (Button)view.findViewById(R.id.btnRegresar);
+        btnEliminar = (Button)view.findViewById(R.id.btnEliminarViaje);
+        if(Viajes.accionar==1){
+            btnEliminar.setVisibility(View.GONE);
+        }
 
         //Llamada a metodos de carga
 
         //Obtener los registros de rutas
         cargarComplementos("https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_cargar_campos_viajes.php",1,"rutas");
-        cargarComplementos("https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_cargar_campos_viajes.php",2,"conductores");
-        cargarComplementos("https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_cargar_campos_viajes.php",3,"vehiculos");
 
         //Evento de seleccion de Ruta
         acRutas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -267,10 +277,21 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
         btnViaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               EnviarForm();
+                if(Viajes.accionar==1){
+                    EnviarForm(1,"Esta seguro que desea registrar este viaje?");
+                }
+               else if(Viajes.accionar==2){
+                    EnviarForm(1,"Esta seguro que desea modificar este viaje?");
+                }
             }
         });
-  btnRegresar.setOnClickListener(new View.OnClickListener() {
+        btnEliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EnviarForm(2,"Esta seguro que desea eliminar este viaje?");
+            }
+        });
+        btnRegresar.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
           RegresarBusqueda();
@@ -282,15 +303,23 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
      *Alerta para guardado de datos
      * */
 
-    public void EnviarForm(){
+    public void EnviarForm(final int i, String mensaje){
         AlertDialog.Builder myBuild = new AlertDialog.Builder(getActivity());
         myBuild.setTitle("Mensaje");
-        myBuild.setMessage("¿Esta seguro de guardar este viaje?");
+        myBuild.setMessage(mensaje);
         myBuild.setIcon(R.drawable.ic_warning_black_24dp);
         myBuild.setPositiveButton("Si", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                generarViaje();
+                switch (i){
+                    case 1:
+                        generarViaje();
+                        break;
+                    case 2:
+                        eliminarViaje();
+                        break;
+                }
+
             }
         });
         myBuild.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -305,9 +334,9 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
 
 
     public  void RegresarBusqueda(){
-        HomeFragment homeFragment = new HomeFragment();
+        ConsultaViajes homeFragment = new ConsultaViajes();
         FragmentTransaction fr = getFragmentManager().beginTransaction();
-        fr.replace(R.id.nav_host_fragment, new HomeFragment());
+        fr.replace(R.id.nav_host_fragment, new ConsultaViajes());
         fr.commit();
 
     }
@@ -382,7 +411,6 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
             public void onResponse(String response) {
                 try {
                     JSONArray consulta = new JSONArray(response);
-
                     switch (accion){
 
                         case 1:     //Cargar rutas almacenadas
@@ -447,6 +475,24 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
                                 Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
                             }
                             break;
+
+                        case 4:
+                            try {
+                                Viajes viajes = new Viajes();
+                                JSONObject object = consulta.getJSONObject(0);
+                                viajes.setId_viaje(Viajes.getIdViaje());
+                                viajes.setId_ruta(object.getInt("id_ruta"));
+                                viajes.setId_vehiculo(object.getInt("id_vehiculo"));
+                                viajes.setId_conductor(object.getInt("id_conductor"));
+                                viajes.setInicio(object.getString("inicio"));
+                                viajes.setFinalizacion(object.getString("final"));
+                                viajes.setNomViaje(object.getString("nom_viaje"));
+                                cargarViaje(viajes);
+                            }
+                            catch (JSONException e){
+                                Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
+                            }
+                            break;
                     }
 
                 }
@@ -466,11 +512,13 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
 
                 Map<String, String> parametros = new HashMap<String, String>();
                 parametros.put("tabla", tabla);
+                parametros.put("id_viaje", String.valueOf(Viajes.idViaje));
                 return parametros;
             }
         };
         requestQueue.add(stringRequest);
     }
+
 
     //Metodo que carga las rutas almacenadas en un AutoComplete
     private void cargarRutas(ArrayList list){
@@ -483,6 +531,7 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, rutasV);
         acRutas.setAdapter(adapter);
+        cargarComplementos("https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_cargar_campos_viajes.php",2,"conductores");
     }
 
     //Metodo que carga los conductores almacenados en un AutoComplete
@@ -496,6 +545,7 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, conductoresV);
         acConductores.setAdapter(adapter);
+        cargarComplementos("https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_cargar_campos_viajes.php",3,"vehiculos");
     }
 
     //Metodo que carga los vehiculos almacenados en un Spinner
@@ -509,6 +559,67 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, vehiculosV);
         spVehiculo.setAdapter(adapter);
+        if(Viajes.accionar==2){
+            cargarComplementos("https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_cargar_campos_viajes.php",4,"viajes");
+        }
+        else {
+            if (pDialog.isShowing()){
+                pDialog.dismiss();
+            }
+        }
+    }
+
+    private void cargarViaje(Object object){
+        viajeCargado = (Viajes) object;
+
+        btnViaje.setText("Modificar viaje");
+
+        etNomViaje.setText(viajeCargado.getNomViaje());
+
+        String[] fechaIni = viajeCargado.getInicio().split(" ");
+        etFechaInicio.setText(fechaIni[0]);
+        etHoraInicio.setText(fechaIni[1]);
+
+        String[] fechaFin = viajeCargado.getFinalizacion().split(" ");
+        etFechaFinal.setText(fechaFin[0]);
+        etHoraFinal.setText(fechaFin[1]);
+
+        for(int i = 0; i<rutas.size();i++){
+            if(viajeCargado.getId_ruta()==rutas.get(i).getId_ruta()){
+                acRutas.setText(rutas.get(i).getDatos());
+                latIni = rutas.get(i).getLatitudInicial();
+                longIni = rutas.get(i).getLongitudInicial();
+                latFin = rutas.get(i).getLatitudFinal();
+                longFin = rutas.get(i).getLongitudFinal();
+                t_origen = rutas.get(i).getOrigen();
+                t_destino = rutas.get(i).getDestino();
+                obtenerRutaWs(latIni, longIni, latFin, longFin);
+                tvOrigen.setText(t_origen);
+                tvDestino.setText(t_destino);
+            }
+            else {
+                mapa.clear();
+            }
+        }
+
+        for(int i = 0; i<conductores.size();i++){
+            if(viajeCargado.getId_conductor()==conductores.get(i).getId_conductor()){
+                acConductores.setText(conductores.get(i).getDatos());
+                url_conductor = conductores.get(i).getUrl_foto();
+                tvTelefono.setText(conductores.get(i).getTelefono());
+                tvTipoLicencia.setText(conductores.get(i).getTipo_licencia());
+            }
+        }
+        Picasso.get().load(url_conductor).into(imgConductor);
+
+        for (int i = 0; i<vehiculos.size();i++){
+            if(viajeCargado.getId_vehiculo()==vehiculos.get(i).getId_vehiculo()){
+                spVehiculo.setSelection(i+1);
+            }
+        }
+        if (pDialog.isShowing()){
+            pDialog.dismiss();
+        }
     }
 
     //Metodo que ingresa o modifica viajes
@@ -586,10 +697,30 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
                         }
                     }
                     viajes.setId_vehiculo(vehiculos.get(spVehiculo.getSelectedItemPosition()-1).getId_vehiculo());
-                    viajes.cargarViajes(context,"https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_viajes.php","insertar", fr, activity);
+                    if(Viajes.accionar==1){
+                        viajes.cargarViajes(context,"https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_viajes.php","insertar", fr, activity);
+                    }
+                    else if(Viajes.accionar==2){
+                        if(viajes.getId_ruta()==viajeCargado.getId_ruta() && viajes.getId_conductor()==viajeCargado.getId_conductor() &&
+                        viajes.getId_vehiculo()==viajeCargado.getId_vehiculo() && viajes.getInicio().equals(viajeCargado.getInicio()) &&
+                        viajes.getFinalizacion().equals(viajeCargado.getFinalizacion()) && viajes.getNomViaje().equals(viajeCargado.getNomViaje())){
+                            Toast.makeText(getContext(), "Datos sin modificacion", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            viajes.setId_viaje(viajeCargado.getId_viaje());
+                            viajes.cargarViajes(context,"https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_viajes.php","modificar", fr, activity);
+                        }
+
+                    }
                 }
             }
         }
+    }
+
+    private void eliminarViaje(){
+        viajes = new Viajes();
+        viajes = viajeCargado;
+        viajes.cargarViajes(context,"https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_viajes.php","eliminar", fr, activity);
     }
 
     public static void regresarConsulta(FragmentTransaction fr, Activity activity){
@@ -597,7 +728,6 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
         fr.replace(R.id.nav_host_fragment, new ConsultaViajes());
         fr.commit();
         ((Administrador)activity).getSupportActionBar().setTitle("Consultar viajes");
-
     }
 
     //Metodo que manda las coordenadas al servicio de Google maps

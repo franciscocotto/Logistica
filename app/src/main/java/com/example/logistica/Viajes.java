@@ -16,9 +16,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.logistica.ui.viajes.MantenimientoViajes;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -150,12 +152,14 @@ public class Viajes extends Fragment {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> parametros = new HashMap<String, String>();
                 parametros.put("accion",accion);
+                parametros.put("id_viaje",String.valueOf(id_viaje));
                 parametros.put("id_ruta",String.valueOf(id_ruta));
                 parametros.put("id_vehiculo",String.valueOf(id_vehiculo));
                 parametros.put("id_conductor",String.valueOf(id_conductor));
                 parametros.put("inicio",inicio);
                 parametros.put("final",finalizacion);
                 parametros.put("nom_viaje",nomViaje);
+
                 return parametros;
             }
         };
