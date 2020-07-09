@@ -11,21 +11,21 @@ import com.facebook.internal.ImageRequest;
  * Created by CHENAO on 19/11/2017.
  */
 
-public class VolleySingleton {
+public class SingletonVolley {
 
-    private static VolleySingleton intanciaVolley;
+    private static SingletonVolley intanciaVolley;
     private RequestQueue request;
     private static Context contexto;
 
-    private VolleySingleton(Context context) {
+    private SingletonVolley(Context context) {
         contexto = context;
         request = getRequestQueue();
     }
 
 
-    public static synchronized VolleySingleton getIntanciaVolley(Context context) {
+    public static synchronized SingletonVolley getIntanciaVolley(Context context) {
         if (intanciaVolley == null) {
-            intanciaVolley = new VolleySingleton(context);
+            intanciaVolley = new SingletonVolley(context);
         }
 
         return intanciaVolley;

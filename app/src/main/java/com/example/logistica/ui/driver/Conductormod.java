@@ -49,8 +49,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.logistica.Administrador;
 import com.example.logistica.BuildConfig;
-import com.example.logistica.ConMapsActivity;
-import com.example.logistica.HandlerService;
+import com.example.logistica.ServiceHandler;
 import com.example.logistica.R;
 
 
@@ -467,7 +466,7 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
         };
         //request.add(stringRequest);
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        VolleySingleton.getIntanciaVolley(getContext()).addToRequestQueue(stringRequest);
+        SingletonVolley.getIntanciaVolley(getContext()).addToRequestQueue(stringRequest);
     }
 
     private String convertirImgString(Bitmap bitmap) {
@@ -712,8 +711,8 @@ public class Conductormod extends Fragment implements AdapterView.OnItemSelected
     public class getTipoLicencias extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... arg0) {
-            HandlerService jsonParser = new HandlerService();
-            String json = jsonParser.makeServiceCall(URL_TIPOLICENCIA, HandlerService.GET);
+            ServiceHandler jsonParser = new ServiceHandler();
+            String json = jsonParser.makeServiceCall(URL_TIPOLICENCIA, ServiceHandler.GET);
             Log.e("Response: ", "> " + json);
             if (json != null) {
                 try {
