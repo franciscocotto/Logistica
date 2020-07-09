@@ -1,4 +1,4 @@
-package com.example.logistica.ui.despachador;
+package com.example.logistica.ui.conductor;
 
 import android.os.Bundle;
 
@@ -10,13 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.example.logistica.Administrador;
+import com.example.logistica.Driver;
 import com.example.logistica.R;
 import com.example.logistica.ui.viajes.ConsultaViajes;
 
-public class Despachador extends Fragment {
+public class Conductor_Asignado extends Fragment {
 
-    public Despachador() {
+    public Conductor_Asignado() {
         // Required empty public constructor
     }
 
@@ -33,7 +33,7 @@ public class Despachador extends Fragment {
                 FragmentTransaction fr = getFragmentManager().beginTransaction();
                 fr.replace(R.id.nav_host_fragment, new ConsultaViajes());
                 fr.commit();
-                ((com.example.logistica.Despachador) getActivity()).getSupportActionBar().setTitle("Viajes");
+                ((Driver) getActivity()).getSupportActionBar().setTitle("Viajes");
             }
         });
 

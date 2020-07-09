@@ -108,7 +108,7 @@ public class consultarConductor extends Fragment {
                     String busqueda = etBuscar.getText().toString();
                     buscarConductor(busqueda,2);
                     if(lista.getCount()== 0){
-                        Toast.makeText(getActivity().getApplicationContext(), "Busqueda Finalizada", Toast.LENGTH_LONG).show();
+                       // Toast.makeText(getActivity().getApplicationContext(), "Busqueda Finalizada", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -174,11 +174,11 @@ public class consultarConductor extends Fragment {
     public void buscarConductor(final String busqueda, int accion){
         String URL = null;
         switch (accion){
-            case 1: //Consulta de docuemntos
+            case 1: //Consulta de conductores
                     URL = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_vc17009/ws_consultaConductores.php";
                 break;
 
-            case 2: //Buscar documentos
+            case 2: //Buscar conductores
                     URL = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_vc17009/ws_buscarConductor.php";
         }
             lista.setAdapter(null);

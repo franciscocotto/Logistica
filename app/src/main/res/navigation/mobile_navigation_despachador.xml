@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.logistica.ui.despachador.Despachador"
+        android:name="com.example.logistica.ui.conductor.Conductor_Asignado"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_despachador">
     </fragment>
@@ -15,7 +15,7 @@
 
     <fragment
         android:id="@+id/nav_viaje"
-        android:name="com.example.logistica.ui.viajes.MantenimientoViajes"
+        android:name="com.example.logistica.ui.viajes.ConsultaViajes"
         android:label="@string/menu_viaje"
         tools:layout="@layout/fragment_ingresar_viaje" />
 

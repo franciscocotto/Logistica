@@ -2,14 +2,15 @@ package com.example.logistica;
 
 public class User {
 
-    private int id, rol;
+    private int id, rol, driver;
     private String name, email, user;
 
     public User() {
     }
 
-    public User(int id, int rol, String name, String email, String user) {
+    public User(int id, int driver, int rol, String name, String email, String user) {
         this.id = id;
+        this.driver = driver;
         this.rol = rol;
         this.name = name;
         this.email = email;
@@ -30,6 +31,14 @@ public class User {
 
     public void setRol(int rol) {
         this.rol = rol;
+    }
+
+    public int getDriver() {
+        return driver;
+    }
+
+    public void setDriver(int driver) {
+        this.driver = driver;
     }
 
     public String getName() {

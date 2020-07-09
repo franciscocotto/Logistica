@@ -91,6 +91,7 @@ public class Administrador extends AppCompatActivity implements  View.OnClickLis
         int id = item.getItemId();
 
         if (id == R.id.buttonLogout) {
+            Viajes.accionar=1;
             SharedPrefManager.getInstance(getApplicationContext()).logout();
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);

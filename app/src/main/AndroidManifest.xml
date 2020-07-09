@@ -77,7 +77,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Despachador"
+            android:name=".Driver"
             android:label="@string/title_activity_despachador"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".BuscarDocumento" />

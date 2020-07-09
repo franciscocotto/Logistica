@@ -11,7 +11,8 @@ public class SharedPrefManager {
     private static final String KEY_EMAIL = "keyemail";
     private static final String KEY_NAME = "keyname";
     private static final String KEY_ID = "keyid";
-    private static final String KEY_ROL = "keyid";
+    private static final String KEY_DRIVER = "keydriver";
+    private static final String KEY_ROL = "keyrol";
     private static SharedPrefManager mInstance;
     private static Context ctx;
 
@@ -30,6 +31,7 @@ public class SharedPrefManager {
         SharedPreferences sharedPreferences = ctx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(KEY_ID, user.getId());
+        editor.putInt(KEY_DRIVER, user.getDriver());
         editor.putInt(KEY_ROL, user.getRol());
         editor.putString(KEY_NAME, user.getName());
         editor.putString(KEY_USERNAME, user.getUser());
@@ -48,7 +50,8 @@ public class SharedPrefManager {
         SharedPreferences sharedPreferences = ctx.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
         return new User(
                 sharedPreferences.getInt(KEY_ID, -1),
-                sharedPreferences.getInt(KEY_ROL, -1),
+                sharedPreferences.getInt(KEY_DRIVER, 0),
+                sharedPreferences.getInt(KEY_ROL, 1),
                 sharedPreferences.getString(KEY_USERNAME, null),
                 sharedPreferences.getString(KEY_EMAIL, null),
                 sharedPreferences.getString(KEY_NAME, null)

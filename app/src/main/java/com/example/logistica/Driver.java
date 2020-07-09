@@ -3,13 +3,10 @@ package com.example.logistica;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.navigation.NavController;
@@ -20,7 +17,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class Despachador extends AppCompatActivity {
+public class Driver extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     TextView id,users,name,email;
@@ -43,6 +40,10 @@ public class Despachador extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        Viajes.accionar = 3;
+        User user = SharedPrefManager.getInstance(this).getUser();
+        Viajes.conductor = user.getDriver();
     }
 
     @Override
@@ -67,7 +68,7 @@ public class Despachador extends AppCompatActivity {
 
         }
         else{
-            Intent intent = new Intent(Despachador.this,MainActivity.class);
+            Intent intent = new Intent(Driver.this,MainActivity.class);
             startActivity(intent);
             finish();
         }
@@ -82,6 +83,7 @@ public class Despachador extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.buttonLogout) {
+            Viajes.accionar=1;
             SharedPrefManager.getInstance(getApplicationContext()).logout();
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);

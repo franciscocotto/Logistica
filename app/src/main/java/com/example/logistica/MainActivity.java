@@ -1,6 +1,5 @@
 package com.example.logistica;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,11 +7,9 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Bundle;
-import android.os.Message;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -21,22 +18,15 @@ import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.example.logistica.R;
-import com.example.logistica.ui.home.HomeFragment;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginResult;
@@ -45,14 +35,11 @@ import com.facebook.login.widget.LoginButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.security.auth.callback.Callback;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -118,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             }
             else{
             finish();
-            startActivity(new Intent(this, Despachador.class));
+            startActivity(new Intent(this, Driver.class));
             }
         }
 
@@ -232,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
                                 //creating a new user object
                                 User user = new User(
                                         userJson.getInt("id"),
+                                        userJson.getInt("id_conductor"),
                                         userJson.getInt("rol"),
                                         userJson.getString("name"),
                                         userJson.getString("username"),
@@ -252,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
                                     SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
                                     //starting the profile activity
                                     finish();
-                                    Intent intent = new Intent(MainActivity.this, Despachador.class);
+                                    Intent intent = new Intent(MainActivity.this, Driver.class);
                                     startActivity(intent);
                                 }
                             } else {

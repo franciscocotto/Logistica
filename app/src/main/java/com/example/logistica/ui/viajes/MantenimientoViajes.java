@@ -183,6 +183,10 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
         if(Viajes.accionar==1){
             btnEliminar.setVisibility(View.GONE);
         }
+        if(Viajes.accionar==3){
+            btnViaje.setVisibility(View.GONE);
+            btnEliminar.setVisibility(View.GONE);
+        }
 
         //Llamada a metodos de carga
 
@@ -493,6 +497,7 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
                                 Toast.makeText(getContext(), e.toString(), Toast.LENGTH_LONG).show();
                             }
                             break;
+
                     }
 
                 }
@@ -559,10 +564,10 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, vehiculosV);
         spVehiculo.setAdapter(adapter);
-        if(Viajes.accionar==2){
+        if(Viajes.accionar==2 || Viajes.accionar==3){
             cargarComplementos("https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_cargar_campos_viajes.php",4,"viajes");
         }
-        else {
+      else {
             if (pDialog.isShowing()){
                 pDialog.dismiss();
             }
@@ -619,6 +624,17 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
         }
         if (pDialog.isShowing()){
             pDialog.dismiss();
+        }
+        if(Viajes.accionar == 3){
+            etNomViaje.setEnabled(false);
+            acConductores.setEnabled(false);
+            acRutas.setEnabled(false);
+            etFechaInicio.setEnabled(false);
+            etHoraInicio.setEnabled(false);
+            etFechaFinal.setEnabled(false);
+            etHoraFinal.setEnabled(false);
+            spVehiculo.setEnabled(false);
+
         }
     }
 

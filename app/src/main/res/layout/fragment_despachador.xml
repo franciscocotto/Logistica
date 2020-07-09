@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.despachador.Despachador"
+    tools:context=".ui.conductor.Conductor_Asignado"
     android:background="@drawable/bg">
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

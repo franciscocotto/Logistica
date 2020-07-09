@@ -36,6 +36,24 @@ public class Viajes extends Fragment {
 
     public static int idViaje;
     public static int accionar;
+    public static int conductor;
+
+    public static int getAccionar() {
+        return accionar;
+    }
+
+    public static void setAccionar(int accionar) {
+        Viajes.accionar = accionar;
+    }
+
+    public static int getConductor() {
+        return conductor;
+    }
+
+    public static void setConductor(int conductor) {
+        Viajes.conductor = conductor;
+    }
+
     private int id_viaje, id_ruta, id_vehiculo, id_conductor;
     private String inicio, finalizacion, nomViaje;
     private boolean resultado;
