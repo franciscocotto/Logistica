@@ -86,7 +86,7 @@
                     android:layout_height="wrap_content"
                     android:digits="-0123456789"
                     android:hint="@string/hint_addTelCON"
-                    android:inputType="text"
+                    android:inputType="numberSigned"
                     android:maxLength="9"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -100,7 +100,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:digits="-0123456789"                android:hint="@string/hint_addDuiCon"
-                    android:inputType="number"
+                    android:inputType="numberSigned"
                     android:maxLength="10"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -115,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:digits="-0123456789"
                     android:hint="@string/hint_addNitCon"
-                    android:inputType="number"
+                    android:inputType="numberSigned"
                     android:maxLength="17"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -154,8 +154,8 @@
                     android:layout_height="wrap_content"
                     android:digits="-0123456789"
                     android:hint="@string/hint_addNumLic"
-                    android:inputType="number"
-                    android:maxLength="150"
+                    android:inputType="numberSigned"
+                    android:maxLength="17"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -170,7 +170,7 @@
                     android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
                     android:hint="@string/hint_addDirCon"
                     android:inputType="text"
-                    android:maxLength="17"
+                    android:maxLength="150"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
