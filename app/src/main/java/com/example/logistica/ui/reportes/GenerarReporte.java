@@ -1,9 +1,11 @@
 package com.example.logistica.ui.reportes;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -55,9 +57,12 @@ public class GenerarReporte extends Fragment{
     public GenerarReporte() { }
     String nombre;
     ArrayList<Reporte> reportes = new ArrayList<Reporte>();
+    File carpeta = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "Logistica");
     ArrayList<String> rutasArchivos;
     ArrayList<String> nombreArchivos;
+    ArrayList<Uri> URIS;
     String URLViajes = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_reporte_viajes.php";
+
     ListView lvArchivos;
     Button btnReporteViajes, btnRegresar;
 
@@ -94,7 +99,7 @@ public class GenerarReporte extends Fragment{
         lvArchivos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                abrirReporteExel(rutasArchivos.get(position));
+                abrirReporteExel(URIS.get(position));
             }
         });
         return view;
@@ -144,12 +149,21 @@ public class GenerarReporte extends Fragment{
     }
 
 
-    private void abrirReporteExel(String URI){
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-        intent.setDataAndType(Uri.parse(URI), "application/vnd.ms-excel");
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        startActivity(intent);
+    private void abrirReporteExel(Uri uri){
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, "application/vnd.ms-excel");
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        try {
+            this.startActivity(intent);
+        }catch (ActivityNotFoundException e){
+            e.printStackTrace();
+        }
+
+        /*Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("application/vnd.ms-excel");
+        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        startActivity(intent);*/
     }
 
     private void generarReporteViajes(ArrayList list){
@@ -274,7 +288,7 @@ public class GenerarReporte extends Fragment{
             celda.setCellValue(reportes.get(i).getFinalViaje());
         }
 
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Logistica/", nombre+".xls");
+        File file = new File(carpeta.getPath(), nombre+".xls");
         FileOutputStream outputStream = null;
 
         try {
@@ -291,8 +305,8 @@ public class GenerarReporte extends Fragment{
     private void cargarArchivos(){
         rutasArchivos = new ArrayList<String>();
         nombreArchivos = new ArrayList<String>();
+        URIS = new ArrayList<>();
 
-        File carpeta = new File(Environment.getExternalStorageDirectory().getAbsolutePath(),  "Logistica");
         if(!carpeta.exists()){
             carpeta.mkdirs();
         }
@@ -301,6 +315,7 @@ public class GenerarReporte extends Fragment{
 
         for (File archivo : listaArchivos){
             rutasArchivos.add(archivo.getPath());
+            URIS.add(FileProvider.getUriForFile(getContext(), getActivity().getOpPackageName()+".provider", archivo));
         }
 
         for (int i = 0; i<listaArchivos.length; i++){
