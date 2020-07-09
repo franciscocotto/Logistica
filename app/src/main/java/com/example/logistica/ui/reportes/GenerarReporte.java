@@ -2,6 +2,7 @@ package com.example.logistica.ui.reportes;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -55,6 +56,7 @@ import java.util.ArrayList;
 public class GenerarReporte extends Fragment{
 
     public GenerarReporte() { }
+    int posicion;
     String nombre;
     ArrayList<Reporte> reportes = new ArrayList<Reporte>();
     File carpeta = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "Logistica");
@@ -64,7 +66,7 @@ public class GenerarReporte extends Fragment{
     String URLViajes = "https://inventario-pdm115.000webhostapp.com/Logistica/ws_bg17016/ws_reporte_viajes.php";
 
     ListView lvArchivos;
-    Button btnReporteViajes, btnRegresar;
+    Button btnReporteViajes, btnRegresar, btnAbrir, btnEnviar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,7 +78,8 @@ public class GenerarReporte extends Fragment{
         final EditText etNom = (EditText)view.findViewById(R.id.etNomReporte);
         btnReporteViajes = (Button)view.findViewById(R.id.btnReporteViajes);
         btnRegresar = (Button)view.findViewById(R.id.btnRegresar);
-
+        btnAbrir = (Button)view.findViewById(R.id.btnAbrir);
+        btnEnviar = (Button)view.findViewById(R.id.btnEnviar);
         cargarArchivos();
         btnReporteViajes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +102,27 @@ public class GenerarReporte extends Fragment{
         lvArchivos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                abrirReporteExel(URIS.get(position));
+                for(int i = 0; i<nombreArchivos.size();i++){
+                    lvArchivos.getChildAt(i).setBackgroundColor(Color.WHITE);
+                }
+                lvArchivos.getChildAt(position).setBackgroundColor(Color.GRAY);
+                posicion = position;
+                btnAbrir.setVisibility(View.VISIBLE);
+                btnEnviar.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btnAbrir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                abrirReporteExel(URIS.get(posicion));
+            }
+        });
+
+        btnEnviar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enviarReporte(URIS.get(posicion));
             }
         });
         return view;
@@ -159,11 +182,14 @@ public class GenerarReporte extends Fragment{
             e.printStackTrace();
         }
 
-        /*Intent intent = new Intent(Intent.ACTION_SEND);
+
+    }
+    private void enviarReporte(Uri uri){
+        Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("application/vnd.ms-excel");
         intent.putExtra(Intent.EXTRA_STREAM, uri);
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        startActivity(intent);*/
+        startActivity(intent);
     }
 
     private void generarReporteViajes(ArrayList list){
@@ -303,6 +329,8 @@ public class GenerarReporte extends Fragment{
         }
     }
     private void cargarArchivos(){
+        btnEnviar.setVisibility(View.GONE);
+        btnAbrir.setVisibility(View.GONE);
         rutasArchivos = new ArrayList<String>();
         nombreArchivos = new ArrayList<String>();
         URIS = new ArrayList<>();

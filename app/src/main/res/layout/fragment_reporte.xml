@@ -46,11 +46,29 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/btnAbrir"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="abrir reporte"
+                android:background="@drawable/gradient_1"
+                android:layout_marginTop="20dp"
+                android:textColor="@android:color/white"/>
+
+            <Button
+                android:id="@+id/btnEnviar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Enviar reporte"
+                android:background="@drawable/gradient_1"
+                android:layout_marginTop="20dp"
+                android:textColor="@android:color/white"/>
+
+            <Button
                 android:id="@+id/btnRegresar"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/hint_regresar"
-                android:background="@drawable/gradient_1"
+                android:background="#4C4B4B"
                 android:layout_marginTop="20dp"
                 android:textColor="@android:color/white"/>
 
