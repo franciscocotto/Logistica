@@ -91,7 +91,8 @@
                 android:id="@+id/addDuiCon"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:digits="-0123456789"                android:hint="@string/hint_addDuiCon"
+                android:digits="-.0123456789"
+                android:hint="@string/hint_addDuiCon"
                 android:inputType="number"
                 android:maxLength="10"
                 android:singleLine="true" />
@@ -105,7 +106,7 @@
                     android:id="@+id/addNitCon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:digits="-0123456789"                    android:hint="@string/hint_addNitCon"
+                    android:digits="-.0123456789"                    android:hint="@string/hint_addNitCon"
                     android:inputType="number"
                     android:maxLength="17"
                     android:singleLine="true" />
@@ -143,7 +144,7 @@
                     android:id="@+id/addNumLic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:digits="-0123456789"
+                    android:digits="-.0123456789"
                     android:hint="@string/hint_addNumLic"
                     android:inputType="number"
                     android:maxLength="150"
@@ -161,7 +162,7 @@
                     android:digits=" ,.-()·@ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
                     android:hint="@string/hint_addDirCon"
                     android:inputType="text"
-                    android:maxLength="17"
+                    android:maxLength="150"
                     android:singleLine="true" />
             </com.google.android.material.textfield.TextInputLayout>
 
