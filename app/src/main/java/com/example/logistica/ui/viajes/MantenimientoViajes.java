@@ -46,8 +46,6 @@ import com.example.logistica.Viajes;
 import com.example.logistica.WS;
 import com.example.logistica.dialog.DatePickerFragment;
 import com.example.logistica.dialog.TimePickerFragment;
-import com.example.logistica.ui.home.HomeFragment;
-import com.google.android.gms.common.internal.safeparcel.SafeParcelable;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -65,7 +63,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,7 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
     private GoogleMap mapa;
     WS ws;
     Polyline polyline;
+    Date fechaInicio, fechaFinal;
 
     //Objetos
     private Toast mensaje;
@@ -317,7 +319,11 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
             public void onClick(DialogInterface dialog, int which) {
                 switch (i){
                     case 1:
-                        generarViaje();
+                        try {
+                            generarViaje();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                         break;
                     case 2:
                         eliminarViaje();
@@ -639,7 +645,7 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
     }
 
     //Metodo que ingresa o modifica viajes
-    private void generarViaje(){
+    private void generarViaje() throws ParseException {
         if(etNomViaje.getText().toString().isEmpty() || acRutas.getText().toString().isEmpty() || etFechaInicio.getText().toString().isEmpty() ||
         etHoraInicio.getText().toString().isEmpty() || etFechaFinal.getText().toString().isEmpty() ||
                 etHoraFinal.getText().toString().isEmpty() || acConductores.getText().toString().isEmpty() || (spVehiculo.getSelectedItemId()==0)){
@@ -673,6 +679,7 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
             if(!acRutas.getText().toString().isEmpty() && !acConductores.getText().toString().isEmpty()){
                 boolean ruta = false;
                 boolean conductor = false;
+                boolean fechas = true;
                 if(!acRutas.getText().toString().isEmpty()){
                     for (int i = 0; i<rutasV.length;i++){
                         if (acRutas.getText().toString().equals(rutasV[i])){
@@ -693,7 +700,24 @@ public class MantenimientoViajes extends Fragment implements OnMapReadyCallback{
                         acConductores.setError("Dato invalido");
                     }
                 }
-                if(ruta==false || conductor==false){
+                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                try {
+                    fechaInicio = formato.parse(etFechaInicio.getText().toString()+" "+etHoraInicio.getText().toString());
+                    fechaFinal = formato.parse(etFechaFinal.getText().toString()+" "+etHoraFinal.getText().toString());
+                }
+                catch (ParseException ex){
+                    Toast.makeText(getContext(), ex.toString(), Toast.LENGTH_SHORT).show();
+                }
+
+                if(fechaFinal.before(fechaInicio)){
+                    etFechaInicio.setError("Error con fechas ingresadas");
+                    etFechaFinal.setError("Error con fechas ingresadas");
+                    etHoraInicio.setError("Error con horas ingresadas");
+                    etHoraFinal.setError("Error con horas ingresadas");
+                    Toast.makeText(getContext(), "Incoherencia en programacion de inicio y final del viaje.",Toast.LENGTH_LONG).show();
+                    fechas = false;
+                }
+                if(ruta==false || conductor==false || fechas==false){
                     Toast.makeText(getContext(), "Algunos datos son invalidos",Toast.LENGTH_LONG).show();
                 }
                 else {
